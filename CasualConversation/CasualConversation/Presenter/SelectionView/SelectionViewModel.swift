@@ -6,3 +6,18 @@
 //
 
 import Foundation
+
+final class SelectionViewModel: ObservableObject {
+	
+	struct Dependency {
+		let conversationUseCase: ConversationMaintainable
+		let noteUseCase: NoteUseCaseManagable
+	}
+	
+	private let dependency: Dependency
+	
+	init(dependency: Dependency) {
+		self.dependency = dependency
+	}
+	
+}
