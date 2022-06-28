@@ -15,7 +15,11 @@ protocol ConversationMaintainable {
 	// TODO: Conversation RUD 기능
 }
 
-final class ConversationUseCase: ConversationRecodable, ConversationMaintainable {
+protocol ConversationUseCaseManagable: ConversationRecodable, ConversationMaintainable  {
+	
+}
+
+final class ConversationUseCase: ConversationUseCaseManagable {
 	
 	struct Dependecy {
 		let repository: ConversationRepositoryProtocol
