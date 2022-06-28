@@ -7,10 +7,8 @@
 
 import Foundation
 
-struct Note: Identifiable {
-    
-    typealias Identifier = UUID
-    
+struct Note: UUIDIdentifiable {
+        
     enum Category {
         case vocabulary
         case sentece
@@ -20,7 +18,7 @@ struct Note: Identifiable {
     let original: String
     let translation: String
     let category: Category
-    let references: [Identifier]
-    let date: Data
+	let references: [Identifier]
+    let createdDate: Date
     
 }

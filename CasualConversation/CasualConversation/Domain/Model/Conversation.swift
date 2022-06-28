@@ -7,15 +7,13 @@
 
 import Foundation
 
-struct Conversation: Identifiable {
-    
-    typealias Identifier = UUID
-    
+struct Conversation: UUIDIdentifiable {
+        
     let id: Identifier
-    let title: String
-    let topic: String
-    let members: [String]
+    var title: String?
+    var topic: String?
+    let members: [Member]
     let recordFilePath: String
-    let date: Data
+    let recordedDate: Data
     
 }
