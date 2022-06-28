@@ -11,11 +11,11 @@ protocol ConversationRecodable {
 	// TODO: Conversation C 기능
 }
 
-protocol ConversationManagable {
+protocol ConversationMaintainable {
 	// TODO: Conversation RUD 기능
 }
 
-final class ConversationUseCase: ConversationRecodable, ConversationManagable {
+final class ConversationUseCase: ConversationRecodable, ConversationMaintainable {
 	
 	struct Dependecy {
 		let repository: ConversationRepositoryProtocol
