@@ -98,6 +98,8 @@ let mainAppTarget = [
 		.target(name: CleanArchitecture.domain.name),
 		.target(name: CleanArchitecture.presentation.name),
 		.target(name: CleanArchitecture.data.name),
+		.swinject,
+		.swinjectAutoregistration
 	],
 	settings: nil,
 	coreDataModels: [],
@@ -135,6 +137,8 @@ let project = Project
 		organizationName: PSE.organizationName,
 		// options
 		packages: [
+			.swinject,
+			.swinjectAutoregistration
 		],
 		settings: .settings(configurations: [
 			.debug(name: "Debug"),
