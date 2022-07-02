@@ -6,16 +6,20 @@
 //
 
 import SwiftUI
+import DataLayer
+import Presentation
+import Domain
+
 
 @main
 struct CasualConversationApp: App {
     
-    let persistenceController = PersistenceController.shared
+//    let persistenceController = PersistenceController.shared
 
     var body: some Scene {
         WindowGroup {
             MainTabView()
-                .environment(\.managedObjectContext, persistenceController.container.viewContext)
+//                .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
     

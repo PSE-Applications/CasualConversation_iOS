@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import DataLayer
 
 final class SelectionViewModel: ObservableObject {
 	
