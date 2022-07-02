@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol NoteUseCaseManagable {
+public protocol NoteUseCaseManagable {
 	// TODO: Conversation CRUD
 }
 

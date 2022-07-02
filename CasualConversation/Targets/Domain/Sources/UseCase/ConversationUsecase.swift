@@ -7,15 +7,15 @@
 
 import Foundation
 
-protocol ConversationRecodable {
+public protocol ConversationRecodable {
 	// TODO: Conversation C 기능
 }
 
-protocol ConversationMaintainable {
+public protocol ConversationMaintainable {
 	// TODO: Conversation RUD 기능
 }
 
-protocol ConversationUseCaseManagable: ConversationRecodable, ConversationMaintainable  {
+public protocol ConversationUseCaseManagable: ConversationRecodable, ConversationMaintainable  {
 	
 }
 

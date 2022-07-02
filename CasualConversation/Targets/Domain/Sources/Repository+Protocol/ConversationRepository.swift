@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol ConversationRepositoryProtocol {
+public protocol ConversationRepositoryProtocol {
 	
 	// TODO: Conversation 추가
 	// TODO: Conversation 목록 조회

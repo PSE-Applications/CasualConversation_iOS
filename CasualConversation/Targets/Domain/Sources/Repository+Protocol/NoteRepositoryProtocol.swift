@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol NoteRepositoryProtocol {
+public protocol NoteRepositoryProtocol {
 	
 	// TODO: Note 추가
 	// TODO: Note 목록 조회
