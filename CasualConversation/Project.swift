@@ -17,13 +17,11 @@ enum PSE {
 enum CleanArchitecture {
 	case domain
 	case data
-	case presentation
 	
 	var name: String {
 		switch self {
 		case .domain: 		return "Domain"
 		case .data:			return "DataLayer"
-		case .presentation:	return "Presentation"
 		}
 	}
 }
@@ -66,7 +64,6 @@ func makeModule(layer: CleanArchitecture, dependencies: [CleanArchitecture]) -> 
 }
 
 let domainModule = makeModule(layer: .domain, dependencies: [])
-let presentationModule = makeModule(layer: .presentation, dependencies: [.domain])
 let dataLayerModule = makeModule(layer: .data, dependencies: [.domain])
 
 
@@ -96,7 +93,6 @@ let mainAppTarget = [
 	scripts: [],
 	dependencies: [
 		.target(name: CleanArchitecture.domain.name),
-		.target(name: CleanArchitecture.presentation.name),
 		.target(name: CleanArchitecture.data.name),
 		.swinject,
 		.swinjectAutoregistration
@@ -148,7 +144,6 @@ let project = Project
 			mainAppTarget,
 			domainModule,
 			dataLayerModule,
-			presentationModule
 		].flatMap { $0 },
 		schemes: [],
 		fileHeaderTemplate: nil,
