@@ -9,8 +9,8 @@ import SwiftUI
 
 public struct MainTabView: View {
 	
-	public init() {
-		
+	public init(viewModel: MainTabViewModel) {
+		self.viewModel = viewModel
 	}
 
 	public var body: some View {

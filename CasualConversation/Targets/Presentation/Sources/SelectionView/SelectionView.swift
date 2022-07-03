@@ -9,8 +9,10 @@ import SwiftUI
 
 public struct SelectionView: View {
 	
-	public init() {
-		
+	private let viewModel: SelectionViewModel
+	
+	public init(viewModel: SelectionViewModel) {
+		self.viewModel = viewModel
 	}
 
 	public var body: some View {

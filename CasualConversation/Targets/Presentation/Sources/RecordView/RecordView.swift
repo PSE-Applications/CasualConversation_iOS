@@ -9,8 +9,10 @@ import SwiftUI
 
 public struct RecordView: View {
 	
-	public init() {
-		
+	private let viewModel: RecordViewModel
+	
+	public init(viewModel: RecordViewModel) {
+		self.viewModel = viewModel
 	}
 
 	public var body: some View {

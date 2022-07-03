@@ -10,7 +10,7 @@ import Domain
 
 import Foundation
 
-public final class NoteSetViewModel: Dependency {
+public final class NoteSetViewModel: Dependency, ObservableObject {
 	
 	public struct Dependency {
 		let useCase: NoteUseCaseManagable

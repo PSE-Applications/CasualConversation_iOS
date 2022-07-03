@@ -10,7 +10,7 @@ import Domain
 
 import Foundation
 
-public final class SelectionViewModel: Dependency {
+public final class SelectionViewModel: Dependency, ObservableObject {
 	
 	public struct Dependency {
 		let conversationUseCase: ConversationMaintainable

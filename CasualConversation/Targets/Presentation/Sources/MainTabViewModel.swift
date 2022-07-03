@@ -10,7 +10,7 @@ import Domain
 
 import Foundation
 
-public final class MainTabViewModel: Dependency {
+public final class MainTabViewModel: Dependency, ObservableObject {
 	
 	public struct Dependency {
 		public init() {

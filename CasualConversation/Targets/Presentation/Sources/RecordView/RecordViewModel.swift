@@ -10,7 +10,7 @@ import Domain
 
 import Foundation
 
-public final class RecordViewModel: Dependency {
+public final class RecordViewModel: Dependency, ObservableObject {
 	
 	public struct Dependency {
 		let useCase: ConversationRecodable

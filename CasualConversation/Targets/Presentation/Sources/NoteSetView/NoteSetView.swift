@@ -9,8 +9,10 @@ import SwiftUI
 
 public struct NoteSetView: View {
 	
-	public init() {
-		
+	private let viewModel: NoteSetViewModel
+	
+	public init(viewModel: NoteSetViewModel) {
+		self.viewModel = viewModel
 	}
 
 	public var body: some View {
