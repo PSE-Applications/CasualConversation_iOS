@@ -9,6 +9,12 @@ import SwiftUI
 
 public struct MainTabView: View {
 	
+	@EnvironmentObject
+	private var sceneDIContainer: PresentationDIContainer
+	
+	@ObservedObject
+	private var viewModel: MainTabViewModel
+	
 	public init(viewModel: MainTabViewModel) {
 		self.viewModel = viewModel
 	}
@@ -19,10 +25,11 @@ public struct MainTabView: View {
     
 }
 
-struct MainTabView_Previews: PreviewProvider {
-    
-    static var previews: some View {
-        MainTabView()
-    }
-    
-}
+//struct MainTabView_Previews: PreviewProvider {
+//
+//	static let viewModel: ViewModelProtocol = MainTabViewModel(dependency: .init())
+//    static var previews: some View {
+//		MainTabView(viewModel: viewModel)
+//    }
+//    
+//}

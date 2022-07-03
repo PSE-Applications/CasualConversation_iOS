@@ -21,10 +21,10 @@ public struct NoteSetView: View {
 	
 }
 
-struct NoteSetView_Previews: PreviewProvider {
-	
-	static var previews: some View {
-		SelectionView()
-	}
-	
-}
+//struct NoteSetView_Previews: PreviewProvider {
+//
+//	static var previews: some View {
+//		SelectionView(viewModel: viewModel)
+//	}
+//
+//}

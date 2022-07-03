@@ -21,10 +21,10 @@ public struct RecordView: View {
 	
 }
 
-struct RecordView_Previews: PreviewProvider {
-	
-	static var previews: some View {
-		RecordView()
-	}
-	
-}
+//struct RecordView_Previews: PreviewProvider {
+//
+//	static var previews: some View {
+//		RecordView()
+//	}
+//
+//}

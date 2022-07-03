@@ -21,10 +21,10 @@ public struct SelectionView: View {
 	
 }
 
-struct SelectionView_Previews: PreviewProvider {
-	
-	static var previews: some View {
-		SelectionView()
-	}
-	
-}
+//struct SelectionView_Previews: PreviewProvider {
+//
+//	static var previews: some View {
+//		SelectionView()
+//	}
+//
+//}
