@@ -15,13 +15,17 @@ enum PSE {
 
 // MARK: - Modules
 enum CleanArchitecture {
+	case common
+	case presentation
 	case domain
 	case data
 	
 	var name: String {
 		switch self {
+		case .common: 		return "Common"
+		case .presentation: return "Presentation"
 		case .domain: 		return "Domain"
-		case .data:			return "DataLayer"
+		case .data:			return "Data"
 		}
 	}
 }
@@ -63,8 +67,11 @@ func makeModule(layer: CleanArchitecture, dependencies: [CleanArchitecture]) -> 
 	return [sources, tests]
 }
 
-let domainModule = makeModule(layer: .domain, dependencies: [])
-let dataLayerModule = makeModule(layer: .data, dependencies: [.domain])
+let commonModule = makeModule(layer: .common, dependencies: [])
+let presentationModule = makeModule(layer: .presentation, dependencies: [.common, .domain, .data])
+let dataModule = makeModule(layer: .data, dependencies: [.common, .domain])
+let domainModule = makeModule(layer: .domain, dependencies: [.common])
+
 
 
 // MARK: - Project
@@ -86,12 +93,14 @@ let mainAppTarget = [
 	deploymentTarget: PSE.deploymentTarget,
 	infoPlist: .extendingDefault(with: infoPlist),
 	sources: ["Targets/\(PSE.projectName)/Sources/**"],
-	resources: ["Targets/\(PSE.projectName)/resources/**"],
+	resources: ["Targets/\(PSE.projectName)/Resources/**"],
 	copyFiles: nil,
 	headers: nil,
 	entitlements: nil,
 	scripts: [],
 	dependencies: [
+		.target(name: CleanArchitecture.common.name),
+		.target(name: CleanArchitecture.presentation.name),
 		.target(name: CleanArchitecture.domain.name),
 		.target(name: CleanArchitecture.data.name)//,
 //		.swinject,
@@ -142,8 +151,10 @@ let project = Project
 		]),
 		targets: [
 			mainAppTarget,
+			commonModule,
+			presentationModule,
 			domainModule,
-			dataLayerModule,
+			dataModule,
 		].flatMap { $0 },
 		schemes: [],
 		fileHeaderTemplate: nil,

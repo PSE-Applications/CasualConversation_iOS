@@ -6,15 +6,16 @@
 //
 
 import Foundation
+import Common
 
-struct Note: UUIDIdentifiable {
+public struct Note: UUIDIdentifiable {
         
     enum Category {
         case vocabulary
         case sentece
     }
     
-    let id: Identifier
+	public let id: Identifier
     let original: String
     let translation: String
     let category: Category

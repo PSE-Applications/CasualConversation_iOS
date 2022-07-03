@@ -11,7 +11,7 @@ public protocol NoteUseCaseManagable {
 	// TODO: Conversation CRUD
 }
 
-final class NoteUseCase: NoteUseCaseManagable {
+public final class NoteUseCase: NoteUseCaseManagable {
 	
 	struct Dependecy {
 		let repository: NoteRepositoryProtocol

@@ -6,10 +6,11 @@
 //
 
 import Foundation
+import Common
 
-struct Member: UUIDIdentifiable {
+public struct Member: UUIDIdentifiable {
 		
-	let id: Identifier
+	public let id: Identifier
 	let name: String
 	
 }

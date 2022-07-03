@@ -5,10 +5,12 @@
 //  Created by Yongwoo Marco on 2022/06/23.
 //
 
-import SwiftUI
-
+import Common
 import Domain
-import DataLayer
+import Data
+import Presentation
+
+import SwiftUI
 
 @main
 struct CasualConversationApp: App {

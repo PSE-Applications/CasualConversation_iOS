@@ -7,9 +7,13 @@
 
 import SwiftUI
 
-struct RecordView: View {
+public struct RecordView: View {
+	
+	public init() {
+		
+	}
 
-	var body: some View {
+	public var body: some View {
 		Text("Hello world")
 	}
 	

@@ -1,5 +1,5 @@
 //
-//  NoteSetView.swift
+//  SelectionView.swift
 //  CasualConversation
 //
 //  Created by Yongwoo Marco on 2022/06/23.
@@ -7,15 +7,19 @@
 
 import SwiftUI
 
-struct NoteSetView: View {
+public struct SelectionView: View {
+	
+	public init() {
+		
+	}
 
-	var body: some View {
+	public var body: some View {
 		Text("Hello world")
 	}
 	
 }
 
-struct NoteSetView_Previews: PreviewProvider {
+struct SelectionView_Previews: PreviewProvider {
 	
 	static var previews: some View {
 		SelectionView()

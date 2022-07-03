@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol UUIDIdentifiable: Identifiable {
+public protocol UUIDIdentifiable: Identifiable {
 	
 	typealias Identifier = UUID
 	

@@ -7,9 +7,13 @@
 
 import SwiftUI
 
-struct MainTabView: View {
+public struct MainTabView: View {
+	
+	public init() {
+		
+	}
 
-    var body: some View {
+	public var body: some View {
         Text("Hello world")
     }
     

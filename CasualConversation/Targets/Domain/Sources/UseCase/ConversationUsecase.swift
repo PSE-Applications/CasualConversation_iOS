@@ -19,7 +19,7 @@ public protocol ConversationUseCaseManagable: ConversationRecodable, Conversatio
 	
 }
 
-final class ConversationUseCase: ConversationUseCaseManagable {
+public final class ConversationUseCase: ConversationUseCaseManagable {
 	
 	struct Dependecy {
 		let repository: ConversationRepositoryProtocol

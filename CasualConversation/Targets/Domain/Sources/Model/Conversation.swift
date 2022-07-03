@@ -6,10 +6,11 @@
 //
 
 import Foundation
+import Common
 
-struct Conversation: UUIDIdentifiable {
+public struct Conversation: UUIDIdentifiable {
         
-    let id: Identifier
+	public let id: Identifier
     var title: String?
     var topic: String?
     let members: [Member]
