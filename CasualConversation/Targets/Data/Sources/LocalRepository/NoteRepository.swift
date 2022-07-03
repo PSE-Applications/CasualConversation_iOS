@@ -11,4 +11,6 @@ import Domain
 
 public struct NoteRepository: NoteRepositoryProtocol {
 	
+	public init() {}
+	
 }
