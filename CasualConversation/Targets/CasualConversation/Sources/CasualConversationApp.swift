@@ -15,12 +15,12 @@ import SwiftUI
 @main
 struct CasualConversationApp: App {
 	
-	private let presentationDIContainer: PresentationDIContainer = AppDIContainer().makeSceneDIContainer()
+	private let appDIContainer = AppDIContainer()
 	
     var body: some Scene {
         WindowGroup {
-			presentationDIContainer.MainTabView()
-				.environmentObject(presentationDIContainer)
+			appDIContainer.PresentationEntryPoint()
+				.environmentObject(appDIContainer.makeSceneDIContainer())
         }
     }
     

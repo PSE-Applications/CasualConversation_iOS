@@ -30,4 +30,9 @@ final class AppDIContainer {
 		)
 	}
 	
+	func PresentationEntryPoint() -> MainTabView {
+		let viewModel: MainTabViewModel = .init(dependency: .init())
+		return .init(viewModel: viewModel)
+	}
+	
 }
