@@ -5,18 +5,24 @@
 //  Created by Yongwoo Marco on 2022/06/23.
 //
 
-import Foundation
+import Common
 import Domain
 
-final class RecordViewModel: ObservableObject {
+import Foundation
+
+public final class RecordViewModel: Dependency {
 	
-	struct Dependency {
+	public struct Dependency {
 		let useCase: ConversationRecodable
+		
+		public init(useCase: ConversationRecodable) {
+			self.useCase = useCase
+		}
 	}
 	
-	private let dependency: Dependency
+	public let dependency: Dependency
 	
-	init(dependency: Dependency) {
+	public init(dependency: Dependency) {
 		self.dependency = dependency
 	}
 	

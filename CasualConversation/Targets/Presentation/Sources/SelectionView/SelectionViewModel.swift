@@ -5,20 +5,30 @@
 //  Created by Yongwoo Marco on 2022/06/23.
 //
 
-import Foundation
+import Common
 import Domain
 
-final class SelectionViewModel: ObservableObject {
+import Foundation
+
+public final class SelectionViewModel: Dependency {
 	
-	struct Dependency {
+	public struct Dependency {
 		let conversationUseCase: ConversationMaintainable
 		let noteUseCase: NoteUseCaseManagable
+		
+		public init(
+			conversationUseCase: ConversationMaintainable,
+			noteUseCase: NoteUseCaseManagable
+		) {
+			self.conversationUseCase = conversationUseCase
+			self.noteUseCase = noteUseCase
+		}
 	}
 	
-	private let dependency: Dependency
+	public let dependency: Dependency
 	
-	init(dependency: Dependency) {
+	public init(dependency: Dependency) {
 		self.dependency = dependency
 	}
-	
+
 }
