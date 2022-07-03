@@ -9,6 +9,6 @@
 import Foundation
 import Domain
 
-struct ConversationRepository: ConversationRepositoryProtocol {
+public struct ConversationRepository: ConversationRepositoryProtocol {
 	
 }

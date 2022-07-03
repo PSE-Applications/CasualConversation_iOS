@@ -1,5 +1,5 @@
 //
-//  NoteRepository.swift
+//  RecordService.swift
 //  CasualConversation
 //
 //  Created by Yongwoo Marco on 2022/07/03.
@@ -7,8 +7,3 @@
 //
 
 import Foundation
-import Domain
-
-public struct NoteRepository: NoteRepositoryProtocol {
-	
-}
