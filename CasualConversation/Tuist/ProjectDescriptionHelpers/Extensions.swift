@@ -8,18 +8,18 @@
 import ProjectDescription
 
 public extension TargetDependency {
-	static let swinject = TargetDependency.package(product: "Swinject")
-	static let swinjectAutoregistration =  TargetDependency.package(product: "SwinjectAutoregistration")
+//	static let swinject = TargetDependency.package(product: "Swinject")
+//	static let swinjectAutoregistration =  TargetDependency.package(product: "SwinjectAutoregistration")
 }
 
 public extension Package {
-	static let swinject = Package.remote(
-		url: "https://github.com/Swinject/Swinject.git",
-		requirement: .upToNextMajor(from: .init(2, 8, 1))
-	)
-	static let swinjectAutoregistration = Package.remote(
-		url: "https://github.com/Swinject/SwinjectAutoregistration.git",
-		requirement: .upToNextMajor(from: .init(2, 8, 1)))
+//	static let swinject = Package.remote(
+//		url: "https://github.com/Swinject/Swinject.git",
+//		requirement: .upToNextMajor(from: .init(2, 8, 1))
+//	)
+//	static let swinjectAutoregistration = Package.remote(
+//		url: "https://github.com/Swinject/SwinjectAutoregistration.git",
+//		requirement: .upToNextMajor(from: .init(2, 8, 1)))
 }
 
 // MARK: - SourceFile
