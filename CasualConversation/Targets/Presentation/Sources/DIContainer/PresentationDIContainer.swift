@@ -8,22 +8,25 @@
 
 import Common
 import Domain
+import Data
 
 import Foundation
-
 
 public final class PresentationDIContainer: Dependency, ObservableObject {
 	
 	public struct Dependency {
 		let conversationRepository: ConversationRepositoryProtocol
 		let noteRepository: NoteRepositoryProtocol
+		let recordRepository: RecordRepositoryProtocol
 		
 		public init(
 			conversationRepository: ConversationRepositoryProtocol,
-			noteRepository: NoteRepositoryProtocol
+			noteRepository: NoteRepositoryProtocol,
+			recordRepository: RecordRepositoryProtocol
 		) {
 			self.conversationRepository = conversationRepository
 			self.noteRepository = noteRepository
+			self.recordRepository = recordRepository
 		}
 	}
 	
@@ -32,7 +35,8 @@ public final class PresentationDIContainer: Dependency, ObservableObject {
 	// MARK: UseCases
 	lazy var casualConversationUseCase: ConversationUseCase = .init(
 		dependency: .init(
-			repository: self.dependency.conversationRepository
+			repository: self.dependency.conversationRepository,
+			recordService: self.recordService
 		)
 	)
 	lazy var noteUseCase: NoteUseCase = .init(
@@ -41,6 +45,9 @@ public final class PresentationDIContainer: Dependency, ObservableObject {
 			filter: .all
 		)
 	)
+	lazy var recordService: RecordService = .init(
+		dependency: .init(
+			repository: self.dependency.recordRepository
 		)
 	)
 	

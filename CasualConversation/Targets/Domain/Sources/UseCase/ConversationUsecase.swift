@@ -26,9 +26,14 @@ public final class ConversationUseCase: Dependency, ConversationUseCaseManagable
 	
 	public struct Dependency {
 		let repository: ConversationRepositoryProtocol
+		let recordService: RecordServiceProtocol
 		
-		public init(repository: ConversationRepositoryProtocol) {
+		public init(
+			repository: ConversationRepositoryProtocol,
+			recordService: RecordServiceProtocol
+		) {
 			self.repository = repository
+			self.recordService = recordService
 		}
 	}
 	

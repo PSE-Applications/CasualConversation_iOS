@@ -20,12 +20,14 @@ final class AppDIContainer {
 	// MARK: - Repository
 	lazy var conversationRepository: ConversationRepositoryProtocol = ConversationRepository()
 	lazy var noteRepository: NoteRepositoryProtocol = NoteRepository()
+	lazy var recordRepository: RecordRepositoryProtocol = RecordRepository()
 	
 	func makeSceneDIContainer() -> PresentationDIContainer {
 		return .init(
 			dependency: .init(
 				conversationRepository: self.conversationRepository,
-				noteRepository: self.noteRepository
+				noteRepository: self.noteRepository,
+				recordRepository: self.recordRepository
 			)
 		)
 	}
