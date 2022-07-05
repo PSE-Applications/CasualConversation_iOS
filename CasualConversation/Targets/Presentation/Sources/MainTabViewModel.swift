@@ -5,20 +5,23 @@
 //  Created by Yongwoo Marco on 2022/06/23.
 //
 
-import Foundation
+import Common
 import Domain
 
-final class MainTabViewModel: ObservableObject {
+import Foundation
+
+public final class MainTabViewModel: Dependency, ObservableObject {
 	
-	struct Denpendency {
-		let conversationUseCase: ConversationUseCaseManagable
-		let noteUseCase: NoteUseCaseManagable
+	public struct Dependency {
+		public init() {
+			
+		}
 	}
 	
-	private let dependency: Denpendency
-	
-	init(dependency: Denpendency) {
+	public let dependency: Dependency
+
+	public init(dependency: Dependency) {
 		self.dependency = dependency
 	}
-
+	
 }

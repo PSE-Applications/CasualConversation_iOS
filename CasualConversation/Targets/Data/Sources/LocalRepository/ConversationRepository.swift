@@ -11,4 +11,6 @@ import Domain
 
 public struct ConversationRepository: ConversationRepositoryProtocol {
 	
+	public init() {}
+	
 }

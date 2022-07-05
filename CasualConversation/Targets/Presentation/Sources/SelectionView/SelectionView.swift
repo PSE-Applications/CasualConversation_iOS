@@ -9,8 +9,10 @@ import SwiftUI
 
 public struct SelectionView: View {
 	
-	public init() {
-		
+	private let viewModel: SelectionViewModel
+	
+	public init(viewModel: SelectionViewModel) {
+		self.viewModel = viewModel
 	}
 
 	public var body: some View {
@@ -19,10 +21,10 @@ public struct SelectionView: View {
 	
 }
 
-struct SelectionView_Previews: PreviewProvider {
-	
-	static var previews: some View {
-		SelectionView()
-	}
-	
-}
+//struct SelectionView_Previews: PreviewProvider {
+//
+//	static var previews: some View {
+//		SelectionView()
+//	}
+//
+//}

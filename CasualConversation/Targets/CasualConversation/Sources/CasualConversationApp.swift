@@ -14,13 +14,13 @@ import SwiftUI
 
 @main
 struct CasualConversationApp: App {
-    
-//    let persistenceController = PersistenceController.shared
-
+	
+	private let appDIContainer = AppDIContainer()
+	
     var body: some Scene {
         WindowGroup {
-            MainTabView()
-//                .environment(\.managedObjectContext, persistenceController.container.viewContext)
+			appDIContainer.PresentationEntryPoint()
+				.environmentObject(appDIContainer.makeSceneDIContainer())
         }
     }
     

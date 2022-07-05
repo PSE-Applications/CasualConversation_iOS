@@ -9,8 +9,10 @@ import SwiftUI
 
 public struct RecordView: View {
 	
-	public init() {
-		
+	private let viewModel: RecordViewModel
+	
+	public init(viewModel: RecordViewModel) {
+		self.viewModel = viewModel
 	}
 
 	public var body: some View {
@@ -19,10 +21,10 @@ public struct RecordView: View {
 	
 }
 
-struct RecordView_Previews: PreviewProvider {
-	
-	static var previews: some View {
-		RecordView()
-	}
-	
-}
+//struct RecordView_Previews: PreviewProvider {
+//
+//	static var previews: some View {
+//		RecordView()
+//	}
+//
+//}
