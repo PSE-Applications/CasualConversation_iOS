@@ -37,7 +37,10 @@ public final class PresentationDIContainer: Dependency, ObservableObject {
 	)
 	lazy var noteUseCase: NoteUseCase = .init(
 		dependency: .init(
-			repository: self.dependency.noteRepository
+			repository: self.dependency.noteRepository,
+			filter: .all
+		)
+	)
 		)
 	)
 	
@@ -65,17 +68,23 @@ public final class PresentationDIContainer: Dependency, ObservableObject {
 		return .init(viewModel: viewModel)
 	}
 	
-	func SelectionView() -> SelectionView {
+	func SelectionView(selected conversation: Conversation) -> SelectionView {
+		self.noteUseCase.changeFilter(to: .selected(conversation))
+		
 		let viewModel: SelectionViewModel = .init(dependency: .init(
-			conversationUseCase: self.casualConversationUseCase,
-			noteUseCase: self.noteUseCase)
+				conversationUseCase: self.casualConversationUseCase,
+				noteUseCase: self.noteUseCase
+			)
 		)
 		return .init(viewModel: viewModel)
 	}
 	
 	func NoteSetView() -> NoteSetView {
+		self.noteUseCase.changeFilter(to: .all)
+		
 		let viewModel: NoteSetViewModel = .init(dependency: .init(
-			useCase: self.noteUseCase)
+				useCase: self.noteUseCase
+			)
 		)
 		return .init(viewModel: viewModel)
 	}
