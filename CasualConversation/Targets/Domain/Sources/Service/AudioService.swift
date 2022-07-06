@@ -12,18 +12,24 @@ import Foundation
 import AVFoundation
 
 public protocol RecordServiceProtocol {
+	// Recorder Features
 	func setupRecorder()
 	func startRecording()
 //	func pauseRecording()
 	func stopRecording()
+	
+	// Player Features
+	func playAudio(from filePath: URL)
+	func stopPlaying()
 }
 
-public final class RecordService: NSObject, Dependency, ObservableObject {
+public final class AudioService: NSObject, Dependency, ObservableObject {
 	
 	@Published var status: AudioStatus = .stopped
 	
 	public var dependency: Dependency
 	private var audioRecorder: AVAudioRecorder?
+	private var audioPlayer: AVAudioPlayer?
 	private var filePath: URL {
 		let fileManager = FileManager.default
 		let tempDir = fileManager.temporaryDirectory
@@ -45,7 +51,7 @@ public final class RecordService: NSObject, Dependency, ObservableObject {
 
 }
 
-extension RecordService: RecordServiceProtocol {
+extension AudioService: RecordServiceProtocol {
 	
 	public func setupRecorder() {
 		let recordSettings: [String: Any] = [
@@ -76,13 +82,39 @@ extension RecordService: RecordServiceProtocol {
 		status = .stopped
 	}
 	
+	public func playAudio(from filePath: URL) {
+		do {
+			audioPlayer = try AVAudioPlayer(contentsOf: filePath)
+		} catch {
+			print(error.localizedDescription)
+		}
+		guard let audioPlayer = audioPlayer else { return }
+		audioPlayer.delegate = self
+		if audioPlayer.duration > 0.0 {
+			audioPlayer.play()
+			status = .playing
+		}
+	}
+	
+	public func stopPlaying() {
+		audioPlayer?.stop()
+		status = .stopped
+	}
+	
 }
 
-extension RecordService: AVAudioRecorderDelegate {
+extension AudioService: AVAudioRecorderDelegate {
 	
 	public func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {
 		status = .stopped
 	}
 	
+}
+
+extension AudioService: AVAudioPlayerDelegate {
+	
+	public func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+		status = .stopped
+	}
 	
 }

@@ -45,7 +45,7 @@ public final class PresentationDIContainer: Dependency, ObservableObject {
 			filter: .all
 		)
 	)
-	lazy var recordService: RecordService = .init(
+	lazy var recordService: AudioService = .init(
 		dependency: .init(
 			repository: self.dependency.recordRepository
 		)

@@ -11,14 +11,18 @@ import Foundation
 
 
 public protocol ConversationRecodable {
-	// TODO: Conversation C 기능
 	func setupRecorder()
 	func startRecording()
-	func stopRecording()
+	func stopRecording() // Create Conversation
+	func startPlayingAudio(From filePath: URL)
+	func stopPlayingAudio()
 }
 
 public protocol ConversationMaintainable {
-	// TODO: Conversation RUD 기능
+	
+	// Audio Play
+	func startPlayingAudio(From filePath: URL)
+	func stopPlayingAudio()
 }
 
 public protocol ConversationUseCaseManagable: ConversationRecodable, ConversationMaintainable  {
@@ -47,7 +51,7 @@ public final class ConversationUseCase: Dependency, ConversationUseCaseManagable
 	}
 	
 	private func createConversation(with filePath: URL) {
-		
+		// Create Conversation
 	}
 
 }
@@ -66,9 +70,22 @@ extension ConversationUseCase {
 	public func stopRecording() {
 		self.dependency.recordService.stopRecording()
 		
-		// 저장된 filePath 받아오기
+		// TODO: 저장된 filePath 받아오기
 		// let savedAudioFilePath: URL = ...
 		// createConversation(with: savedAudioFilePath)
 	}
 
+}
+
+// MARK: - ConversationMaintainable
+extension ConversationUseCase {
+	
+	public func startPlayingAudio(From filePath: URL) {
+		self.dependency.recordService.playAudio(from: filePath)
+	}
+	
+	public func stopPlayingAudio() {
+		self.dependency.recordService.stopPlaying()
+	}
+	
 }
