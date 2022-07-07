@@ -10,7 +10,7 @@ import Domain
 
 import Foundation
 
-public struct RecordRepository {
+public struct AudioRepository {
 	
 	public init() {
 		
@@ -18,6 +18,6 @@ public struct RecordRepository {
 	
 }
 
-extension RecordRepository: RecordRepositoryProtocol {
+extension AudioRepository: RecordRepositoryProtocol {
 	
 }

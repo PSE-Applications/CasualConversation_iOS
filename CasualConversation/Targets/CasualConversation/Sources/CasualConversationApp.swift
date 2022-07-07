@@ -20,7 +20,7 @@ struct CasualConversationApp: App {
     var body: some Scene {
         WindowGroup {
 			appDIContainer.PresentationEntryPoint()
-				.environmentObject(appDIContainer.makeSceneDIContainer())
+				.environmentObject(appDIContainer.makePresentationDIContainer())
         }
     }
     

@@ -17,16 +17,16 @@ public final class PresentationDIContainer: Dependency, ObservableObject {
 	public struct Dependency {
 		let conversationRepository: ConversationRepositoryProtocol
 		let noteRepository: NoteRepositoryProtocol
-		let recordRepository: RecordRepositoryProtocol
+		let audioRepository: RecordRepositoryProtocol
 		
 		public init(
 			conversationRepository: ConversationRepositoryProtocol,
 			noteRepository: NoteRepositoryProtocol,
-			recordRepository: RecordRepositoryProtocol
+			audioRepository: RecordRepositoryProtocol
 		) {
 			self.conversationRepository = conversationRepository
 			self.noteRepository = noteRepository
-			self.recordRepository = recordRepository
+			self.audioRepository = audioRepository
 		}
 	}
 	
@@ -47,7 +47,7 @@ public final class PresentationDIContainer: Dependency, ObservableObject {
 	)
 	lazy var recordService: AudioService = .init(
 		dependency: .init(
-			repository: self.dependency.recordRepository
+			repository: self.dependency.audioRepository
 		)
 	)
 	
