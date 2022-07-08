@@ -33,14 +33,14 @@ public final class ConversationUseCase: Dependency, ConversationUseCaseManagable
 	
 	public struct Dependency {
 		let repository: ConversationRepositoryProtocol
-		let recordService: RecordServiceProtocol
+		let audioService: AudioServiceProtocol
 		
 		public init(
 			repository: ConversationRepositoryProtocol,
-			recordService: RecordServiceProtocol
+			recordService: AudioServiceProtocol
 		) {
 			self.repository = repository
-			self.recordService = recordService
+			self.audioService = recordService
 		}
 	}
 	
@@ -60,15 +60,15 @@ public final class ConversationUseCase: Dependency, ConversationUseCaseManagable
 extension ConversationUseCase {
 	
 	public func setupRecorder() {
-		self.dependency.recordService.setupRecorder()
+		self.dependency.audioService.setupRecorder()
 	}
 	
 	public func startRecording() {
-		self.dependency.recordService.startRecording()
+		self.dependency.audioService.startRecording()
 	}
 
 	public func stopRecording() {
-		self.dependency.recordService.stopRecording()
+		self.dependency.audioService.stopRecording()
 		
 		// TODO: 저장된 filePath 받아오기
 		// let savedAudioFilePath: URL = ...
@@ -81,11 +81,11 @@ extension ConversationUseCase {
 extension ConversationUseCase {
 	
 	public func startPlayingAudio(From filePath: URL) {
-		self.dependency.recordService.playAudio(from: filePath)
+		self.dependency.audioService.playAudio(from: filePath)
 	}
 	
 	public func stopPlayingAudio() {
-		self.dependency.recordService.stopPlaying()
+		self.dependency.audioService.stopPlaying()
 	}
 	
 }

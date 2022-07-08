@@ -6,3 +6,11 @@
 //
 
 import Foundation
+
+public struct FileManagerRepository: FileManagerRepositoryProtocol {
+	
+	public init() {
+		
+	}
+	
+}
