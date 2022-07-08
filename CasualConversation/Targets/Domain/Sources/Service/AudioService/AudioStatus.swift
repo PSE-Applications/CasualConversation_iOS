@@ -8,18 +8,23 @@
 
 import Foundation
 
-enum AudioStatus: Int, CustomStringConvertible {
+public enum AudioStatus: Int, CustomStringConvertible {
 	
 	case stopped
 	case playing
 	case recording
+	case pause
 	
 	var audioName: String {
-		let audioNames = ["Audio:Stopped", "Audio:Playing", "Audio:Recording"]
+		let audioNames = ["Audio:Stopped",
+						  "Audio:Playing",
+						  "Audio:Recording",
+						  "Audio:Paused"]
 		return audioNames[rawValue]
 	}
 	
-	var description: String {
+	public var description: String {
 		return audioName
 	}
+	
 }
