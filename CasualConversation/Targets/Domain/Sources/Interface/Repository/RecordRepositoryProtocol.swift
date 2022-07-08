@@ -9,5 +9,5 @@
 import Foundation
 
 public protocol RecordRepositoryProtocol {
-	
+	var storagePath: URL { get }
 }

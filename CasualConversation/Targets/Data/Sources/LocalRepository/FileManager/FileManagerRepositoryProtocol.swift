@@ -8,4 +8,5 @@
 import Foundation
 
 public protocol FileManagerRepositoryProtocol {
+	var directoryPath: URL { get }
 }

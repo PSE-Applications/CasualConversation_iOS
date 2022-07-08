@@ -31,4 +31,8 @@ public struct RecordRepository: Dependency {
 
 extension RecordRepository: RecordRepositoryProtocol {
 	
+	public var storagePath: URL {
+		dependency.repository.directoryPath
+	}
+	
 }
