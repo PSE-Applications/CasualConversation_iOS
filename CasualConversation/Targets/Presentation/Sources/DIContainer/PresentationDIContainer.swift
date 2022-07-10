@@ -8,22 +8,25 @@
 
 import Common
 import Domain
+import Data
 
 import Foundation
-
 
 public final class PresentationDIContainer: Dependency, ObservableObject {
 	
 	public struct Dependency {
 		let conversationRepository: ConversationRepositoryProtocol
 		let noteRepository: NoteRepositoryProtocol
+		let recordRepository: RecordRepositoryProtocol
 		
 		public init(
 			conversationRepository: ConversationRepositoryProtocol,
-			noteRepository: NoteRepositoryProtocol
+			noteRepository: NoteRepositoryProtocol,
+			recordRepository: RecordRepositoryProtocol
 		) {
 			self.conversationRepository = conversationRepository
 			self.noteRepository = noteRepository
+			self.recordRepository = recordRepository
 		}
 	}
 	
@@ -32,12 +35,19 @@ public final class PresentationDIContainer: Dependency, ObservableObject {
 	// MARK: UseCases
 	lazy var casualConversationUseCase: ConversationUseCase = .init(
 		dependency: .init(
-			repository: self.dependency.conversationRepository
+			repository: self.dependency.conversationRepository,
+			recordService: self.recordService
 		)
 	)
 	lazy var noteUseCase: NoteUseCase = .init(
 		dependency: .init(
-			repository: self.dependency.noteRepository
+			repository: self.dependency.noteRepository,
+			filter: .all
+		)
+	)
+	lazy var recordService: AudioService = .init(
+		dependency: .init(
+			repository: self.dependency.recordRepository
 		)
 	)
 	
@@ -65,17 +75,23 @@ public final class PresentationDIContainer: Dependency, ObservableObject {
 		return .init(viewModel: viewModel)
 	}
 	
-	func SelectionView() -> SelectionView {
+	func SelectionView(selected conversation: Conversation) -> SelectionView {
+		self.noteUseCase.changeFilter(to: .selected(conversation))
+		
 		let viewModel: SelectionViewModel = .init(dependency: .init(
-			conversationUseCase: self.casualConversationUseCase,
-			noteUseCase: self.noteUseCase)
+				conversationUseCase: self.casualConversationUseCase,
+				noteUseCase: self.noteUseCase
+			)
 		)
 		return .init(viewModel: viewModel)
 	}
 	
 	func NoteSetView() -> NoteSetView {
+		self.noteUseCase.changeFilter(to: .all)
+		
 		let viewModel: NoteSetViewModel = .init(dependency: .init(
-			useCase: self.noteUseCase)
+				useCase: self.noteUseCase
+			)
 		)
 		return .init(viewModel: viewModel)
 	}

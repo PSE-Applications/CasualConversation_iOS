@@ -6,3 +6,10 @@
 //
 
 import Foundation
+import CoreData
+
+public struct CoreDataRepository: CoreDataRepositoryProtocol {
+	
+	public init() {}
+	
+}
