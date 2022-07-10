@@ -68,7 +68,7 @@ func makeModule(layer: CleanArchitecture, dependencies: [CleanArchitecture]) -> 
 }
 
 let commonModule = makeModule(layer: .common, dependencies: [])
-let presentationModule = makeModule(layer: .presentation, dependencies: [.common, .domain, .data])
+let presentationModule = makeModule(layer: .presentation, dependencies: [.common, .domain])
 let dataModule = makeModule(layer: .data, dependencies: [.common, .domain])
 let domainModule = makeModule(layer: .domain, dependencies: [.common])
 
