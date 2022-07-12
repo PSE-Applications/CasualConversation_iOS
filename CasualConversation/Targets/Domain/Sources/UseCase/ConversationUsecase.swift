@@ -11,10 +11,9 @@ import Foundation
 
 
 public protocol ConversationRecodable {
-	func setupRecorder()
 	func startRecording()
 	func pauseRecording()
-	func stopRecording(completion: (URL) -> ())
+	func stopRecording(completion: (URL?) -> ())
 	func createConversation(with filePath: URL)
 }
 
@@ -54,14 +53,8 @@ public final class ConversationUseCase: Dependency, ConversationUseCaseManagable
 // MARK: - ConversationRecodable
 extension ConversationUseCase {
 	
-	public func setupRecorder() {
-		let currentDate = Date().formatted(.dateTime)
-		let numberingName = "Conversation - \(conversations.count + 1)"
-		let newFilePathSuffix = "\(currentDate) - \(numberingName)"
-		self.dependency.audioService.setupRecorder(suffix: newFilePathSuffix)
-	}
-	
 	public func startRecording() {
+		self.dependency.audioService.setupRecorder()
 		self.dependency.audioService.startRecording()
 	}
 
@@ -69,7 +62,7 @@ extension ConversationUseCase {
 		self.dependency.audioService.pauseRecording()
 	}
 	
-	public func stopRecording(completion: (URL) -> Void) {
+	public func stopRecording(completion: (URL?) -> Void) {
 		let savedAudioFilePath = self.dependency.audioService.stopRecording()
 		completion(savedAudioFilePath)
 	}
@@ -86,7 +79,8 @@ extension ConversationUseCase {
 	
 	public func startPlayingAudio(from selectedConversation: Conversation) {
 		let filePath = selectedConversation.recordFilePath
-		self.dependency.audioService.playAudio(from: filePath)
+		self.dependency.audioService.setupPlaying(from: filePath)
+		self.dependency.audioService.playAudio()
 	}
 	
 	public func stopPlayingAudio() {

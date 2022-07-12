@@ -11,9 +11,9 @@ import AVFAudio
 
 public protocol AudioRecorderProtocol where Self: AVAudioRecorder {
 	var delegate: AVAudioRecorderDelegate? { get set }
-	var currentTime: TimeInterval { get }
-	var isRecording: Bool { get }
 	var url: URL { get }
+	var isRecording: Bool { get }
+	var currentTime: TimeInterval { get }
 	func prepareToRecord() -> Bool
 	func record() -> Bool
 	func pause()

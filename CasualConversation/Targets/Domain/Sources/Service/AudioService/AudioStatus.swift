@@ -13,7 +13,7 @@ public enum AudioStatus: Int, CustomStringConvertible {
 	case stopped
 	case playing
 	case recording
-	case pause
+	case paused
 	
 	var audioName: String {
 		let audioNames = ["Audio:Stopped",

@@ -10,10 +10,11 @@ import Foundation
 import AVFAudio
 
 public protocol AudioPlayerProtocol {
+	var delegate: AVAudioPlayerDelegate? { get set }
+	var url: URL? { get }
 	var isPlaying: Bool { get }
 	var currentTime: TimeInterval { get }
 	var duration: TimeInterval { get }
-	var delegate: AVAudioPlayerDelegate? { get set }
 	func prepareToPlay() -> Bool
 	func play() -> Bool
 	func pause()

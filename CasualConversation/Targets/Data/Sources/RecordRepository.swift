@@ -10,6 +10,7 @@ import Common
 import Domain
 
 import Foundation
+import AVFAudio
 
 public struct RecordRepository: Dependency {
 	
@@ -58,5 +59,4 @@ extension RecordRepository: RecordRepositoryProtocol {
 }
 
 extension AVAudioRecorder: AudioRecorderProtocol { }
-
 extension AVAudioPlayer: AudioPlayerProtocol { }
