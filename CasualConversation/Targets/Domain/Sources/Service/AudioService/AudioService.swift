@@ -9,18 +9,19 @@
 import Common
 
 import Foundation
-import AVFoundation
+import AVFAudio
 
 public protocol AudioPlayable {
-	func playAudio(from filePath: URL)
+	func setupPlaying(from filePath: URL)
+	func playAudio()
 	func stopPlaying()
 }
 
 public protocol AudioRecordable {
-	func setupRecorder(suffix filePath: String)
+	func setupRecorder()
 	func startRecording()
 	func pauseRecording()
-	func stopRecording() -> URL
+	func stopRecording() -> URL?
 }
 
 public protocol AudioServiceProtocol: AudioPlayable, AudioRecordable { }
@@ -31,8 +32,8 @@ public final class AudioService: NSObject, Dependency, ObservableObject {
 	
 	public var dependency: Dependency
 	
-	private var recorder: AudioRecorder?
-	private var player: AudioPlayer?
+	private var audioRecorder: AudioRecorderProtocol?
+	private var audioPlayer: AudioPlayerProtocol?
 	
 //	private let meterTable = MeterTable(tableSize: 100)
 	
@@ -97,7 +98,7 @@ public final class AudioService: NSObject, Dependency, ObservableObject {
 //				else if status == .recording {
 //					stopRecording()
 //				}
-			status = .pause
+			status = .paused
 		}
 	}
 	
@@ -112,7 +113,7 @@ public final class AudioService: NSObject, Dependency, ObservableObject {
 			} else if status == .recording {
 				pauseRecording()
 			}
-			status = .pause
+			status = .paused
 		case .ended:
 			guard let rawValue = info[AVAudioSessionInterruptionOptionKey] as? UInt else { return }
 			let options = AVAudioSession.InterruptionOptions(rawValue: rawValue)
@@ -127,65 +128,74 @@ public final class AudioService: NSObject, Dependency, ObservableObject {
 }
 
 extension AudioService: AudioServiceProtocol {
+
 	// MARK: - AudioRecodable
-	public func setupRecorder(suffix filePath: String) {
-		let newFilePath = dependency.repository.storagePath.appendingPathComponent(filePath)
-		guard let newRecorder = AudioRecorder.makeRecorder(from: newFilePath) else {
+	public func setupRecorder() {
+		guard let newRecorder = dependency.repository.makeAudioRecorder() else {
 			print("\(#function) 해당 filePath에 오디오 파일이 없습니다")
 			return
 		}
-		recorder = newRecorder
-		recorder?.setupRecorder(delegate: self)
+		self.audioRecorder = newRecorder
+		self.audioRecorder?.delegate = self
 	}
 	
 	public func startRecording() {
-		recorder?.startRecording()
+		self.audioRecorder?.record()
 		status = .recording
 	}
 	
 	public func pauseRecording() {
-		recorder?.pauseRecording()
-		status = .pause
+		self.audioRecorder?.pause()
+		status = .paused
 	}
 	
-	public func stopRecording() -> URL {
-		let filePath = recorder?.stopRecording() ?? URL(string: "")!
+	public func stopRecording() -> URL? {
+		self.audioRecorder?.stop()
+		let savedFilePath = audioRecorder?.url
+		self.audioRecorder = nil
 		status = .stopped
-		recorder = nil
-		return filePath
+		return savedFilePath
 	}
 	
 	public func recordingCurrentTime() -> TimeInterval {
-		return recorder?.currentTime ?? 0
+		return audioRecorder?.currentTime ?? 0
 	}
 	
 }
 
 extension AudioService {
+	
 	// MARK: - AudioPlayable
-	public func playAudio(from filePath: URL) {
-		guard let newplayer = AudioPlayer.makePlayer(from: filePath) else {
+	public func setupPlaying(from filePath: URL) {
+		guard let newplayer = dependency.repository.makeAudioPlayer(from: filePath) else {
 			print("\(#function) 해당 filePath에 오디오 파일이 없습니다")
 			return
 		}
-		player = newplayer
-		player?.setupPlayer(delegate: self)
-		player?.playback()
-		status = .playing
+		audioPlayer = newplayer
+		audioPlayer?.delegate = self
+	}
+	
+	public func playAudio() {
+		if let audioPlayer = audioPlayer {
+			let isPlaying = audioPlayer.play()
+			status = isPlaying ? .playing : .stopped
+		} else {
+			
+		}
 	}
 	
 	public func pausePlaying() {
-		player?.pausePlaying()
-		status = .pause
+		audioPlayer?.pause()
+		status = .paused
 	}
 	
 	public func stopPlaying() {
-		player?.stopPlaying()
+		audioPlayer?.stop()
 		status = .stopped
 	}
 	
 	public func playingCurrentTime() -> TimeInterval {
-		return player?.currentTime ?? 0
+		return audioPlayer?.currentTime ?? 0
 	}
 	
 }
