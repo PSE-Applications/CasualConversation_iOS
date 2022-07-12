@@ -1,7 +1,7 @@
 import Foundation
 import XCTest
 
-final class DataTests: XCTestCase {
+final class DataLayerTests: XCTestCase {
     func test_example() {
         XCTAssertEqual("Data", "Data")
     }

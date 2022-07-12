@@ -35,4 +35,28 @@ extension RecordRepository: RecordRepositoryProtocol {
 		dependency.repository.directoryPath
 	}
 	
+	public func makeAudioRecorder() -> AudioRecorderProtocol? {
+		let recordSettings: [String: Any] = [
+			AVFormatIDKey: Int(kAudioFormatLinearPCM),
+			AVSampleRateKey: 44100.0,
+			AVNumberOfChannelsKey: 1,
+			AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue
+		]
+		let currentDate = Date().formatted(.dateTime)
+		let newFilePath = storagePath.appendingPathComponent(currentDate.description)
+		let recorder = try? AVAudioRecorder(url: newFilePath, settings: recordSettings)
+		return recorder
+	}
+	
+	public func makeAudioPlayer(from filePath: URL) -> AudioPlayerProtocol? {
+		guard let player = try? AVAudioPlayer(contentsOf: filePath) else {
+			return nil
+		}
+		return player
+	}
+	
 }
+
+extension AVAudioRecorder: AudioRecorderProtocol { }
+
+extension AVAudioPlayer: AudioPlayerProtocol { }
