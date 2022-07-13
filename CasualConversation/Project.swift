@@ -5,6 +5,7 @@ import MyPlugin
 // Local plugin loaded
 let localHelper = LocalHelper(name: "MyPlugin")
 
+// MARK: - Project String Data
 enum PSE {
 	static let projectName = "CasualConversation"
 	static let organizationName = "pseapplications"
@@ -38,7 +39,7 @@ func makeModule(layer: CleanArchitecture, dependencies: [CleanArchitecture]) -> 
 		productName: nil,
 		bundleId: "\(PSE.bundleId).\(layer.name)",
 		deploymentTarget: PSE.deploymentTarget,
-//		infoPlist: .default,
+		infoPlist: .default,
 		sources: ["Targets/\(layer.name)/Sources/**"],
 		resources: nil,
 		copyFiles: nil,
@@ -57,11 +58,13 @@ func makeModule(layer: CleanArchitecture, dependencies: [CleanArchitecture]) -> 
 		platform: .iOS,
 		product: .unitTests,
 		bundleId: "\(PSE.bundleId).DomainTests",
-//		infoPlist: .default,
+		infoPlist: .default,
 		sources: ["Targets/\(layer.name)/Tests/**"],
 		resources: [],
 		dependencies: [
-			.target(name: "\(layer.name)")
+			.target(name: "\(layer.name)"),
+			.quick,
+			.nimble
 		]
 	)
 	return [sources, tests]
@@ -84,41 +87,42 @@ let infoPlist: [String: InfoPlist.Value] = [
 ]
 
 let mainAppTarget = [
-	Target(
-	name: PSE.projectName,
-	platform: .iOS,
-	product: .app,
-	productName: nil,
-	bundleId: "\(PSE.bundleId).\(PSE.projectName)",
-	deploymentTarget: PSE.deploymentTarget,
-	infoPlist: .extendingDefault(with: infoPlist),
-	sources: ["Targets/\(PSE.projectName)/Sources/**"],
-	resources: ["Targets/\(PSE.projectName)/Resources/**"],
-	copyFiles: nil,
-	headers: nil,
-	entitlements: nil,
-	scripts: [],
-	dependencies: [
-		.target(name: CleanArchitecture.common.name),
-		.target(name: CleanArchitecture.presentation.name),
-		.target(name: CleanArchitecture.domain.name),
-		.target(name: CleanArchitecture.data.name)//,
-//		.swinject,
-//		.swinjectAutoregistration
-	],
-	settings: nil,
-	coreDataModels: [],
-	environment: [:],
-	launchArguments: [],
-	additionalFiles: []),
-	Target(
+	Target.init(
+		name: PSE.projectName,
+		platform: .iOS,
+		product: .app,
+		productName: nil,
+		bundleId: "\(PSE.bundleId).\(PSE.projectName)",
+		deploymentTarget: PSE.deploymentTarget,
+		infoPlist: .extendingDefault(with: infoPlist),
+		sources: ["Targets/\(PSE.projectName)/Sources/**"],
+		resources: ["Targets/\(PSE.projectName)/Resources/**"],
+		copyFiles: nil,
+		headers: nil,
+		entitlements: nil,
+		scripts: [],
+		dependencies: [
+			.target(name: CleanArchitecture.common.name),
+			.target(name: CleanArchitecture.presentation.name),
+			.target(name: CleanArchitecture.domain.name),
+			.target(name: CleanArchitecture.data.name)//,
+//			.swinject,
+//			.swinjectAutoregistration
+		],
+		settings: nil,
+		coreDataModels: [],
+		environment: [:],
+		launchArguments: [],
+		additionalFiles: []
+	),
+	Target.init(
 		name: "\(PSE.projectName)Tests",
 		platform: .iOS,
 		product: .unitTests,
 		productName: nil,
 		bundleId: "\(PSE.bundleId).\(PSE.projectName)Tests",
 		deploymentTarget: PSE.deploymentTarget,
-//		infoPlist: .default,
+		infoPlist: .default,
 		sources: ["Targets/\(PSE.projectName)/Tests/**"],
 		resources: nil,
 		copyFiles: nil,
@@ -126,7 +130,9 @@ let mainAppTarget = [
 		entitlements: nil,
 		scripts: [],
 		dependencies: [
-			.target(name: PSE.projectName)
+			.target(name: PSE.projectName),
+			.quick,
+			.nimble
 		],
 		settings: nil,
 		coreDataModels: [],
@@ -136,28 +142,28 @@ let mainAppTarget = [
 	)
 ]
 
-let project = Project
-	.init(
-		name: PSE.projectName,
-		organizationName: PSE.organizationName,
-		// options
-		packages: [
+let project = Project.init(
+	name: PSE.projectName,
+	organizationName: PSE.organizationName,
+	packages: [
+		.quick,
+		.nimble//,
 //			.swinject,
 //			.swinjectAutoregistration
-		],
-		settings: .settings(configurations: [
-			.debug(name: "Debug"),
-			.release(name: "Release")
-		]),
-		targets: [
-			mainAppTarget,
-			commonModule,
-			presentationModule,
-			domainModule,
-			dataModule,
-		].flatMap { $0 },
-		schemes: [],
-		fileHeaderTemplate: nil,
-		additionalFiles: [],
-		resourceSynthesizers: []
-	)
+	],
+	settings: .settings(configurations: [
+		.debug(name: "Debug"),
+		.release(name: "Release")
+	]),
+	targets: [
+		mainAppTarget,
+		commonModule,
+		presentationModule,
+		domainModule,
+		dataModule,
+	].flatMap { $0 },
+	schemes: [],
+	fileHeaderTemplate: nil,
+	additionalFiles: [],
+	resourceSynthesizers: []
+)

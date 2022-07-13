@@ -10,6 +10,8 @@ import ProjectDescription
 public extension TargetDependency {
 //	static let swinject = TargetDependency.package(product: "Swinject")
 //	static let swinjectAutoregistration =  TargetDependency.package(product: "SwinjectAutoregistration")
+	static let quick: TargetDependency = .package(product: "Quick")
+	static let nimble: TargetDependency = .package(product: "Nimble")
 }
 
 public extension Package {
@@ -19,7 +21,13 @@ public extension Package {
 //	)
 //	static let swinjectAutoregistration = Package.remote(
 //		url: "https://github.com/Swinject/SwinjectAutoregistration.git",
-//		requirement: .upToNextMajor(from: .init(2, 8, 1)))
+	//		requirement: .upToNextMajor(from: .init(2, 8, 1)))
+	static let quick = Package.remote(
+		url: "https://github.com/Quick/Quick.git",
+		requirement: .upToNextMajor(from: .init(3, 0, 0)))
+	static let nimble = Package.remote(
+		url: "https://github.com/Quick/Nimble.git",
+		requirement: .upToNextMajor(from: .init(9, 0, 0)))
 }
 
 // MARK: - SourceFile
