@@ -1,5 +1,5 @@
 //
-//  RecorderRepositorySpecs.swift
+//  RecordRepositorySpecs.swift
 //  DataTests
 //
 //  Created by Yongwoo Marco on 2022/07/12.
@@ -14,16 +14,24 @@ import Nimble
 import Foundation
 import AVFAudio
 
-final class RecorderRepositorySpecs: QuickSpec {
+final class RecordRepositorySpecs: QuickSpec {
 	
 	override func spec() {
 		
 		var fileManagerRepository: FileManagerRepository!
 		var recordRepository: RecordRepository!
 		
-		beforeEach {
+		beforeSuite {
 			fileManagerRepository = FileManagerRepository()
-			recordRepository = RecordRepository(dependency: .init(repository: fileManagerRepository))
+			recordRepository = RecordRepository(dependency: .init(
+					repository: fileManagerRepository
+				)
+			)
+		}
+		
+		afterSuite {
+			fileManagerRepository = nil
+			recordRepository = nil
 		}
 		
 		describe("Factory Methods") {
@@ -37,7 +45,7 @@ final class RecorderRepositorySpecs: QuickSpec {
 				}
 			}
 			
-			// 임시 파일이 필요함
+			// TODO: 임시 파일이 필요함 실제로 읽을 수 있는 filePath 필요
 //			context("call makeAudioPlayer(_:)") {
 //				let filePath = URL(fileURLWithPath: "newFilePath")
 //
