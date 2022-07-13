@@ -10,6 +10,10 @@ import Common
 import Domain
 
 import Foundation
+import AVFAudio
+
+extension AVAudioRecorder: AudioRecorderProtocol { }
+extension AVAudioPlayer: AudioPlayerProtocol { }
 
 public struct RecordRepository: Dependency {
 	
@@ -31,8 +35,24 @@ public struct RecordRepository: Dependency {
 
 extension RecordRepository: RecordRepositoryProtocol {
 	
-	public var storagePath: URL {
-		dependency.repository.directoryPath
+	public func makeAudioRecorder() -> AudioRecorderProtocol? {
+		let recordSettings: [String: Any] = [
+			AVFormatIDKey: Int(kAudioFormatLinearPCM),
+			AVSampleRateKey: 44100.0,
+			AVNumberOfChannelsKey: 1,
+			AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue
+		]
+		let currentDate = Date().formatted(.dateTime)
+		let newFilePath = dependency.repository.directoryPath.appendingPathComponent(currentDate.description)
+		let recorder = try? AVAudioRecorder(url: newFilePath, settings: recordSettings)
+		return recorder
+	}
+	
+	public func makeAudioPlayer(from filePath: URL) -> AudioPlayerProtocol? {
+		guard let player = try? AVAudioPlayer(contentsOf: filePath) else {
+			return nil
+		}
+		return player
 	}
 	
 }
