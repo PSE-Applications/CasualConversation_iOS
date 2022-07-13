@@ -9,11 +9,9 @@ import Foundation
 
 public struct FileManagerRepository {
 	
-	private var baseDirectory = FileManager.default.temporaryDirectory
+	private var baseDirectory = FileManager.default.temporaryDirectory // 저장위치 선정 필요함 (임시 선정 - temporaryDirectory)
 	
-	public init() {
-		
-	}
+	public init() { }
 	
 }
 

@@ -34,9 +34,7 @@ public final class AudioService: NSObject, Dependency, ObservableObject {
 	
 	private var audioRecorder: AudioRecorderProtocol?
 	private var audioPlayer: AudioPlayerProtocol?
-	
-//	private let meterTable = MeterTable(tableSize: 100)
-	
+		
 	public struct Dependency {
 		let repository: RecordRepositoryProtocol
 		
@@ -94,11 +92,8 @@ public final class AudioService: NSObject, Dependency, ObservableObject {
 		if previousOutput.portType == .headphones {
 			if status == .playing {
 				pausePlaying()
+				status = .paused
 			}
-//				else if status == .recording {
-//					stopRecording()
-//				}
-			status = .paused
 		}
 	}
 	
@@ -137,6 +132,7 @@ extension AudioService: AudioServiceProtocol {
 		}
 		self.audioRecorder = newRecorder
 		self.audioRecorder?.delegate = self
+		self.audioRecorder?.prepareToRecord()
 	}
 	
 	public func startRecording() {
@@ -158,7 +154,7 @@ extension AudioService: AudioServiceProtocol {
 	}
 	
 	public func recordingCurrentTime() -> TimeInterval {
-		return audioRecorder?.currentTime ?? 0
+		return self.audioRecorder?.currentTime ?? 0
 	}
 	
 }
@@ -171,8 +167,9 @@ extension AudioService {
 			print("\(#function) 해당 filePath에 오디오 파일이 없습니다")
 			return
 		}
-		audioPlayer = newplayer
-		audioPlayer?.delegate = self
+		self.audioPlayer = newplayer
+		self.audioPlayer?.delegate = self
+		// self.audioPlayer?.prepareToPlay()
 	}
 	
 	public func playAudio() {
@@ -185,17 +182,17 @@ extension AudioService {
 	}
 	
 	public func pausePlaying() {
-		audioPlayer?.pause()
+		self.audioPlayer?.pause()
 		status = .paused
 	}
 	
 	public func stopPlaying() {
-		audioPlayer?.stop()
+		self.audioPlayer?.stop()
 		status = .stopped
 	}
 	
 	public func playingCurrentTime() -> TimeInterval {
-		return audioPlayer?.currentTime ?? 0
+		return self.audioPlayer?.currentTime ?? 0
 	}
 	
 }

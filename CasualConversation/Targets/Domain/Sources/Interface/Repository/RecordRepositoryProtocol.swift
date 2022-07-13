@@ -10,7 +10,6 @@ import Foundation
 import AVFAudio
 
 public protocol RecordRepositoryProtocol {
-	var storagePath: URL { get }
 	func makeAudioRecorder() -> AudioRecorderProtocol?
 	func makeAudioPlayer(from filePath: URL) -> AudioPlayerProtocol?
 }
