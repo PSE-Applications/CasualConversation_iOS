@@ -6,43 +6,56 @@
 //  Copyright © 2022 pseapplications. All rights reserved.
 //
 
-import Foundation
+@testable import Data
+
 import Quick
 import Nimble
-@testable import Data
+
+import Foundation
+import AVFAudio
 
 final class RecorderRepositorySpecs: QuickSpec {
 	
-	var repository: RecordRepository
-	
-	beforeEach {
-		repository = RecordRepository()
-	}
-	
 	override func spec() {
-		description("Factory Methods") {
-			let nowDate = Date()
+		
+		var fileManagerRepository: FileManagerRepository!
+		var recordRepository: RecordRepository!
+		
+		beforeEach {
+			fileManagerRepository = FileManagerRepository()
+			recordRepository = RecordRepository(dependency: .init(repository: fileManagerRepository))
+		}
+		
+		describe("Factory Methods") {
 			
 			context("call makeAudioRecorder()") {
-				let prefixOffset = 10 // 2022.00.00
-				let nowDateStringPrefix = nowDate.formatted(.dateTime).prefix(prefixOffset)
-				
-				it("return AVAudioRecorder as AudioRecorderProtocol") {
-					let recorder = repository.makeAudioRecorder()
+				it("return AVAudioRecorder instance as AudioRecorderProtocol") {
+					let recorder = recordRepository.makeAudioRecorder()
 					
-					expect(recorder?.url.description.prefix(prefixOffset))
-						.to(equal(nowDate.formatted(.dateTime).prefix(prefixOffset)))
+					expect(recorder).notTo(beNil())
+					expect(recorder).to(beAKindOf(AVAudioRecorder.self))
 				}
 			}
 			
-			context("call makeAudioPlayer(_:)") {
-				let filePath = URL(fileURLWithPath: "newFilePath")
+			// 임시 파일이 필요함
+//			context("call makeAudioPlayer(_:)") {
+//				let filePath = URL(fileURLWithPath: "newFilePath")
+//
+//				it("return AVAudioPlayer as AudioPlayerProtocol") {
+//					let player = recordRepository.makeAudioPlayer(from: filePath)
+//
+//					expect(player).notTo(beNil())
+//					expect(player).to(beAKindOf(AVAudioPlayer.self))
+//				}
+//			}
+			
+			context("call makeAudioPlayer(_:) by incorrect filePath") {
+				let filePath = URL(fileURLWithPath: "failurePath")
 				
-				it("return AVAudioPlayer as AudioPlayerProtocol") {
-					let player = repository.makeAudioPlayer(from: filePath)
+				it("return nil") {
+					let player = recordRepository.makeAudioPlayer(from: filePath)
 					
-					expect(player?.url!)
-						.to(filePath)
+					expect(player).to(beNil())
 				}
 			}
 		}
