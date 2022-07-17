@@ -14,7 +14,6 @@ import Quick
 import Nimble
 
 import Foundation
-import SwiftUI
 
 extension Conversation {
 	
@@ -46,53 +45,40 @@ final class PresentationDIContainerSpecs: QuickSpec {
 			
 			context("FactoryMethods") {
 				
-				it("call func MainTabView then MainTabView instance as some View") {
-					// Arrange
+				it("call func MainTabView then MainTabView instance") {
 					let mainTabView: MainTabView
 					
-					// Act
 					mainTabView = presentationDIContainerSpecs.MainTabView()
 					
-					// Assert
 					expect(mainTabView).notTo(beNil())
 				}
 				
-				it("call func RecordView then RecordView instance as View") {
-					// Arrange
+				it("call func RecordView then RecordView instance") {
 					let recordView: RecordView
 					
-					// Act
 					recordView = presentationDIContainerSpecs.RecordView()
 					
-					// Assert
 					expect(recordView).notTo(beNil())
 				}
 				
-				it("call func SelectionView then SelectionView instance as View") {
-					// Arrange
+				it("call func SelectionView then SelectionView instance") {
 					let testConversation = Conversation.dummy
 					let selectionView: SelectionView
 					
-					// Act
 					selectionView = presentationDIContainerSpecs.SelectionView(selected: testConversation)
 					
-					// Assert
 					expect(selectionView).notTo(beNil())
 				}
 				
-				it("call func NoteSetView then NoteSetView instance as View") {
-					// Arrange
+				it("call func NoteSetView then NoteSetView instance") {
 					let recordView: NoteSetView
 					
-					// Act
 					recordView = presentationDIContainerSpecs.NoteSetView()
 					
-					// Assert
 					expect(recordView).notTo(beNil())
 				}
 			}
 		}
-		
 	}
 	
 }
