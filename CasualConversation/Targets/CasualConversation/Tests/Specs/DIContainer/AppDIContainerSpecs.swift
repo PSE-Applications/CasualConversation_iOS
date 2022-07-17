@@ -11,8 +11,6 @@
 import Quick
 import Nimble
 
-import Foundation
-
 final class AppDIContainerSpecs: QuickSpec {
 	
 	override func spec() {
