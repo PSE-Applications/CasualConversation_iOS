@@ -67,17 +67,6 @@ final class AudioServiceSpecs: QuickSpec {
 					expect(audioPlayable.status).to(equal(.playing))
 				}
 				
-				it("call func setupRecorder then currentPlayingTime eqaul 0.0") {
-					// Arrange
-					let filePath = URL(fileURLWithPath: "")
-					
-					// Act
-					_ = audioPlayable.setupPlaying(from: filePath)
-					
-					// Assert
-					expect(audioPlayable.currentPlayingTime).to(equal(TimeInterval(0.0)))
-				}
-				
 				it("call func pausePlaying then status eqaul .paused") {
 					// Arrange
 					_ = audioPlayable.startPlaying()
