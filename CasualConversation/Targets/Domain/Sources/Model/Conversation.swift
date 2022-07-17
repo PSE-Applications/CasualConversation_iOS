@@ -15,6 +15,6 @@ public struct Conversation: UUIDIdentifiable {
     var topic: String?
     let members: [Member]
     let recordFilePath: URL
-    let recordedDate: Data
+    let recordedDate: Date
     
 }

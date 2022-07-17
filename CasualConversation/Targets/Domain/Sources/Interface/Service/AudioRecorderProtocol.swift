@@ -9,7 +9,7 @@
 import Foundation
 import AVFAudio
 
-public protocol AudioRecorderProtocol where Self: AVAudioRecorder {
+public protocol AudioRecorderProtocol {
 	var delegate: AVAudioRecorderDelegate? { get set }
 	var url: URL { get }
 	var isRecording: Bool { get }
