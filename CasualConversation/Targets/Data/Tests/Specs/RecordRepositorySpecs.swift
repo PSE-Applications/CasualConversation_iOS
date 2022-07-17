@@ -11,7 +11,6 @@
 import Quick
 import Nimble
 
-import Foundation
 import AVFAudio
 
 final class RecordRepositorySpecs: QuickSpec {
@@ -26,8 +25,8 @@ final class RecordRepositorySpecs: QuickSpec {
 			beforeSuite {
 				fileManagerRepository = FileManagerRepository()
 				recordRepository = RecordRepository(dependency: .init(
-					repository: fileManagerRepository
-				)
+						repository: fileManagerRepository
+					)
 				)
 			}
 			
@@ -36,47 +35,31 @@ final class RecordRepositorySpecs: QuickSpec {
 				recordRepository = nil
 			}
 			
-			
-			context("FactoryMethods") {
+			context("FactoryMethods - by FileManagerRepository") {
 				
 				it("call func makeAudioRecorder then AVAudioRecorder instance as AudioRecorderProtocol") {
 					// Arrange
-					var recorder: AVAudioRecorder
+					var recorder: AVAudioRecorder?
 					
 					// Act
-					recorder = recordRepository.makeAudioRecorder()!
+					recorder = recordRepository.makeAudioRecorder() as! AVAudioRecorder?
 					
 					// Assert
 					expect(recorder).notTo(beNil())
 					expect(recorder).to(beAKindOf(AVAudioRecorder.self))
 				}
-			}
-			
-			// TODO: 임시 파일이 필요함 실제로 읽을 수 있는 filePath 필요
-//			it("call makeAudioPlayer(_:) then AVAudioPlayer as AudioPlayerProtocol") {
-//				// Arrange
-//				let filePath = URL(fileURLWithPath: "newFilePath")
-//				var player: AVAudioPlayer?
-//
-//				// Act
-//				player = recordRepository.makeAudioPlayer(from: filePath) as? AVaudioPlayer
-//
-//
-//				// Assert
-//				expect(player).notTo(beNil())
-//				expect(player).to(beAKindOf(AVAudioPlayer.self))
-//			}
-			
-			it("call func makeAudioPlayer by incorrect filePath then nil") {
-				// Arrange
-				let filePath = URL(fileURLWithPath: "failurePath")
-				var player: AVAudioPlayer?
 				
-				// Act
-				player = recordRepository.makeAudioPlayer(from: filePath) as? AVAudioPlayer
-				
-				// Assert
-				expect(player).to(beNil())
+				it("call func makeAudioPlayer by incorrect filePath then nil") {
+					// Arrange
+					let filePath = URL(fileURLWithPath: "failurePath")
+					var player: AVAudioPlayer?
+					
+					// Act
+					player = recordRepository.makeAudioPlayer(from: filePath) as? AVAudioPlayer
+					
+					// Assert
+					expect(player).to(beNil())
+				}
 			}
 		}
 	}
