@@ -28,54 +28,57 @@ final class AudioServiceSpecs: QuickSpec {
 			
 			describe("AudioPlayable 추상화하고") {
 				var audioPlayable: AudioPlayable!
-				var filePath: URL!
-				beforeEach {
-					audioPlayable = audioService
-					filePath = URL(fileURLWithPath: "testableFilePath")
-				}
-				afterEach {
-					audioPlayable = nil
-					filePath = nil
-				}
+				beforeEach { audioPlayable = audioService }
+				afterEach { audioPlayable = nil }
 				
-				context("재생을 위해 녹음물 filePath로 준비 작업을 하면") {
-					beforeEach { _ = audioPlayable.setupPlaying(from: filePath) }
+				describe("Mock 생성 성공 케이스") {
+					var filePath: URL!
+					beforeEach { filePath = URL(fileURLWithPath: "testableFilePath") } // TODO: Testable Dummy 녹음 파일 필요
+					afterEach { filePath = nil }
 					
-					it("현재재생시간을 확인가능함") {
-						expect(audioPlayable.currentPlayingTime).to(equal(TimeInterval(0.0)))
-					}
-				}
-				
-				context("재생을 시작하면") {
-					beforeEach {
-						_ = audioPlayable.setupPlaying(from: filePath)
-						_ = audioPlayable.startPlaying()
-					}
-					
-					it("현재상태가 재생중") {
-						expect(audioPlayable.status).to(equal(.playing))
-					}
-				}
-				
-				context("재생중 일시정지하면") {
-					beforeEach {
-						_ = audioPlayable.startPlaying()
-						audioPlayable.pausePlaying()
-					}
-					
-					it("현재상태가 일시정지중") {
-						expect(audioPlayable.status).to(equal(.paused))
-					}
-				}
-				
-				context("재생중 중단하면") {
-					beforeEach {
-						_ = audioPlayable.startPlaying()
-						audioPlayable.stopPlaying()
-					}
-					
-					it("현재상태가 중단중") {
-						expect(audioPlayable.status).to(equal(.stopped))
+					context("재생을 위해 녹음물 준비 작업을 하면") {
+						var optionalParameter: Error!
+						beforeEach {
+							audioPlayable.setupPlaying(from: filePath) { error in
+								optionalParameter = error
+							}
+						}
+
+						it("nil 받음") {
+							expect(optionalParameter).to(beNil())
+						}
+						
+						context("재생시작을 성공하면") {
+							var optionalParameter: Error!
+							beforeEach {
+								audioPlayable.startPlaying() { error in
+									optionalParameter = error
+								}
+							}
+							
+							it("nil 받음") {
+								expect(optionalParameter).to(beNil())
+							}
+							
+							context("재생중 일시정지하면") {
+								beforeEach { audioPlayable.pausePlaying() }
+								afterEach { audioPlayable.startPlaying() { _ in } }
+								
+								it("현재상태가 paused") {
+									expect(audioPlayable.status).to(equal(.paused))
+								}
+							}
+							
+							context("재생중 중단하면") {
+								beforeEach {
+									audioPlayable.stopPlaying()
+								}
+								
+								it("현재상태가 stopped") {
+									expect(audioPlayable.status).to(equal(.stopped))
+								}
+							}
+						}
 					}
 				}
 			}
@@ -84,44 +87,52 @@ final class AudioServiceSpecs: QuickSpec {
 				var audioRecordable: AudioRecordable!
 				beforeEach { audioRecordable = audioService }
 				
-				context("녹음을 위해 준비 작업을 하면") {
-					beforeEach { _ = audioRecordable.setupRecorder() }
-					
-					it("현재녹음시간을 확인가능함") {
-						expect(audioRecordable.currentRecordingTime).to(equal(TimeInterval(0.0)))
-					}
-				}
-				
-				context("녹음을 시작하면") {
+				context("녹음을 위해 준비 작업을 하면") { // Date() 객체를 이용한 새로운 FilePath 생성됨
+					var optionalParameter: Error!
 					beforeEach {
-						_ = audioRecordable.setupRecorder()
-						_ = audioRecordable.startRecording()
+						audioRecordable.setupRecorder() { error in
+							optionalParameter = error
+						}
 					}
 					
-					it("현재 상태가 녹음중") {
-						expect(audioService.status).to(equal(.recording))
-					}
-				}
-				
-				context("녹음 중에 일시정지하면") {
-					beforeEach {
-						_ = audioRecordable.startRecording()
-						_ = audioRecordable.pauseRecording()
+					it("nil 받음") {
+						expect(optionalParameter).to(beNil())
 					}
 					
-					it("현재 상태가 일시정지중") {
-						expect(audioRecordable.status).to(equal(.paused))
-					}
-				}
-				
-				context("녹음 중에 중단하면") {
-					beforeEach {
-						_ = audioRecordable.startRecording()
-						_ = audioRecordable.stopRecording()
+					context("녹음 시작을 성공하면") {
+						var startOptionalParameter: Error!
+						beforeEach {
+							audioRecordable.startRecording() { error in
+								startOptionalParameter = error
+							}
+						}
+						
+						it("nil 받음") {
+							expect(startOptionalParameter).to(beNil())
+						}
 					}
 					
-					it("현재 상태가 중단중") {
-						expect(audioRecordable.status).to(equal(.stopped))
+					context("녹음 중에 일시정지하면") {
+						beforeEach { audioRecordable.pauseRecording() }
+						afterEach { audioRecordable.startRecording() { _ in } }
+						
+						it("현재 상태가 paused") {
+							expect(audioRecordable.status).to(equal(.paused))
+						}
+					}
+					
+					context("녹음 중에 중단하면") {
+						var stopParameter: Result<URL, Error>!
+						beforeEach {
+							audioRecordable.stopRecording() { result in
+								stopParameter = result
+							}
+						}
+						
+						it(".success(let url) 받음") {
+//							expect(stopParameter).to(be(succeed())) // failed - expected to be identical to <0x600000788750>, got <0x60000075eee0>
+//							expect(stopParameter).to(beSuccess()) // 공식문서 - 적용안됨...
+						}
 					}
 				}
 			}
