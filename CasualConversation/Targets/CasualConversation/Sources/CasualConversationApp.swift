@@ -5,11 +5,6 @@
 //  Created by Yongwoo Marco on 2022/06/23.
 //
 
-import Common
-import Domain
-import Data
-import Presentation
-
 import SwiftUI
 
 @main

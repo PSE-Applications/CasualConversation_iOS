@@ -8,14 +8,13 @@
 
 import Common
 import Data
-import Domain
 import Presentation
 
 import Foundation
 
 final class AppDIContainer {
 	
-	lazy var appConfigurations = AppConfigurations()
+	private lazy var appConfigurations = AppConfigurations()
 	
 	// MARK: - Repository
 	private lazy var coreDataRepository: CoreDataRepositoryProtocol = CoreDataRepository()
