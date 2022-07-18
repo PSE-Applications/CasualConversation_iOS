@@ -1,5 +1,5 @@
 //
-//  DomainLayerSpecs.swift
+//  AudioServiceSpecs.swift
 //  CasualConversation
 //
 //  Created by Yongwoo Marco on 2022/07/13.
@@ -13,35 +13,32 @@ import Nimble
 
 import Foundation.NSURL
 
-final class DomainLayerSpecs: QuickSpec {
+extension AudioService {
+	fileprivate static var sut: Self {
+		Self.init(dependency: .init(repository: MockRecordRepository()))
+	}
+}
+
+final class AudioServiceSpecs: QuickSpec {
 	override func spec() {
-		
-		var recordRepository: RecordRepositoryProtocol!
-		
-		beforeEach { recordRepository = MockRecordRepository() }
-		afterEach { recordRepository = nil }
-		
-		describe("AudioService 객체") {
+		describe("인스턴스 객체") {
 			var audioService: AudioServiceProtocol!
-			beforeEach {
-				audioService = AudioService(dependency: .init(
-						repository: recordRepository
-					)
-				)
-			}
-			afterEach {
-				audioService = nil
-			}
+			beforeEach { audioService = AudioService.sut }
+			afterEach { audioService = nil }
 			
-			describe("AudioPlayable 추상화") {
+			describe("AudioPlayable 추상화하고") {
 				var audioPlayable: AudioPlayable!
-				
-				beforeEach { audioPlayable = audioService }
-				
-				let filePath = URL(fileURLWithPath: "")
+				var filePath: URL!
+				beforeEach {
+					audioPlayable = audioService
+					filePath = URL(fileURLWithPath: "testableFilePath")
+				}
+				afterEach {
+					audioPlayable = nil
+					filePath = nil
+				}
 				
 				context("재생을 위해 녹음물 filePath로 준비 작업을 하면") {
-					
 					beforeEach { _ = audioPlayable.setupPlaying(from: filePath) }
 					
 					it("현재재생시간을 확인가능함") {
@@ -55,35 +52,35 @@ final class DomainLayerSpecs: QuickSpec {
 						_ = audioPlayable.startPlaying()
 					}
 					
-					it("현재 상태가 재생중") {
+					it("현재상태가 재생중") {
 						expect(audioPlayable.status).to(equal(.playing))
 					}
 				}
 				
-				context("재생 중에 일시정지하면") {
+				context("재생중 일시정지하면") {
 					beforeEach {
 						_ = audioPlayable.startPlaying()
 						audioPlayable.pausePlaying()
 					}
 					
-					it("현재 상태가 일시정지중") {
+					it("현재상태가 일시정지중") {
 						expect(audioPlayable.status).to(equal(.paused))
 					}
 				}
 				
-				context("재생 중에 중단하면") {
+				context("재생중 중단하면") {
 					beforeEach {
 						_ = audioPlayable.startPlaying()
 						audioPlayable.stopPlaying()
 					}
 					
-					it("현재 상태가 중단중") {
+					it("현재상태가 중단중") {
 						expect(audioPlayable.status).to(equal(.stopped))
 					}
 				}
 			}
 			
-			describe("AudioRecordable 추상화") {
+			describe("AudioRecordable 추상화하고") {
 				var audioRecordable: AudioRecordable!
 				beforeEach { audioRecordable = audioService }
 				
