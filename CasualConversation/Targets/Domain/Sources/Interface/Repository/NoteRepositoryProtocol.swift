@@ -5,8 +5,6 @@
 //  Created by Yongwoo Marco on 2022/06/28.
 //
 
-import Foundation
-
 public protocol NoteRepositoryProtocol {
 	
 	// TODO: Note 추가

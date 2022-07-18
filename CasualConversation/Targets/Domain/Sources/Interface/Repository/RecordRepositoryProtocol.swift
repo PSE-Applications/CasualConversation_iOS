@@ -6,8 +6,7 @@
 //  Copyright © 2022 pseapplications. All rights reserved.
 //
 
-import Foundation
-import AVFAudio
+import Foundation.NSURL
 
 public protocol RecordRepositoryProtocol {
 	func makeAudioRecorder() -> AudioRecorderProtocol?

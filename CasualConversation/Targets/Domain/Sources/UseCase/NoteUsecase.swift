@@ -7,9 +7,6 @@
 
 import Common
 
-import Foundation
-
-
 public protocol NoteUseCaseManagable {
 	// TODO: Conversation CRUD
 }

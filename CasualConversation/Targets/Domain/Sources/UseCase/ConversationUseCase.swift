@@ -7,8 +7,7 @@
 
 import Common
 
-import Foundation
-
+import Foundation.NSURL
 
 public protocol ConversationRecodable {
 	func startRecording() -> Bool

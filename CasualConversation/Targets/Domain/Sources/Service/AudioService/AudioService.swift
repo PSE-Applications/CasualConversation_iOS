@@ -127,9 +127,8 @@ public final class AudioService: NSObject, Dependency, ObservableObject {
 	
 }
 
+// MARK: - AudioRecodable
 extension AudioService: AudioServiceProtocol {
-
-	// MARK: - AudioRecodable
 	
 	public var currentRecordingTime: TimeInterval {
 		self.audioRecorder?.currentTime ?? -1
@@ -169,9 +168,9 @@ extension AudioService: AudioServiceProtocol {
 	
 }
 
+// MARK: - AudioPlayable
 extension AudioService {
-	
-	// MARK: - AudioPlayable
+
 	public var currentPlayingTime: TimeInterval {
 		self.audioPlayer?.currentTime ?? -1
 	}

@@ -6,8 +6,8 @@
 //  Copyright © 2022 pseapplications. All rights reserved.
 //
 
-import Foundation
-import AVFAudio
+import Foundation.NSURL
+import AVFAudio.AVAudioPlayer
 
 public protocol AudioRecorderProtocol {
 	var delegate: AVAudioRecorderDelegate? { get set }

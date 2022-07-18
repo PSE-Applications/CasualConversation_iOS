@@ -5,7 +5,6 @@
 //  Created by Yongwoo Marco on 2022/06/28.
 //
 
-import Foundation
 import Common
 
 public struct Member: UUIDIdentifiable {
