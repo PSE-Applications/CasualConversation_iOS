@@ -9,7 +9,6 @@
 import Common
 import Domain
 
-import Foundation
 import AVFAudio
 
 extension AVAudioRecorder: AudioRecorderProtocol { }

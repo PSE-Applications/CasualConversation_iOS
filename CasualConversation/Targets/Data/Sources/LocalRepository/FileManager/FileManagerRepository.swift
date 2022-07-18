@@ -5,11 +5,11 @@
 //  Created by Yongwoo Marco on 2022/06/23.
 //
 
-import Foundation
+import Foundation.NSFileManager
 
 public struct FileManagerRepository {
 	
-	private var baseDirectory = FileManager.default.temporaryDirectory // 저장위치 선정 필요함 (임시 선정 - temporaryDirectory)
+	private var baseDirectory = FileManager.default.temporaryDirectory // TODO: 저장위치 선정 필요함 (임시 선정 - temporaryDirectory)
 	
 	public init() { }
 	

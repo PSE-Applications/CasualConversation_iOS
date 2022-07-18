@@ -6,7 +6,6 @@
 //  Copyright © 2022 pseapplications. All rights reserved.
 //
 
-import Foundation
 import Domain
 
 public struct NoteRepository: NoteRepositoryProtocol {
