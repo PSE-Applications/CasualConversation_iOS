@@ -9,12 +9,16 @@ import Foundation.NSURL
 import Common
 
 public struct Conversation: UUIDIdentifiable {
-        
+    
+	public static var empty: Self {
+		Self.init(id: UUID(), members: [], recordFilePath: URL(string: "Empty")!, recordedDate: Date())
+	}
+	
 	public let id: Identifier
     var title: String?
     var topic: String?
     let members: [Member]
     let recordFilePath: URL
     let recordedDate: Date
-    
+	
 }
