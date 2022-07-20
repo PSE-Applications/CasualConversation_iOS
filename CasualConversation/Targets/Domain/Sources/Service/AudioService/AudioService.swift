@@ -13,7 +13,7 @@ import AVFAudio
 
 public protocol AudioPlayable {
 	var status: AudioStatus { get }
-	var currentPlayingTime: TimeInterval { get }
+	var currentPlayingTime: TimeInterval? { get }
 	func setupPlaying(from filePath: URL, completion: (Error?) -> Void)
 	func startPlaying(completion: (Error?) -> Void)
 	func pausePlaying()
@@ -22,7 +22,7 @@ public protocol AudioPlayable {
 
 public protocol AudioRecordable {
 	var status: AudioStatus { get }
-	var currentRecordingTime: TimeInterval { get }
+	var currentRecordingTime: TimeInterval? { get }
 	func setupRecorder(completion: (Error?) -> Void)
 	func startRecording(completion: (Error?) -> Void)
 	func pauseRecording()
@@ -130,8 +130,8 @@ public final class AudioService: NSObject, Dependency, ObservableObject {
 // MARK: - AudioRecodable
 extension AudioService: AudioServiceProtocol {
 	
-	public var currentRecordingTime: TimeInterval {
-		self.audioRecorder?.currentTime ?? -1
+	public var currentRecordingTime: TimeInterval? {
+		self.audioRecorder?.currentTime
 	}
 	
 	public func setupRecorder(completion: (Error?) -> Void) {
@@ -180,8 +180,8 @@ extension AudioService: AudioServiceProtocol {
 // MARK: - AudioPlayable
 extension AudioService {
 
-	public var currentPlayingTime: TimeInterval {
-		self.audioPlayer?.currentTime ?? -1
+	public var currentPlayingTime: TimeInterval? {
+		self.audioPlayer?.currentTime
 	}
 	
 	public func setupPlaying(from filePath: URL, completion: (Error?) -> Void) {
