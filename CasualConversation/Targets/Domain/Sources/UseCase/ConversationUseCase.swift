@@ -15,13 +15,12 @@ public protocol ConversationUseCaseManagable: ConversationRecodable, Conversatio
 public protocol ConversationRecodable {
 	func startRecording(completion: (Error?) -> Void)
 	func pauseRecording()
-	func stopRecording(completion: (Result<URL, Error>) -> Void)
+	func stopRecording(completion: (Error?) -> Void)
 //	func appendPin()
 }
 
 public protocol ConversationMaintainable {
 	var list: [Conversation] { get }
-	func add(item: Conversation, completion: (Error?) -> Void)
 	func edit(newItem: Conversation, completion: (Error?) -> Void)
 	func delete(item: Conversation, completion: (Error?) -> Void)
 	func startPlaying(from selectedConversation: Conversation, completion: (Error?) -> Void)
@@ -45,7 +44,7 @@ public final class ConversationUseCase: Dependency, ConversationUseCaseManagable
 	}
 	
 	public let dependency: Dependency
-	private var pinTemporaryStorage: [TimeInterval]?
+//	private var pinTemporaryStorage: [TimeInterval]?
 	
 	public init(dependency: Dependency) {
 		self.dependency = dependency
@@ -56,7 +55,7 @@ public final class ConversationUseCase: Dependency, ConversationUseCaseManagable
 // MARK: - ConversationRecodable
 extension ConversationUseCase {
 	
-	private func createConversation(with filePath: URL) {
+	private func createConversation(with filePath: URL, completion: (Error?) -> Void) {
 		let recordedDate = Date()
 		let newItem: Conversation = .init(
 			id: UUID(),
@@ -64,9 +63,9 @@ extension ConversationUseCase {
 			members: [],
 			recordFilePath: filePath,
 			recordedDate: recordedDate,
-			pins: self.pinTemporaryStorage ?? []
+			pins: [] // self.pinTemporaryStorage ?? []
 		)
-		// TODO: 구현필요 - ConversationRepository
+		self.dependency.repository.add(newItem, completion: completion)
 	}
 	
 	public func startRecording(completion: (Error?) -> Void) {
@@ -90,12 +89,17 @@ extension ConversationUseCase {
 		self.dependency.audioService.pauseRecording()
 	}
 	
-	public func stopRecording(completion: (Result<URL, Error>) -> Void) {
+	public func stopRecording(completion: (Error?) -> Void) {
 		self.dependency.audioService.stopRecording() { result in
-			completion(result)
+			switch result {
+			case .success(let savedfilePath):
+				self.createConversation(with: savedfilePath, completion: completion)
+			case .failure(let error):
+				completion(error)
+			}
 		}
 	}
-// TODO: 저장 위치 고민중
+// TODO: 저장 위치 고민 중
 //	public func appendPin() {
 //		if self.dependency.audioService.status == .playing,
 //		   self.pinTemporaryStorage != nil {
@@ -109,19 +113,15 @@ extension ConversationUseCase {
 extension ConversationUseCase {
 	
 	public var list: [Conversation] {
-		[] // TODO: 구현필요 - ConversationRepository
-	}
-	
-	public func add(item: Conversation, completion: (Error?) -> Void) {
-		// TODO: 구현필요 - ConversationRepository
+		self.dependency.repository.list
 	}
 	
 	public func edit(newItem: Conversation, completion: (Error?) -> Void) {
-		// TODO: 구현필요 - ConversationRepository
+		self.dependency.repository.edit(newItem: newItem, completion: completion)
 	}
 	
 	public func delete(item: Conversation, completion: (Error?) -> Void) {
-		// TODO: 구현필요 - ConversationRepository
+		self.dependency.repository.delete(item, completion: completion)
 	}
 	
 	public func startPlaying(from selectedConversation: Conversation, completion: (Error?) -> Void) {
