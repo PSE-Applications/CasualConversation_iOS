@@ -49,19 +49,19 @@ public final class NoteUseCase: Dependency {
 extension NoteUseCase: NoteUseCaseManagable {
 	
 	public var list: [Note] {
-		[]
+		self.dependency.repository.list
 	}
 	
 	public func add(item: Note, completion: (Error?) -> Void) {
-		
+		self.dependency.repository.add(item: item, completion: completion)
 	}
 	
 	public func edit(newItem: Note, completion: (Error?) -> Void) {
-	
+		self.dependency.repository.edit(newItem: newItem, completion: completion)
 	}
 	
 	public func delete(item: Note, completion: (Error?) -> Void) {
-	
+		self.dependency.repository.delete(item: item, completion: completion)
 	}
 
 }
