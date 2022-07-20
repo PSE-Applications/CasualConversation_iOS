@@ -1,5 +1,5 @@
 //
-//  MockConversationRepository.swift
+//  MockNoteRepository.swift
 //  DomainTests
 //
 //  Created by Yongwoo Marco on 2022/07/20.
@@ -8,25 +8,25 @@
 
 @testable import Domain
 
-struct MockConversationRepository {
+struct MockNoteRepository {
 	let `case`: Bool
 }
 
-extension MockConversationRepository: ConversationRepositoryProtocol {
+extension MockNoteRepository: NoteRepositoryProtocol {
 	
-	var list: [Conversation] {
+	var list: [Note] {
 		[]
 	}
 	
-	func add(_ item: Conversation, completion: (Error?) -> Void) {
+	func add(item: Note, completion: (Error?) -> Void) {
 		completion( `case` ? nil : (AnyObject.self as! Error) ) // TODO: Error 타입 변동필요
 	}
 	
-	func edit(newItem: Conversation, completion: (Error?) -> Void) {
+	func edit(newItem: Note, completion: (Error?) -> Void) {
 		completion( `case` ? nil : (AnyObject.self as! Error) ) // TODO: Error 타입 변동필요
 	}
 	
-	func delete(_ item: Conversation, completion: (Error?) -> Void) {
+	func delete(item: Note, completion: (Error?) -> Void) {
 		completion( `case` ? nil : (AnyObject.self as! Error) ) // TODO: Error 타입 변동필요
 	}
 	
