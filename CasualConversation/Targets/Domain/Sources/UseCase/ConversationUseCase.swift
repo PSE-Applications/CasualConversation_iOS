@@ -9,20 +9,25 @@ import Common
 
 import Foundation.NSURL
 
+
+public protocol ConversationUseCaseManagable: ConversationRecodable, ConversationMaintainable { }
+
 public protocol ConversationRecodable {
 	func startRecording(completion: (Error?) -> Void)
 	func pauseRecording()
 	func stopRecording(completion: (Result<URL, Error>) -> Void)
-	func createConversation(with filePath: URL)
+//	func appendPin()
 }
 
 public protocol ConversationMaintainable {
+	var list: [Conversation] { get }
+	func add(item: Conversation, completion: (Error?) -> Void)
+	func edit(newItem: Conversation, completion: (Error?) -> Void)
+	func delete(item: Conversation, completion: (Error?) -> Void)
 	func startPlaying(from selectedConversation: Conversation, completion: (Error?) -> Void)
 	func stopPlaying()
 	func pausePlaying()
 }
-
-public protocol ConversationUseCaseManagable: ConversationRecodable, ConversationMaintainable { }
 
 public final class ConversationUseCase: Dependency, ConversationUseCaseManagable {
 	
@@ -40,17 +45,29 @@ public final class ConversationUseCase: Dependency, ConversationUseCaseManagable
 	}
 	
 	public let dependency: Dependency
-	
-	private var conversations: [Conversation] = []
+	private var pinTemporaryStorage: [TimeInterval]?
 	
 	public init(dependency: Dependency) {
 		self.dependency = dependency
 	}
-	
+
 }
 
 // MARK: - ConversationRecodable
 extension ConversationUseCase {
+	
+	private func createConversation(with filePath: URL) {
+		let recordedDate = Date()
+		let newItem: Conversation = .init(
+			id: UUID(),
+			title: recordedDate.description,
+			members: [],
+			recordFilePath: filePath,
+			recordedDate: recordedDate,
+			pins: self.pinTemporaryStorage ?? []
+		)
+		// TODO: 구현필요 - ConversationRepository
+	}
 	
 	public func startRecording(completion: (Error?) -> Void) {
 		self.dependency.audioService.setupRecorder() { error in
@@ -78,16 +95,34 @@ extension ConversationUseCase {
 			completion(result)
 		}
 	}
-
-	public func createConversation(with filePath: URL) {
-//		let newItem = Conversation(id: UUID(), title: <#T##String?#>, topic: <#T##String?#>, members: <#T##[Member]#>, recordFilePath: <#T##URL#>, recordedDate: <#T##Data#>)
-		// TODO: Create Conversation
-	}
-	
+// TODO: 저장 위치 고민중
+//	public func appendPin() {
+//		if self.dependency.audioService.status == .playing,
+//		   self.pinTemporaryStorage != nil {
+//			let pinTime = self.dependency.audioService.currentRecordingTime
+//			self.pinTemporaryStorage?.append(pinTime)
+//		}
+//	}
 }
 
 // MARK: - ConversationMaintainable
 extension ConversationUseCase {
+	
+	public var list: [Conversation] {
+		[] // TODO: 구현필요 - ConversationRepository
+	}
+	
+	public func add(item: Conversation, completion: (Error?) -> Void) {
+		// TODO: 구현필요 - ConversationRepository
+	}
+	
+	public func edit(newItem: Conversation, completion: (Error?) -> Void) {
+		// TODO: 구현필요 - ConversationRepository
+	}
+	
+	public func delete(item: Conversation, completion: (Error?) -> Void) {
+		// TODO: 구현필요 - ConversationRepository
+	}
 	
 	public func startPlaying(from selectedConversation: Conversation, completion: (Error?) -> Void) {
 		let filePath = selectedConversation.recordFilePath
