@@ -9,6 +9,17 @@ import Foundation.NSDate
 import Common
 
 public struct Note: UUIDIdentifiable {
+	
+	public static var empty: Self {
+		.init(
+			id: UUID(),
+			original: "",
+			translation: "",
+			category: .vocabulary,
+			references: [],
+			createdDate: Date()
+		)
+	}
         
     enum Category {
         case vocabulary

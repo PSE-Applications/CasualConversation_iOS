@@ -6,11 +6,8 @@
 //
 
 public protocol NoteRepositoryProtocol {
-	
-	// TODO: Note 추가
-	// TODO: Note 목록 조회
-	// TODO: Note 조회
-	// TODO: Note 변경
-	// TODO: Note 삭제
-	
+	var list: [Note] { get }
+	func add(item: Note, completion: (Error?) -> Void)
+	func edit(newItem: Note, completion: (Error?) -> Void)
+	func delete(item: Note, completion: (Error?) -> Void)
 }

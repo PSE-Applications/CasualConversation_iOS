@@ -8,10 +8,13 @@
 import Common
 
 public protocol NoteUseCaseManagable {
-	// TODO: Conversation CRUD
+	var list: [Note] { get }
+	func add(item: Note, completion: (Error?) -> Void)
+	func edit(newItem: Note, completion: (Error?) -> Void)
+	func delete(item: Note, completion: (Error?) -> Void)
 }
 
-public final class NoteUseCase: Dependency, NoteUseCaseManagable {
+public final class NoteUseCase: Dependency {
 	
 	public enum Filter {
 		case all
@@ -43,3 +46,22 @@ public final class NoteUseCase: Dependency, NoteUseCaseManagable {
 	
 }
 
+extension NoteUseCase: NoteUseCaseManagable {
+	
+	public var list: [Note] {
+		self.dependency.repository.list
+	}
+	
+	public func add(item: Note, completion: (Error?) -> Void) {
+		self.dependency.repository.add(item: item, completion: completion)
+	}
+	
+	public func edit(newItem: Note, completion: (Error?) -> Void) {
+		self.dependency.repository.edit(newItem: newItem, completion: completion)
+	}
+	
+	public func delete(item: Note, completion: (Error?) -> Void) {
+		self.dependency.repository.delete(item: item, completion: completion)
+	}
+
+}

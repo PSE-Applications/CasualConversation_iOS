@@ -11,7 +11,13 @@ import Common
 public struct Conversation: UUIDIdentifiable {
     
 	public static var empty: Self {
-		Self.init(id: UUID(), members: [], recordFilePath: URL(string: "Empty")!, recordedDate: Date())
+		.init(
+			id: UUID(),
+			members: [],
+			recordFilePath: URL(string: "Empty")!,
+			recordedDate: Date(),
+			pins: []
+		)
 	}
 	
 	public let id: Identifier
@@ -20,5 +26,6 @@ public struct Conversation: UUIDIdentifiable {
     let members: [Member]
     let recordFilePath: URL
     let recordedDate: Date
+	let pins: [TimeInterval]
 	
 }

@@ -6,11 +6,8 @@
 //
 
 public protocol ConversationRepositoryProtocol {
-	
-	// TODO: Conversation 추가
-	// TODO: Conversation 목록 조회
-	// TODO: Conversation 조회
-	// TODO: Conversation 변경
-	// TODO: Conversation 삭제
-	
+	var list: [Conversation] { get }
+	func add(_ item: Conversation, completion: (Error?) -> Void)
+	func edit(newItem: Conversation, completion: (Error?) -> Void)
+	func delete(_ item: Conversation, completion: (Error?) -> Void)
 }

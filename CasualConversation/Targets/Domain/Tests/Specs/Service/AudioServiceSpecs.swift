@@ -14,7 +14,7 @@ import Nimble
 import Foundation.NSURL
 
 extension AudioService {
-	fileprivate static var sut: Self {
+	static var sut: Self {
 		Self.init(dependency: .init(repository: MockRecordRepository()))
 	}
 }
