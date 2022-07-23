@@ -8,7 +8,7 @@
 import Common
 import Domain
 
-import Foundation
+import Combine
 
 public final class RecordViewModel: Dependency, ObservableObject {
 	

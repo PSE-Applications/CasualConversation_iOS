@@ -7,78 +7,62 @@
 //
 
 @testable import Presentation
-@testable import Data
-@testable import Domain
+@testable import Data // TODO: 외부 모듈 사용 없는 테스트 필요
 
 import Quick
 import Nimble
 
-import Foundation
-
-extension Conversation {
-	
-	static let dummy: Conversation = .init(
-		id: UUID(), members: [], recordFilePath: URL(string: "dummy")!, recordedDate: Date()
-	)
-	
+extension PresentationDIContainer { // TODO: 외부 모듈 사용 없는 테스트 필요
+	fileprivate static var sut: PresentationDIContainer {
+		self.init(dependency: .init(
+			conversationRepository: ConversationRepository(),
+			noteRepository: NoteRepository(),
+			recordRepository: RecordRepository(dependency: .init(repository: FileManagerRepository()))))
+	}
 }
 
 final class PresentationDIContainerSpecs: QuickSpec {
-	
 	override func spec() {
-		
-		var presentationDIContainerSpecs: PresentationDIContainer!
-		
-		beforeEach {
-			presentationDIContainerSpecs = PresentationDIContainer(dependency: .init(
-				conversationRepository: ConversationRepository(),
-				noteRepository: NoteRepository(),
-				recordRepository: RecordRepository(dependency: .init(
-							repository: FileManagerRepository()
-						)
-					)
-				)
-			)
-		}
-		
-		describe("as PresentationDIContainer") {
+		describe("인스턴스 객체") {
+			var presentationDIContainerSpecs: PresentationDIContainer!
+			beforeEach { presentationDIContainerSpecs = .sut }
+			afterEach { presentationDIContainerSpecs = nil }
 			
-			context("FactoryMethods") {
+			context("MainTabView 팩토리메서드 호출하면") {
+				var mainTabView: MainTabView!
+				beforeEach { mainTabView = presentationDIContainerSpecs.MainTabView() }
 				
-				it("call func MainTabView then MainTabView instance") {
-					let mainTabView: MainTabView
-					
-					mainTabView = presentationDIContainerSpecs.MainTabView()
-					
+				it("MainTabView 객체 생성됨") {
 					expect(mainTabView).notTo(beNil())
 				}
+			}
+			
+			context("RecordView 팩토리메서드 호출하면") {
+				var recordView: RecordView!
+				beforeEach { recordView = presentationDIContainerSpecs.RecordView() }
 				
-				it("call func RecordView then RecordView instance") {
-					let recordView: RecordView
-					
-					recordView = presentationDIContainerSpecs.RecordView()
-					
+				it("RecordView 객체 생성됨") {
 					expect(recordView).notTo(beNil())
 				}
+			}
+			
+			context("선택된 Conversation을 전달하며 SelectionView 팩토리메서드 호출하면") {
+				var selectionView: SelectionView!
+				beforeEach { selectionView = presentationDIContainerSpecs.SelectionView(selected: .empty) }
 				
-				it("call func SelectionView then SelectionView instance") {
-					let testConversation = Conversation.dummy
-					let selectionView: SelectionView
-					
-					selectionView = presentationDIContainerSpecs.SelectionView(selected: testConversation)
-					
+				it("SelectionView 객체 생성됨") {
 					expect(selectionView).notTo(beNil())
 				}
+			}
+			
+			context("NoteSetView 팩토리메서드 호출하면") {
+				var recordView: NoteSetView!
+				beforeEach { recordView = presentationDIContainerSpecs.NoteSetView() }
 				
-				it("call func NoteSetView then NoteSetView instance") {
-					let recordView: NoteSetView
-					
-					recordView = presentationDIContainerSpecs.NoteSetView()
-					
+				it("MainTabView 객체 생성됨") {
 					expect(recordView).notTo(beNil())
 				}
 			}
 		}
 	}
-	
 }

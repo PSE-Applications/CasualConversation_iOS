@@ -5,7 +5,7 @@
 //  Created by Yongwoo Marco on 2022/06/25.
 //
 
-import Foundation
+import Foundation.NSDate
 import Common
 
 public struct Note: UUIDIdentifiable {

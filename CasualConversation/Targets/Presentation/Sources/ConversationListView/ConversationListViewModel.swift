@@ -9,7 +9,7 @@
 import Common
 import Domain
 
-import Foundation
+import Combine
 
 public final class ConversationListViewModel: Dependency, ObservableObject {
 	

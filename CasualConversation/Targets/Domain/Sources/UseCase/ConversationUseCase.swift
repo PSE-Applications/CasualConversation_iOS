@@ -7,18 +7,17 @@
 
 import Common
 
-import Foundation
-
+import Foundation.NSURL
 
 public protocol ConversationRecodable {
-	func startRecording() -> Bool
+	func startRecording(completion: (Error?) -> Void)
 	func pauseRecording()
-	func stopRecording(completion: (URL?) -> ())
+	func stopRecording(completion: (Result<URL, Error>) -> Void)
 	func createConversation(with filePath: URL)
 }
 
 public protocol ConversationMaintainable {
-	func startPlaying(from selectedConversation: Conversation) -> Bool
+	func startPlaying(from selectedConversation: Conversation, completion: (Error?) -> Void)
 	func stopPlaying()
 	func pausePlaying()
 }
@@ -53,11 +52,20 @@ public final class ConversationUseCase: Dependency, ConversationUseCaseManagable
 // MARK: - ConversationRecodable
 extension ConversationUseCase {
 	
-	public func startRecording() -> Bool {
-		if self.dependency.audioService.setupRecorder() {
-			return self.dependency.audioService.startRecording()
-		} else {
-			return false
+	public func startRecording(completion: (Error?) -> Void) {
+		self.dependency.audioService.setupRecorder() { error in
+			guard let error = error else {
+				completion(nil)
+				self.dependency.audioService.startRecording() { error in
+					guard let error = error else {
+						completion(nil)
+						return
+					}
+					completion(error)
+				}
+				return
+			}
+			completion(error)
 		}
 	}
 
@@ -65,9 +73,10 @@ extension ConversationUseCase {
 		self.dependency.audioService.pauseRecording()
 	}
 	
-	public func stopRecording(completion: (URL?) -> Void) {
-		let savedAudioFilePath = self.dependency.audioService.stopRecording()
-		completion(savedAudioFilePath)
+	public func stopRecording(completion: (Result<URL, Error>) -> Void) {
+		self.dependency.audioService.stopRecording() { result in
+			completion(result)
+		}
 	}
 
 	public func createConversation(with filePath: URL) {
@@ -80,12 +89,21 @@ extension ConversationUseCase {
 // MARK: - ConversationMaintainable
 extension ConversationUseCase {
 	
-	public func startPlaying(from selectedConversation: Conversation) -> Bool {
+	public func startPlaying(from selectedConversation: Conversation, completion: (Error?) -> Void) {
 		let filePath = selectedConversation.recordFilePath
-		if self.dependency.audioService.setupPlaying(from: filePath) {
-			return self.dependency.audioService.startPlaying()
-		} else {
-			return false
+		self.dependency.audioService.setupPlaying(from: filePath) { error in
+			guard let error = error else {
+				completion(nil)
+				self.dependency.audioService.startPlaying() { error in
+					guard let error = error else {
+						completion(nil)
+						return
+					}
+					completion(error)
+				}
+				return
+			}
+			completion(error)
 		}
 	}
 	

@@ -14,8 +14,8 @@ import AVFAudio
 public protocol AudioPlayable {
 	var status: AudioStatus { get }
 	var currentPlayingTime: TimeInterval { get }
-	func setupPlaying(from filePath: URL) -> Bool
-	func startPlaying() -> Bool
+	func setupPlaying(from filePath: URL, completion: (Error?) -> Void)
+	func startPlaying(completion: (Error?) -> Void)
 	func pausePlaying()
 	func stopPlaying()
 }
@@ -23,10 +23,10 @@ public protocol AudioPlayable {
 public protocol AudioRecordable {
 	var status: AudioStatus { get }
 	var currentRecordingTime: TimeInterval { get }
-	func setupRecorder() -> Bool
-	func startRecording() -> Bool
+	func setupRecorder(completion: (Error?) -> Void)
+	func startRecording(completion: (Error?) -> Void)
 	func pauseRecording()
-	func stopRecording() -> URL?
+	func stopRecording(completion: (Result<URL, Error>) -> Void)
 }
 
 public protocol AudioServiceProtocol: AudioPlayable, AudioRecordable { }
@@ -127,31 +127,35 @@ public final class AudioService: NSObject, Dependency, ObservableObject {
 	
 }
 
+// MARK: - AudioRecodable
 extension AudioService: AudioServiceProtocol {
-
-	// MARK: - AudioRecodable
 	
 	public var currentRecordingTime: TimeInterval {
 		self.audioRecorder?.currentTime ?? -1
 	}
 	
-	public func setupRecorder() -> Bool {
+	public func setupRecorder(completion: (Error?) -> Void) {
 		guard let newRecorder = dependency.repository.makeAudioRecorder() else {
 			print("\(#function) 해당 filePath에 오디오 파일이 없습니다")
-			return false
+			completion(AnyObject.self as? Error) // TODO: Error 타입 적용 필요
+			return
 		}
 		self.audioRecorder = newRecorder
 		self.audioRecorder?.delegate = self
-		self.audioRecorder?.prepareToRecord()
-		return true
+		guard let result = self.audioRecorder?.prepareToRecord() else {
+			completion(AnyObject.self as? Error) // TODO: Error 타입 적용 필요
+			return
+		}
+		completion( result ? nil : AnyObject.self as? Error ) // TODO: Error 타입 적용 필요
 	}
 	
-	public func startRecording() -> Bool {
+	public func startRecording(completion: (Error?) -> Void) {
 		guard let isRecording = self.audioRecorder?.record() else {
-			return false
+			completion(AnyObject.self as? Error) // TODO: Error 타입 적용 필요
+			return
 		}
 		status = isRecording ? .recording : .stopped
-		return isRecording
+		completion( isRecording ? nil : AnyObject.self as? Error) // TODO: Error 타입 적용 필요
 	}
 	
 	public func pauseRecording() {
@@ -159,42 +163,49 @@ extension AudioService: AudioServiceProtocol {
 		status = .paused
 	}
 	
-	public func stopRecording() -> URL? {
+	public func stopRecording(completion: (Result<URL, Error>) -> Void) {
 		self.audioRecorder?.stop()
 		let savedFilePath = audioRecorder?.url
 		self.audioRecorder = nil
 		status = .stopped
-		return savedFilePath
+		guard let filePath = savedFilePath else {
+			completion(.failure(AnyObject.self as! Error)) // TODO: Error 타입 적용 필요
+			return
+		}
+		completion(.success(filePath))
 	}
 	
 }
 
+// MARK: - AudioPlayable
 extension AudioService {
-	
-	// MARK: - AudioPlayable
+
 	public var currentPlayingTime: TimeInterval {
 		self.audioPlayer?.currentTime ?? -1
 	}
 	
-	public func setupPlaying(from filePath: URL) -> Bool {
+	public func setupPlaying(from filePath: URL, completion: (Error?) -> Void) {
 		guard let newplayer = dependency.repository.makeAudioPlayer(from: filePath) else {
 			print("\(#function) 해당 filePath에 오디오 파일이 없습니다")
-			return false
+			completion(AnyObject.self as? Error) // TODO: Error 타입 적용 필요
+			return
 		}
 		self.audioPlayer = newplayer
 		self.audioPlayer?.delegate = self
 		guard let preparedPlay = self.audioPlayer?.prepareToPlay() else {
-			return false
+			completion(AnyObject.self as? Error) // TODO: Error 타입 적용 필요
+			return
 		}
-		return preparedPlay
+		completion( preparedPlay ? nil : AnyObject.self as? Error) // TODO: Error 타입 적용 필요
 	}
 	
-	public func startPlaying() -> Bool {
+	public func startPlaying(completion: (Error?) -> Void) {
 		guard let isPlaying = self.audioPlayer?.play() else {
-			return false
+			completion(AnyObject.self as? Error) // TODO: Error 타입 적용 필요
+			return
 		}
 		status = isPlaying ? .playing : .stopped
-		return isPlaying
+		completion( isPlaying ? nil : AnyObject.self as? Error) // TODO: Error 타입 적용 필요
 	}
 	
 	public func pausePlaying() {

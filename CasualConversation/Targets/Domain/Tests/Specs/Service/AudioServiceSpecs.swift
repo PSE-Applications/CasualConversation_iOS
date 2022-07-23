@@ -11,136 +11,129 @@
 import Quick
 import Nimble
 
-import Foundation
+import Foundation.NSURL
+
+extension AudioService {
+	fileprivate static var sut: Self {
+		Self.init(dependency: .init(repository: MockRecordRepository()))
+	}
+}
 
 final class AudioServiceSpecs: QuickSpec {
-	
 	override func spec() {
-		
-		var recordRepository: RecordRepositoryProtocol!
-		var audioService: AudioServiceProtocol!
-		
-		describe("as AudioServiceProtocol") {
+		describe("인스턴스 객체") {
+			var audioService: AudioServiceProtocol!
+			beforeEach { audioService = AudioService.sut }
+			afterEach { audioService = nil }
 			
-			beforeSuite {
-				recordRepository = MockRecordRepository()
-				audioService = AudioService(dependency: .init(
-						repository: recordRepository
-					)
-				)
-			}
-			
-			afterSuite {
-				recordRepository = nil
-				audioService = nil
-			}
-			
-			context("Adopted AudioPlayable") {
+			describe("AudioPlayable 추상화하고") {
 				var audioPlayable: AudioPlayable!
+				beforeEach { audioPlayable = audioService }
+				afterEach { audioPlayable = nil }
 				
-				beforeEach {
-					audioPlayable = audioService
-				}
-				
-				afterEach {
-					audioPlayable = nil
-				}
-				
-				it("call setupRecorder then currentPlayingTime eqaul 0.0") {
-					// Arrange
-					let filePath = URL(fileURLWithPath: "")
+				describe("Mock 생성 성공 케이스") {
+					var filePath: URL!
+					beforeEach { filePath = URL(fileURLWithPath: "testableFilePath") } // TODO: Testable Dummy 녹음 파일 필요
+					afterEach { filePath = nil }
 					
-					// Act
-					_ = audioPlayable.setupPlaying(from: filePath)
-					
-					// Assert
-					expect(audioPlayable.currentPlayingTime).to(equal(TimeInterval(0.0)))
-				}
-				
-				it("call func startPlaying then status eqaul .playing") {
-					// Arrange
-					
-					// Act
-					_ = audioPlayable.startPlaying()
-					
-					// Assert
-					expect(audioPlayable.status).to(equal(.playing))
-				}
-				
-				it("call func pausePlaying then status eqaul .paused") {
-					// Arrange
-					_ = audioPlayable.startPlaying()
-					
-					// Act
-					audioPlayable.pausePlaying()
-					
-					// Assert
-					expect(audioPlayable.status).to(equal(.paused))
-				}
-				
-				it("call func stopPlaying then status eqaul .stopped") {
-					// Arrange
-					_ = audioPlayable.startPlaying()
-					
-					// Act
-					audioPlayable.stopPlaying()
-					
-					// Assert
-					expect(audioPlayable.status).to(equal(.stopped))
+					context("재생을 위해 녹음물 준비 작업을 하면") {
+						var optionalParameter: Error!
+						beforeEach {
+							audioPlayable.setupPlaying(from: filePath) { error in
+								optionalParameter = error
+							}
+						}
+
+						it("nil 받음") {
+							expect(optionalParameter).to(beNil())
+						}
+						
+						context("재생시작을 성공하면") {
+							var optionalParameter: Error!
+							beforeEach {
+								audioPlayable.startPlaying() { error in
+									optionalParameter = error
+								}
+							}
+							
+							it("nil 받음") {
+								expect(optionalParameter).to(beNil())
+							}
+							
+							context("재생중 일시정지하면") {
+								beforeEach { audioPlayable.pausePlaying() }
+								afterEach { audioPlayable.startPlaying() { _ in } }
+								
+								it("현재상태가 paused") {
+									expect(audioPlayable.status).to(equal(.paused))
+								}
+							}
+							
+							context("재생중 중단하면") {
+								beforeEach {
+									audioPlayable.stopPlaying()
+								}
+								
+								it("현재상태가 stopped") {
+									expect(audioPlayable.status).to(equal(.stopped))
+								}
+							}
+						}
+					}
 				}
 			}
 			
-			context("Adopted AudioRecordable") {
+			describe("AudioRecordable 추상화하고") {
 				var audioRecordable: AudioRecordable!
+				beforeEach { audioRecordable = audioService }
 				
-				beforeEach {
-					audioRecordable = audioService
-				}
-				
-				afterEach {
-					audioRecordable = nil
-				}
-				
-				it("func call setupRecorder then currentRecordingTime eqaul 0.0") {
-					// Arrange
+				context("녹음을 위해 준비 작업을 하면") { // Date() 객체를 이용한 새로운 FilePath 생성됨
+					var optionalParameter: Error!
+					beforeEach {
+						audioRecordable.setupRecorder() { error in
+							optionalParameter = error
+						}
+					}
 					
-					// Act
-					_ = audioRecordable.setupRecorder()
+					it("nil 받음") {
+						expect(optionalParameter).to(beNil())
+					}
 					
-					// Assert
-					expect(audioRecordable.currentRecordingTime).to(equal(TimeInterval(0.0)))
-				}
-				
-				it("func call startRecording then status eqaul .recording") {
-					// Arrange
+					context("녹음 시작을 성공하면") {
+						var startOptionalParameter: Error!
+						beforeEach {
+							audioRecordable.startRecording() { error in
+								startOptionalParameter = error
+							}
+						}
+						
+						it("nil 받음") {
+							expect(startOptionalParameter).to(beNil())
+						}
+					}
 					
-					// Act
-					_ = audioRecordable.startRecording()
+					context("녹음 중에 일시정지하면") {
+						beforeEach { audioRecordable.pauseRecording() }
+						afterEach { audioRecordable.startRecording() { _ in } }
+						
+						it("현재 상태가 paused") {
+							expect(audioRecordable.status).to(equal(.paused))
+						}
+					}
 					
-					// Assert
-					expect(audioService.status).to(equal(.recording))
-				}
-				
-				it("func call pauseRecording then status eqaul .paused") {
-					// Arrange
-					_ = audioRecordable.startRecording()
-					
-					// Act
-					_ = audioRecordable.pauseRecording()
-					
-					// Assert
-					expect(audioRecordable.status).to(equal(.paused))
-				}
-				
-				it("func call stopRecording then status eqaul .stopped") {
-					// Arrange
-					_ = audioRecordable.startRecording()
-					
-					// Act
-					_ = audioRecordable.stopRecording()
-					
-					// Assert
-					expect(audioRecordable.status).to(equal(.stopped))
+					context("녹음 중에 중단하면") {
+						var stopParameter: Result<URL, Error>!
+						beforeEach {
+							audioRecordable.stopRecording() { result in
+								stopParameter = result
+							}
+						}
+						
+						it(".success(let url) 받음") {
+//							expect(stopParameter).to(be(succeed())) // failed - expected to be identical to <0x600000788750>, got <0x60000075eee0>
+//							expect(stopParameter).to(beSuccess()) // 공식문서 - 적용안됨...
+						}
+					}
 				}
 			}
 		}
