@@ -31,7 +31,9 @@ public enum CCError: Error {
     
     // MARK: - Data
     public enum RepositoryFailureReason {
-        
+        case coreDataViewContextUnsaved(Error)
+        case coreDataUnloaded(Error)
+        case fileURLPathInvalidated
     }
     
     case persistenceFailed(reason: RepositoryFailureReason)
