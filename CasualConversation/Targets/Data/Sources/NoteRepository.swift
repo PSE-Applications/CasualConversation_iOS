@@ -10,6 +10,20 @@ import Domain
 
 public struct NoteRepository: NoteRepositoryProtocol {
 	
+	public var list: [Note] = [] // TODO: 처리 필요
+	
+	public func add(item: Note, completion: (Error?) -> Void) {
+		// TODO: 처리 필요
+	}
+	
+	public func edit(newItem: Note, completion: (Error?) -> Void) {
+		// TODO: 처리 필요
+	}
+	
+	public func delete(item: Note, completion: (Error?) -> Void) {
+		// TODO: 처리 필요
+	}
+	
 	public init() {}
 	
 }
