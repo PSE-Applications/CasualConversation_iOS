@@ -16,6 +16,7 @@ public enum CCError: Error {
         case optionalBindingNotWork
     }
     
+    // MARK: - Domain
     public enum ConversationManageFailureReason {
         
     }
@@ -27,5 +28,12 @@ public enum CCError: Error {
     case systemErrorOccured(reason: SystemErrorReason)
     case conversationManageFailed(reason: ConversationManageFailureReason)
     case noteManageFailed(reason: NoteManageFailureReason)
+    
+    // MARK: - Data
+    public enum RepositoryFailureReason {
+        
+    }
+    
+    case persistenceFailed(reason: RepositoryFailureReason)
     
 }
