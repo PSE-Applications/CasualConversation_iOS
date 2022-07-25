@@ -14,8 +14,8 @@ import AVFAudio
 public protocol AudioPlayable {
 	var status: AudioStatus { get }
 	var currentPlayingTime: TimeInterval? { get }
-	func setupPlaying(from filePath: URL, completion: (Error?) -> Void)
-	func startPlaying(completion: (Error?) -> Void)
+	func setupPlaying(from filePath: URL, completion: (CCError?) -> Void)
+	func startPlaying(completion: (CCError?) -> Void)
 	func pausePlaying()
 	func stopPlaying()
 }
@@ -23,10 +23,10 @@ public protocol AudioPlayable {
 public protocol AudioRecordable {
 	var status: AudioStatus { get }
 	var currentRecordingTime: TimeInterval? { get }
-	func setupRecorder(completion: (Error?) -> Void)
-	func startRecording(completion: (Error?) -> Void)
+	func setupRecorder(completion: (CCError?) -> Void)
+	func startRecording(completion: (CCError?) -> Void)
 	func pauseRecording()
-	func stopRecording(completion: (Result<URL, Error>) -> Void)
+	func stopRecording(completion: (Result<URL, CCError>) -> Void)
 }
 
 public protocol AudioServiceProtocol: AudioPlayable, AudioRecordable { }
@@ -60,18 +60,14 @@ public final class AudioService: NSObject, Dependency, ObservableObject {
 	}
 	
 	private func setupNotificationCenter() {
-		NotificationCenter.default
-			.addObserver(self,
-						 selector: #selector(handleRouteChange),
-						 name: AVAudioSession.routeChangeNotification,
-						 object: nil
-			)
-		NotificationCenter.default
-			.addObserver(self,
-						 selector: #selector(handleInteruption),
-						 name: AVAudioSession.interruptionNotification,
-						 object: nil
-			)
+		NotificationCenter.default.addObserver(self,
+											   selector: #selector(handleRouteChange),
+											   name: AVAudioSession.routeChangeNotification,
+											   object: nil)
+		NotificationCenter.default.addObserver(self,
+											   selector: #selector(handleInteruption),
+											   name: AVAudioSession.interruptionNotification,
+											   object: nil)
 	}
 	
 	@objc func handleRouteChange(notification: Notification) {
@@ -134,7 +130,7 @@ extension AudioService: AudioServiceProtocol {
 		self.audioRecorder?.currentTime
 	}
 	
-	public func setupRecorder(completion: (Error?) -> Void) {
+	public func setupRecorder(completion: (CCError?) -> Void) {
 		guard let newRecorder = dependency.repository.makeAudioRecorder() else {
 			print("\(#function) 해당 filePath에 오디오 파일이 없습니다")
 			completion(AnyObject.self as? Error) // TODO: Error 타입 적용 필요
@@ -149,7 +145,7 @@ extension AudioService: AudioServiceProtocol {
 		completion( result ? nil : AnyObject.self as? Error ) // TODO: Error 타입 적용 필요
 	}
 	
-	public func startRecording(completion: (Error?) -> Void) {
+	public func startRecording(completion: (CCError?) -> Void) {
 		guard let isRecording = self.audioRecorder?.record() else {
 			completion(AnyObject.self as? Error) // TODO: Error 타입 적용 필요
 			return
@@ -163,7 +159,7 @@ extension AudioService: AudioServiceProtocol {
 		status = .paused
 	}
 	
-	public func stopRecording(completion: (Result<URL, Error>) -> Void) {
+	public func stopRecording(completion: (Result<URL, CCError>) -> Void) {
 		self.audioRecorder?.stop()
 		let savedFilePath = audioRecorder?.url
 		self.audioRecorder = nil
@@ -184,7 +180,7 @@ extension AudioService {
 		self.audioPlayer?.currentTime
 	}
 	
-	public func setupPlaying(from filePath: URL, completion: (Error?) -> Void) {
+	public func setupPlaying(from filePath: URL, completion: (CCError?) -> Void) {
 		guard let newplayer = dependency.repository.makeAudioPlayer(from: filePath) else {
 			print("\(#function) 해당 filePath에 오디오 파일이 없습니다")
 			completion(AnyObject.self as? Error) // TODO: Error 타입 적용 필요
@@ -199,7 +195,7 @@ extension AudioService {
 		completion( preparedPlay ? nil : AnyObject.self as? Error) // TODO: Error 타입 적용 필요
 	}
 	
-	public func startPlaying(completion: (Error?) -> Void) {
+	public func startPlaying(completion: (CCError?) -> Void) {
 		guard let isPlaying = self.audioPlayer?.play() else {
 			completion(AnyObject.self as? Error) // TODO: Error 타입 적용 필요
 			return

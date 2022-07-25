@@ -6,15 +6,16 @@
 //  Copyright © 2022 pseapplications. All rights reserved.
 //
 
+@testable import Common
 @testable import Domain
 
 import Quick
 import Nimble
 
 extension NoteUseCase {
-	fileprivate static func sut(case type: Bool) -> NoteUseCase {
+	fileprivate static func sut(case type: Bool, error: CCError? = nil) -> NoteUseCase {
 		.init(dependency: .init(
-				repository: MockNoteRepository(case: true),
+				repository: MockNoteRepository(case: type, error: error),
 				filter: .all
 			)
 		)
@@ -31,7 +32,7 @@ final class NoteUseCaseSpecs: QuickSpec {
 				afterEach { noteUseCase = nil }
 				
 				describe("NoteUseCaseManagable 추상화하고") {
-					var managable: NoteUseCaseManagable!
+					var managable: NoteManagable!
 					beforeEach { managable = noteUseCase }
 					afterEach { managable = noteUseCase	}
 					
@@ -41,7 +42,7 @@ final class NoteUseCaseSpecs: QuickSpec {
 						afterEach { newItem = nil }
 						
 						context("추가하면") {
-							var parameter: Error!
+							var parameter: CCError!
 							beforeEach {
 								managable.add(item: newItem) { error in
 									parameter = error
@@ -55,7 +56,7 @@ final class NoteUseCaseSpecs: QuickSpec {
 						}
 						
 						context("변경하면") {
-							var parameter: Error!
+							var parameter: CCError!
 							beforeEach {
 								managable.edit(newItem: .init(
 									id: newItem.id,
@@ -76,7 +77,7 @@ final class NoteUseCaseSpecs: QuickSpec {
 						}
 						
 						context("삭제하면") {
-							var parameter: Error!
+							var parameter: CCError!
 							beforeEach {
 								managable.delete(item: newItem) { error in
 									parameter = error

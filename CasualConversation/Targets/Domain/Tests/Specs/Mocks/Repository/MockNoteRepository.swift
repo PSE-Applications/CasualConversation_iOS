@@ -6,10 +6,12 @@
 //  Copyright © 2022 pseapplications. All rights reserved.
 //
 
+@testable import Common
 @testable import Domain
 
 struct MockNoteRepository {
 	let `case`: Bool
+	let error: CCError?
 }
 
 extension MockNoteRepository: NoteRepositoryProtocol {
@@ -18,16 +20,16 @@ extension MockNoteRepository: NoteRepositoryProtocol {
 		[]
 	}
 	
-	func add(item: Note, completion: (Error?) -> Void) {
-		completion( `case` ? nil : (AnyObject.self as! Error) ) // TODO: Error 타입 변동필요
+	func add(_ item: Note, completion: (CCError?) -> Void) {
+		completion( `case` ? nil : error )
 	}
 	
-	func edit(newItem: Note, completion: (Error?) -> Void) {
-		completion( `case` ? nil : (AnyObject.self as! Error) ) // TODO: Error 타입 변동필요
+	func edit(after editedItem: Note, completion: (CCError?) -> Void) {
+		completion( `case` ? nil : error )
 	}
 	
-	func delete(item: Note, completion: (Error?) -> Void) {
-		completion( `case` ? nil : (AnyObject.self as! Error) ) // TODO: Error 타입 변동필요
+	func delete(_ item: Note, completion: (CCError?) -> Void) {
+		completion( `case` ? nil : error )
 	}
 	
 }

@@ -6,10 +6,12 @@
 //  Copyright © 2022 pseapplications. All rights reserved.
 //
 
+@testable import Common
 @testable import Domain
 
 struct MockConversationRepository {
 	let `case`: Bool
+	let error: CCError?
 }
 
 extension MockConversationRepository: ConversationRepositoryProtocol {
@@ -18,16 +20,16 @@ extension MockConversationRepository: ConversationRepositoryProtocol {
 		[]
 	}
 	
-	func add(_ item: Conversation, completion: (Error?) -> Void) {
-		completion( `case` ? nil : (AnyObject.self as! Error) ) // TODO: Error 타입 변동필요
+	func add(_ item: Conversation, completion: (CCError?) -> Void) {
+		completion( `case` ? nil : error )
 	}
 	
-	func edit(newItem: Conversation, completion: (Error?) -> Void) {
-		completion( `case` ? nil : (AnyObject.self as! Error) ) // TODO: Error 타입 변동필요
+	func edit(after editedItem: Conversation, completion: (CCError?) -> Void) {
+		completion( `case` ? nil : error )
 	}
 	
-	func delete(_ item: Conversation, completion: (Error?) -> Void) {
-		completion( `case` ? nil : (AnyObject.self as! Error) ) // TODO: Error 타입 변동필요
+	func delete(_ item: Conversation, completion: (CCError?) -> Void) {
+		completion( `case` ? nil : error )
 	}
 	
 }

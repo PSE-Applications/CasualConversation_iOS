@@ -13,17 +13,16 @@ import Foundation.NSURL
 public protocol ConversationManagable: ConversationRecodable, ConversationMaintainable { }
 
 public protocol ConversationRecodable {
-	func startRecording(completion: (Error?) -> Void)
+	func startRecording(completion: (CCError?) -> Void)
 	func pauseRecording()
-	func stopRecording(completion: (Error?) -> Void)
-//	func appendPin()
+	func stopRecording(completion: (CCError?) -> Void)
 }
 
 public protocol ConversationMaintainable {
 	var list: [Conversation] { get }
-	func edit(newItem: Conversation, completion: (Error?) -> Void)
-	func delete(item: Conversation, completion: (Error?) -> Void)
-	func startPlaying(from selectedConversation: Conversation, completion: (Error?) -> Void)
+	func edit(newItem: Conversation, completion: (CCError?) -> Void)
+	func delete(item: Conversation, completion: (CCError?) -> Void)
+	func startPlaying(from selectedConversation: Conversation, completion: (CCError?) -> Void)
 	func stopPlaying()
 	func pausePlaying()
 }
@@ -54,7 +53,7 @@ public final class ConversationUseCase: Dependency, ConversationManagable {
 // MARK: - ConversationRecodable
 extension ConversationUseCase {
 	
-	private func createConversation(with filePath: URL, completion: (Error?) -> Void) {
+	private func createConversation(with filePath: URL, completion: (CCError?) -> Void) {
 		let recordedDate = Date()
 		let newItem: Conversation = .init(
 			id: UUID(),
@@ -67,28 +66,27 @@ extension ConversationUseCase {
 		self.dependency.repository.add(newItem, completion: completion)
 	}
 	
-	public func startRecording(completion: (Error?) -> Void) {
+	public func startRecording(completion: (CCError?) -> Void) {
 		self.dependency.audioService.setupRecorder() { error in
-			guard let error = error else {
-				completion(nil)
-				self.dependency.audioService.startRecording() { error in
-					guard let error = error else {
-						completion(nil)
-						return
-					}
-					completion(error)
-				}
+			guard error == nil else {
+				completion(error)
 				return
 			}
-			completion(error)
 		}
+		self.dependency.audioService.startRecording() { error in
+			guard error == nil else {
+				completion(error)
+				return
+			}
+		}
+		completion(nil)
 	}
 
 	public func pauseRecording() {
 		self.dependency.audioService.pauseRecording()
 	}
 	
-	public func stopRecording(completion: (Error?) -> Void) {
+	public func stopRecording(completion: (CCError?) -> Void) {
 		self.dependency.audioService.stopRecording() { result in
 			switch result {
 			case .success(let savedfilePath):
@@ -108,30 +106,29 @@ extension ConversationUseCase {
 		self.dependency.repository.list
 	}
 	
-	public func edit(newItem: Conversation, completion: (Error?) -> Void) {
-		self.dependency.repository.edit(newItem: newItem, completion: completion)
+	public func edit(newItem: Conversation, completion: (CCError?) -> Void) {
+		self.dependency.repository.edit(after: newItem, completion: completion)
 	}
 	
-	public func delete(item: Conversation, completion: (Error?) -> Void) {
+	public func delete(item: Conversation, completion: (CCError?) -> Void) {
 		self.dependency.repository.delete(item, completion: completion)
 	}
 	
-	public func startPlaying(from selectedConversation: Conversation, completion: (Error?) -> Void) {
+	public func startPlaying(from selectedConversation: Conversation, completion: (CCError?) -> Void) {
 		let filePath = selectedConversation.recordFilePath
 		self.dependency.audioService.setupPlaying(from: filePath) { error in
-			guard let error = error else {
-				completion(nil)
-				self.dependency.audioService.startPlaying() { error in
-					guard let error = error else {
-						completion(nil)
-						return
-					}
-					completion(error)
-				}
+			guard error == nil else {
+				completion(error)
 				return
 			}
-			completion(error)
 		}
+		self.dependency.audioService.startPlaying() { error in
+			guard error == nil else {
+				completion(error)
+				return
+			}
+		}
+		completion(nil)
 	}
 	
 	public func stopPlaying() {

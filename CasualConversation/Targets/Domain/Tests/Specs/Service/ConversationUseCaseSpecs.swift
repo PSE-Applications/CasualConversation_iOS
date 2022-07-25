@@ -6,15 +6,16 @@
 //  Copyright © 2022 pseapplications. All rights reserved.
 //
 
+@testable import Common
 @testable import Domain
 
 import Quick
 import Nimble
 
 extension ConversationUseCase {
-	fileprivate static func sut(case type: Bool) -> ConversationUseCase {
+	fileprivate static func sut(case type: Bool, error: CCError? = nil) -> ConversationUseCase {
 		.init(dependency: .init(
-			repository: MockConversationRepository(case: type),
+			repository: MockConversationRepository(case: type, error: error),
 			recordService: AudioService.sut))
 	}
 }
@@ -29,12 +30,12 @@ final class ConversationUseCaseSpecs: QuickSpec {
 				afterEach { conversationUseCase = nil }
 				
 				describe("ConversationUseCaseManagable 추상화하고") {
-					var managable: ConversationUseCaseManagable!
+					var managable: ConversationManagable!
 					beforeEach { managable = conversationUseCase }
 					afterEach { managable = conversationUseCase	}
 					
 					context("녹음 시작하면 startRecording 메서드") {
-						var parameter: Error!
+						var parameter: CCError!
 						beforeEach {
 							managable.startRecording { error in
 								parameter = error
@@ -47,7 +48,7 @@ final class ConversationUseCaseSpecs: QuickSpec {
 					}
 					
 					context("녹음 중단하면 stopRecording 메서드") {
-						var parameter: Error!
+						var parameter: CCError!
 						beforeEach {
 							managable.startRecording { _ in	}
 							managable.stopRecording() { error in
@@ -70,7 +71,7 @@ final class ConversationUseCaseSpecs: QuickSpec {
 						let baseItem = Conversation.empty
 						
 						context("수정하면") {
-							var parameter: Error!
+							var parameter: CCError!
 							beforeEach {
 								maintainable.edit(newItem:
 										.init(
@@ -93,7 +94,7 @@ final class ConversationUseCaseSpecs: QuickSpec {
 						}
 						
 						context("삭제하면") {
-							var parameter: Error!
+							var parameter: CCError!
 							beforeEach {
 								maintainable.delete(item: baseItem) { error in
 									parameter = error
@@ -110,7 +111,7 @@ final class ConversationUseCaseSpecs: QuickSpec {
 						let baseItem = Conversation.empty
 						
 						context("재생 시작하면 startPlaying 메서드") {
-							var parameter: Error!
+							var parameter: CCError!
 							beforeEach {
 								maintainable.startPlaying(from: baseItem) { error in
 									parameter = error
@@ -123,6 +124,15 @@ final class ConversationUseCaseSpecs: QuickSpec {
 						}
 					}
 				}
+			}
+			describe("실패케이스 - bindingFailure") {
+				beforeEach {
+					conversationUseCase = .sut(
+						case: false,
+						error: .conversationManageFailed(reason: .bindingFailure)
+					)
+				}
+				afterEach { conversationUseCase = nil }
 			}
 		}
 	}

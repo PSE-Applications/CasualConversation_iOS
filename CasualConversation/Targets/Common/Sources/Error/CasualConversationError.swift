@@ -9,12 +9,14 @@
 import Foundation
 
 public enum CCError: Error {
-    
+	
     public enum SystemErrorReason {
         case escapingClosureIsLost
         case typeCastingNotWork
         case optionalBindingNotWork
     }
+	
+	case systemErrorOccured(reason: SystemErrorReason)
     
     // MARK: - Domain
     public enum ConversationManageFailureReason {
@@ -25,7 +27,6 @@ public enum CCError: Error {
         
     }
     
-    case systemErrorOccured(reason: SystemErrorReason)
     case conversationManageFailed(reason: ConversationManageFailureReason)
     case noteManageFailed(reason: NoteManageFailureReason)
     

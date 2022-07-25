@@ -9,9 +9,9 @@ import Common
 
 public protocol NoteManagable {
 	var list: [Note] { get }
-	func add(item: Note, completion: (Error?) -> Void)
-	func edit(newItem: Note, completion: (Error?) -> Void)
-	func delete(item: Note, completion: (Error?) -> Void)
+	func add(item: Note, completion: (CCError?) -> Void)
+	func edit(newItem: Note, completion: (CCError?) -> Void)
+	func delete(item: Note, completion: (CCError?) -> Void)
 }
 
 public final class NoteUseCase: Dependency {
@@ -52,16 +52,16 @@ extension NoteUseCase: NoteManagable {
 		self.dependency.repository.list
 	}
 	
-	public func add(item: Note, completion: (Error?) -> Void) {
-		self.dependency.repository.add(item: item, completion: completion)
+	public func add(item: Note, completion: (CCError?) -> Void) {
+		self.dependency.repository.add(item, completion: completion)
 	}
 	
-	public func edit(newItem: Note, completion: (Error?) -> Void) {
-		self.dependency.repository.edit(newItem: newItem, completion: completion)
+	public func edit(newItem: Note, completion: (CCError?) -> Void) {
+		self.dependency.repository.edit(after: newItem, completion: completion)
 	}
 	
-	public func delete(item: Note, completion: (Error?) -> Void) {
-		self.dependency.repository.delete(item: item, completion: completion)
+	public func delete(item: Note, completion: (CCError?) -> Void) {
+		self.dependency.repository.delete(item, completion: completion)
 	}
 
 }
