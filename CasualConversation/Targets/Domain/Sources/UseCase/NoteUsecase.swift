@@ -7,7 +7,7 @@
 
 import Common
 
-public protocol NoteUseCaseManagable {
+public protocol NoteManagable {
 	var list: [Note] { get }
 	func add(item: Note, completion: (Error?) -> Void)
 	func edit(newItem: Note, completion: (Error?) -> Void)
@@ -46,7 +46,7 @@ public final class NoteUseCase: Dependency {
 	
 }
 
-extension NoteUseCase: NoteUseCaseManagable {
+extension NoteUseCase: NoteManagable {
 	
 	public var list: [Note] {
 		self.dependency.repository.list

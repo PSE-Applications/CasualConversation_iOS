@@ -14,9 +14,9 @@ import Combine
 public final class ConversationListViewModel: Dependency, ObservableObject {
 	
 	public struct Dependency {
-		let useCase: ConversationUseCaseManagable
+		let useCase: ConversationManagable
 		
-		public init(useCase: ConversationUseCaseManagable) {
+		public init(useCase: ConversationManagable) {
 			self.useCase = useCase
 		}
 	}

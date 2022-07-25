@@ -14,11 +14,11 @@ public final class SelectionViewModel: Dependency, ObservableObject {
 	
 	public struct Dependency {
 		let conversationUseCase: ConversationMaintainable
-		let noteUseCase: NoteUseCaseManagable
+		let noteUseCase: NoteManagable
 		
 		public init(
 			conversationUseCase: ConversationMaintainable,
-			noteUseCase: NoteUseCaseManagable
+			noteUseCase: NoteManagable
 		) {
 			self.conversationUseCase = conversationUseCase
 			self.noteUseCase = noteUseCase

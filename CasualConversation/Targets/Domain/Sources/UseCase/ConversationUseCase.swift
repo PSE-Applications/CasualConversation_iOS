@@ -10,7 +10,7 @@ import Common
 import Foundation.NSURL
 
 
-public protocol ConversationUseCaseManagable: ConversationRecodable, ConversationMaintainable { }
+public protocol ConversationManagable: ConversationRecodable, ConversationMaintainable { }
 
 public protocol ConversationRecodable {
 	func startRecording(completion: (Error?) -> Void)
@@ -28,7 +28,7 @@ public protocol ConversationMaintainable {
 	func pausePlaying()
 }
 
-public final class ConversationUseCase: Dependency, ConversationUseCaseManagable {
+public final class ConversationUseCase: Dependency, ConversationManagable {
 	
 	public struct Dependency {
 		let repository: ConversationRepositoryProtocol
@@ -44,7 +44,6 @@ public final class ConversationUseCase: Dependency, ConversationUseCaseManagable
 	}
 	
 	public let dependency: Dependency
-//	private var pinTemporaryStorage: [TimeInterval]?
 	
 	public init(dependency: Dependency) {
 		self.dependency = dependency
@@ -63,7 +62,7 @@ extension ConversationUseCase {
 			members: [],
 			recordFilePath: filePath,
 			recordedDate: recordedDate,
-			pins: [] // self.pinTemporaryStorage ?? []
+			pins: []
 		)
 		self.dependency.repository.add(newItem, completion: completion)
 	}
@@ -99,14 +98,7 @@ extension ConversationUseCase {
 			}
 		}
 	}
-// TODO: 저장 위치 고민 중
-//	public func appendPin() {
-//		if self.dependency.audioService.status == .playing,
-//		   self.pinTemporaryStorage != nil {
-//			let pinTime = self.dependency.audioService.currentRecordingTime
-//			self.pinTemporaryStorage?.append(pinTime)
-//		}
-//	}
+	
 }
 
 // MARK: - ConversationMaintainable

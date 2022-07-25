@@ -13,9 +13,9 @@ import Combine
 public final class NoteSetViewModel: Dependency, ObservableObject {
 	
 	public struct Dependency {
-		let useCase: NoteUseCaseManagable
+		let useCase: NoteManagable
 		
-		public init(useCase: NoteUseCaseManagable) {
+		public init(useCase: NoteManagable) {
 			self.useCase = useCase
 		}
 	}
