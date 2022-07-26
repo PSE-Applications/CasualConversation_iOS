@@ -20,19 +20,24 @@ public enum CCError: Error {
     
     // MARK: - Domain
     public enum ConversationManageFailureReason {
-		case bindingFailure
-		case fileURLPathInvalidated
-		case fileURLPathSavedFailure
-		case preparedFailure
-		case startedFailure
+		
     }
     
     public enum NoteManageFailureReason {
         
     }
+	
+	public enum AudioServiceManageFailureReason {
+		case bindingFailure
+		case fileURLPathInvalidated
+		case fileURLPathSavedFailure
+		case preparedFailure
+		case startedFailure
+	}
     
     case conversationManageFailed(reason: ConversationManageFailureReason)
     case noteManageFailed(reason: NoteManageFailureReason)
+	case audioServiceFailed(reason: AudioServiceManageFailureReason)
     
     // MARK: - Data
     public enum RepositoryFailureReason {

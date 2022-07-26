@@ -97,7 +97,7 @@ final class ConversationUseCaseSpecs: QuickSpec {
 				beforeEach {
 					conversationUseCase = .sut(
 						case: false,
-						error: .conversationManageFailed(reason: .bindingFailure)
+						error: .audioServiceFailed(reason: .bindingFailure)
 					)
 				}
 				afterEach { conversationUseCase = nil }

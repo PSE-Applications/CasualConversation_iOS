@@ -43,19 +43,6 @@ public final class ConversationUseCase: Dependency, ConversationManagable {
 // MARK: - ConversationRecodable
 extension ConversationUseCase {
 	
-	private func createConversation(with filePath: URL, completion: (CCError?) -> Void) {
-		let recordedDate = Date()
-		let newItem: Conversation = .init(
-			id: UUID(),
-			title: recordedDate.description,
-			members: [],
-			recordFilePath: filePath,
-			recordedDate: recordedDate,
-			pins: []
-		)
-		self.dependency.repository.add(newItem, completion: completion)
-	}
-	
 	public func add(_ item: Conversation, completion: (CCError?) -> Void) {
 		self.dependency.repository.add(item, completion: completion)
 	}

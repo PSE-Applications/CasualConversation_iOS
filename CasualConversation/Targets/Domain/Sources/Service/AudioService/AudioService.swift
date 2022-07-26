@@ -132,17 +132,17 @@ extension AudioService: AudioServiceProtocol {
 	
 	public func setupRecorder(completion: (CCError?) -> Void) {
 		guard let newRecorder = dependency.repository.makeAudioRecorder() else {
-			completion(.conversationManageFailed(reason: .bindingFailure))
+			completion(.audioServiceFailed(reason: .bindingFailure))
 			return
 		}
 		self.audioRecorder = newRecorder
 		self.audioRecorder?.delegate = self
 		guard let isPreparedToRecord = self.audioRecorder?.prepareToRecord() else {
-			completion(.conversationManageFailed(reason: .bindingFailure))
+			completion(.audioServiceFailed(reason: .bindingFailure))
 			return
 		}
 		guard isPreparedToRecord else {
-			completion(.conversationManageFailed(reason: .preparedFailure))
+			completion(.audioServiceFailed(reason: .preparedFailure))
 			return
 		}
 		completion(nil)
@@ -150,12 +150,12 @@ extension AudioService: AudioServiceProtocol {
 	
 	public func startRecording(completion: (CCError?) -> Void) {
 		guard let isRecording = self.audioRecorder?.record() else {
-			completion(.conversationManageFailed(reason: .bindingFailure))
+			completion(.audioServiceFailed(reason: .bindingFailure))
 			return
 		}
 		status = isRecording ? .recording : .stopped
 		guard isRecording else {
-			completion(.conversationManageFailed(reason: .startedFailure))
+			completion(.audioServiceFailed(reason: .startedFailure))
 			return
 		}
 		completion(nil)
@@ -172,7 +172,7 @@ extension AudioService: AudioServiceProtocol {
 		self.audioRecorder = nil
 		status = .stopped
 		guard let filePath = savedFilePath else {
-			completion(.failure(.conversationManageFailed(reason: .fileURLPathSavedFailure)))
+			completion(.failure(.audioServiceFailed(reason: .fileURLPathSavedFailure)))
 			return
 		}
 		completion(.success(filePath))
@@ -189,17 +189,17 @@ extension AudioService {
 	
 	public func setupPlaying(from filePath: URL, completion: (CCError?) -> Void) {
 		guard let newplayer = dependency.repository.makeAudioPlayer(from: filePath) else {
-			completion(.conversationManageFailed(reason: .bindingFailure))
+			completion(.audioServiceFailed(reason: .bindingFailure))
 			return
 		}
 		self.audioPlayer = newplayer
 		self.audioPlayer?.delegate = self
 		guard let isPreparedToPlay = self.audioPlayer?.prepareToPlay() else {
-			completion(.conversationManageFailed(reason: .bindingFailure))
+			completion(.audioServiceFailed(reason: .bindingFailure))
 			return
 		}
 		guard isPreparedToPlay else {
-			completion(.conversationManageFailed(reason: .preparedFailure))
+			completion(.audioServiceFailed(reason: .preparedFailure))
 			return
 		}
 		completion(nil)
@@ -207,12 +207,12 @@ extension AudioService {
 	
 	public func startPlaying(completion: (CCError?) -> Void) {
 		guard let isPlaying = self.audioPlayer?.play() else {
-			completion(.conversationManageFailed(reason: .bindingFailure))
+			completion(.audioServiceFailed(reason: .bindingFailure))
 			return
 		}
 		status = isPlaying ? .playing : .stopped
 		guard isPlaying else {
-			completion(.conversationManageFailed(reason: .preparedFailure))
+			completion(.audioServiceFailed(reason: .preparedFailure))
 			return
 		}
 		completion(nil)
