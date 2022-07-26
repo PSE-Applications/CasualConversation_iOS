@@ -11,13 +11,13 @@ import Domain
 
 public struct NoteRepository: NoteRepositoryProtocol {
 	
-	public var list: [Note] = [] // TODO: 처리 필요
+	public var fetchList: [Note] = [] // TODO: 처리 필요
 	
-	public func add(_ item: Note, completion: (CCError?) -> Void) {
+	public func create(_ item: Note, completion: (CCError?) -> Void) {
 		// TODO: 처리 필요
 	}
 	
-	public func edit(after editedItem: Note, completion: (CCError?) -> Void) {
+	public func update(after editedItem: Note, completion: (CCError?) -> Void) {
 		// TODO: 처리 필요
 	}
 	

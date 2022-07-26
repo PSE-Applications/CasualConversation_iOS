@@ -11,13 +11,13 @@ import Domain
 
 public struct ConversationRepository: ConversationRepositoryProtocol {
 	
-	public var list: [Conversation] = []
+	public var fetchList: [Conversation] = [] // TODO: 처리 필요
 	
-	public func add(_ item: Conversation, completion: (CCError?) -> Void) {
+	public func create(_ item: Conversation, completion: (CCError?) -> Void) {
 		// TODO: 처리 필요
 	}
 	
-	public func edit(after editedItem: Conversation, completion: (CCError?) -> Void) {
+	public func update(after editedItem: Conversation, completion: (CCError?) -> Void) {
 		// TODO: 처리 필요
 	}
 	

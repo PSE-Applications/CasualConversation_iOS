@@ -16,15 +16,15 @@ struct MockNoteRepository {
 
 extension MockNoteRepository: NoteRepositoryProtocol {
 	
-	var list: [Note] {
+	var fetchList: [Note] {
 		[]
 	}
 	
-	func add(_ item: Note, completion: (CCError?) -> Void) {
+	func create(_ item: Note, completion: (CCError?) -> Void) {
 		completion( `case` ? nil : error )
 	}
 	
-	func edit(after editedItem: Note, completion: (CCError?) -> Void) {
+	func update(after editedItem: Note, completion: (CCError?) -> Void) {
 		completion( `case` ? nil : error )
 	}
 	

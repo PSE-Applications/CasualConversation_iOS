@@ -16,15 +16,15 @@ struct MockConversationRepository {
 
 extension MockConversationRepository: ConversationRepositoryProtocol {
 	
-	var list: [Conversation] {
+	var fetchList: [Conversation] {
 		[]
 	}
 	
-	func add(_ item: Conversation, completion: (CCError?) -> Void) {
+	func create(_ item: Conversation, completion: (CCError?) -> Void) {
 		completion( `case` ? nil : error )
 	}
 	
-	func edit(after editedItem: Conversation, completion: (CCError?) -> Void) {
+	func update(after editedItem: Conversation, completion: (CCError?) -> Void) {
 		completion( `case` ? nil : error )
 	}
 	

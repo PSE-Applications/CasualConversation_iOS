@@ -44,7 +44,7 @@ public final class ConversationUseCase: Dependency, ConversationManagable {
 extension ConversationUseCase {
 	
 	public func add(_ item: Conversation, completion: (CCError?) -> Void) {
-		self.dependency.repository.add(item, completion: completion)
+		self.dependency.repository.create(item, completion: completion)
 	}
 	
 }
@@ -53,11 +53,11 @@ extension ConversationUseCase {
 extension ConversationUseCase {
 	
 	public var list: [Conversation] {
-		self.dependency.repository.list
+		self.dependency.repository.fetchList
 	}
 	
 	public func edit(after editedItem: Conversation, completion: (CCError?) -> Void) {
-		self.dependency.repository.edit(after: editedItem, completion: completion)
+		self.dependency.repository.update(after: editedItem, completion: completion)
 	}
 	
 	public func delete(_ item: Conversation, completion: (CCError?) -> Void) {
