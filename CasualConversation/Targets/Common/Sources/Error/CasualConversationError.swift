@@ -20,7 +20,11 @@ public enum CCError: Error {
     
     // MARK: - Domain
     public enum ConversationManageFailureReason {
-        
+		case bindingFailure
+		case fileURLPathInvalidated
+		case fileURLPathSavedFailure
+		case preparedFailure
+		case startedFailure
     }
     
     public enum NoteManageFailureReason {

@@ -132,26 +132,33 @@ extension AudioService: AudioServiceProtocol {
 	
 	public func setupRecorder(completion: (CCError?) -> Void) {
 		guard let newRecorder = dependency.repository.makeAudioRecorder() else {
-			print("\(#function) 해당 filePath에 오디오 파일이 없습니다")
-			completion(AnyObject.self as? Error) // TODO: Error 타입 적용 필요
+			completion(.conversationManageFailed(reason: .bindingFailure))
 			return
 		}
 		self.audioRecorder = newRecorder
 		self.audioRecorder?.delegate = self
-		guard let result = self.audioRecorder?.prepareToRecord() else {
-			completion(AnyObject.self as? Error) // TODO: Error 타입 적용 필요
+		guard let isPreparedToRecord = self.audioRecorder?.prepareToRecord() else {
+			completion(.conversationManageFailed(reason: .bindingFailure))
 			return
 		}
-		completion( result ? nil : AnyObject.self as? Error ) // TODO: Error 타입 적용 필요
+		guard isPreparedToRecord else {
+			completion(.conversationManageFailed(reason: .preparedFailure))
+			return
+		}
+		completion(nil)
 	}
 	
 	public func startRecording(completion: (CCError?) -> Void) {
 		guard let isRecording = self.audioRecorder?.record() else {
-			completion(AnyObject.self as? Error) // TODO: Error 타입 적용 필요
+			completion(.conversationManageFailed(reason: .bindingFailure))
 			return
 		}
 		status = isRecording ? .recording : .stopped
-		completion( isRecording ? nil : AnyObject.self as? Error) // TODO: Error 타입 적용 필요
+		guard isRecording else {
+			completion(.conversationManageFailed(reason: .startedFailure))
+			return
+		}
+		completion(nil)
 	}
 	
 	public func pauseRecording() {
@@ -165,7 +172,7 @@ extension AudioService: AudioServiceProtocol {
 		self.audioRecorder = nil
 		status = .stopped
 		guard let filePath = savedFilePath else {
-			completion(.failure(AnyObject.self as! Error)) // TODO: Error 타입 적용 필요
+			completion(.failure(.conversationManageFailed(reason: .fileURLPathSavedFailure)))
 			return
 		}
 		completion(.success(filePath))
@@ -182,26 +189,33 @@ extension AudioService {
 	
 	public func setupPlaying(from filePath: URL, completion: (CCError?) -> Void) {
 		guard let newplayer = dependency.repository.makeAudioPlayer(from: filePath) else {
-			print("\(#function) 해당 filePath에 오디오 파일이 없습니다")
-			completion(AnyObject.self as? Error) // TODO: Error 타입 적용 필요
+			completion(.conversationManageFailed(reason: .bindingFailure))
 			return
 		}
 		self.audioPlayer = newplayer
 		self.audioPlayer?.delegate = self
-		guard let preparedPlay = self.audioPlayer?.prepareToPlay() else {
-			completion(AnyObject.self as? Error) // TODO: Error 타입 적용 필요
+		guard let isPreparedToPlay = self.audioPlayer?.prepareToPlay() else {
+			completion(.conversationManageFailed(reason: .bindingFailure))
 			return
 		}
-		completion( preparedPlay ? nil : AnyObject.self as? Error) // TODO: Error 타입 적용 필요
+		guard isPreparedToPlay else {
+			completion(.conversationManageFailed(reason: .preparedFailure))
+			return
+		}
+		completion(nil)
 	}
 	
 	public func startPlaying(completion: (CCError?) -> Void) {
 		guard let isPlaying = self.audioPlayer?.play() else {
-			completion(AnyObject.self as? Error) // TODO: Error 타입 적용 필요
+			completion(.conversationManageFailed(reason: .bindingFailure))
 			return
 		}
 		status = isPlaying ? .playing : .stopped
-		completion( isPlaying ? nil : AnyObject.self as? Error) // TODO: Error 타입 적용 필요
+		guard isPlaying else {
+			completion(.conversationManageFailed(reason: .preparedFailure))
+			return
+		}
+		completion(nil)
 	}
 	
 	public func pausePlaying() {
