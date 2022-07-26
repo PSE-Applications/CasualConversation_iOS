@@ -18,6 +18,7 @@ public protocol AudioPlayable {
 	func startPlaying(completion: (CCError?) -> Void)
 	func pausePlaying()
 	func stopPlaying()
+	func finishPlaying()
 }
 
 public protocol AudioRecordable {
@@ -167,15 +168,14 @@ extension AudioService: AudioServiceProtocol {
 	}
 	
 	public func stopRecording(completion: (Result<URL, CCError>) -> Void) {
+		defer { self.audioRecorder = nil }
 		self.audioRecorder?.stop()
-		let savedFilePath = audioRecorder?.url
-		self.audioRecorder = nil
 		status = .stopped
-		guard let filePath = savedFilePath else {
+		guard let savedFilePath = audioRecorder?.url else {
 			completion(.failure(.audioServiceFailed(reason: .fileURLPathSavedFailure)))
 			return
 		}
-		completion(.success(filePath))
+		completion(.success(savedFilePath))
 	}
 	
 }
@@ -226,6 +226,10 @@ extension AudioService {
 	public func stopPlaying() {
 		self.audioPlayer?.stop()
 		status = .stopped
+	}
+	
+	public func finishPlaying() {
+		self.audioPlayer = nil
 	}
 	
 }
