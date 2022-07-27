@@ -10,41 +10,29 @@ import Common
 import Foundation.NSURL
 
 
-public protocol ConversationUseCaseManagable: ConversationRecodable, ConversationMaintainable { }
+public protocol ConversationManagable: ConversationRecodable, ConversationMaintainable { }
 
 public protocol ConversationRecodable {
-	func startRecording(completion: (Error?) -> Void)
-	func pauseRecording()
-	func stopRecording(completion: (Error?) -> Void)
-//	func appendPin()
+	func add(_ item: Conversation, completion: (CCError?) -> Void)
 }
 
 public protocol ConversationMaintainable {
 	var list: [Conversation] { get }
-	func edit(newItem: Conversation, completion: (Error?) -> Void)
-	func delete(item: Conversation, completion: (Error?) -> Void)
-	func startPlaying(from selectedConversation: Conversation, completion: (Error?) -> Void)
-	func stopPlaying()
-	func pausePlaying()
+	func edit(after editedItem: Conversation, completion: (CCError?) -> Void)
+	func delete(_ item: Conversation, completion: (CCError?) -> Void)
 }
 
-public final class ConversationUseCase: Dependency, ConversationUseCaseManagable {
+public final class ConversationUseCase: Dependency, ConversationManagable {
 	
 	public struct Dependency {
 		let repository: ConversationRepositoryProtocol
-		let audioService: AudioServiceProtocol
 		
-		public init(
-			repository: ConversationRepositoryProtocol,
-			recordService: AudioServiceProtocol
-		) {
+		public init(repository: ConversationRepositoryProtocol) {
 			self.repository = repository
-			self.audioService = recordService
 		}
 	}
 	
 	public let dependency: Dependency
-//	private var pinTemporaryStorage: [TimeInterval]?
 	
 	public init(dependency: Dependency) {
 		self.dependency = dependency
@@ -55,99 +43,25 @@ public final class ConversationUseCase: Dependency, ConversationUseCaseManagable
 // MARK: - ConversationRecodable
 extension ConversationUseCase {
 	
-	private func createConversation(with filePath: URL, completion: (Error?) -> Void) {
-		let recordedDate = Date()
-		let newItem: Conversation = .init(
-			id: UUID(),
-			title: recordedDate.description,
-			members: [],
-			recordFilePath: filePath,
-			recordedDate: recordedDate,
-			pins: [] // self.pinTemporaryStorage ?? []
-		)
-		self.dependency.repository.add(newItem, completion: completion)
+	public func add(_ item: Conversation, completion: (CCError?) -> Void) {
+		self.dependency.repository.create(item, completion: completion)
 	}
 	
-	public func startRecording(completion: (Error?) -> Void) {
-		self.dependency.audioService.setupRecorder() { error in
-			guard let error = error else {
-				completion(nil)
-				self.dependency.audioService.startRecording() { error in
-					guard let error = error else {
-						completion(nil)
-						return
-					}
-					completion(error)
-				}
-				return
-			}
-			completion(error)
-		}
-	}
-
-	public func pauseRecording() {
-		self.dependency.audioService.pauseRecording()
-	}
-	
-	public func stopRecording(completion: (Error?) -> Void) {
-		self.dependency.audioService.stopRecording() { result in
-			switch result {
-			case .success(let savedfilePath):
-				self.createConversation(with: savedfilePath, completion: completion)
-			case .failure(let error):
-				completion(error)
-			}
-		}
-	}
-// TODO: 저장 위치 고민 중
-//	public func appendPin() {
-//		if self.dependency.audioService.status == .playing,
-//		   self.pinTemporaryStorage != nil {
-//			let pinTime = self.dependency.audioService.currentRecordingTime
-//			self.pinTemporaryStorage?.append(pinTime)
-//		}
-//	}
 }
 
 // MARK: - ConversationMaintainable
 extension ConversationUseCase {
 	
 	public var list: [Conversation] {
-		self.dependency.repository.list
+		self.dependency.repository.fetchList
 	}
 	
-	public func edit(newItem: Conversation, completion: (Error?) -> Void) {
-		self.dependency.repository.edit(newItem: newItem, completion: completion)
+	public func edit(after editedItem: Conversation, completion: (CCError?) -> Void) {
+		self.dependency.repository.update(after: editedItem, completion: completion)
 	}
 	
-	public func delete(item: Conversation, completion: (Error?) -> Void) {
+	public func delete(_ item: Conversation, completion: (CCError?) -> Void) {
 		self.dependency.repository.delete(item, completion: completion)
-	}
-	
-	public func startPlaying(from selectedConversation: Conversation, completion: (Error?) -> Void) {
-		let filePath = selectedConversation.recordFilePath
-		self.dependency.audioService.setupPlaying(from: filePath) { error in
-			guard let error = error else {
-				completion(nil)
-				self.dependency.audioService.startPlaying() { error in
-					guard let error = error else {
-						completion(nil)
-						return
-					}
-					completion(error)
-				}
-				return
-			}
-			completion(error)
-		}
-	}
-	
-	public func stopPlaying() {
-		self.dependency.audioService.stopPlaying()
-	}
-	
-	public func pausePlaying() {
-		self.dependency.audioService.pauseRecording()
 	}
 	
 }

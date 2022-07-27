@@ -14,19 +14,20 @@ import AVFAudio
 public protocol AudioPlayable {
 	var status: AudioStatus { get }
 	var currentPlayingTime: TimeInterval? { get }
-	func setupPlaying(from filePath: URL, completion: (Error?) -> Void)
-	func startPlaying(completion: (Error?) -> Void)
+	func setupPlaying(from filePath: URL, completion: (CCError?) -> Void)
+	func startPlaying(completion: (CCError?) -> Void)
 	func pausePlaying()
 	func stopPlaying()
+	func finishPlaying()
 }
 
 public protocol AudioRecordable {
 	var status: AudioStatus { get }
 	var currentRecordingTime: TimeInterval? { get }
-	func setupRecorder(completion: (Error?) -> Void)
-	func startRecording(completion: (Error?) -> Void)
+	func setupRecorder(completion: (CCError?) -> Void)
+	func startRecording(completion: (CCError?) -> Void)
 	func pauseRecording()
-	func stopRecording(completion: (Result<URL, Error>) -> Void)
+	func stopRecording(completion: (Result<URL, CCError>) -> Void)
 }
 
 public protocol AudioServiceProtocol: AudioPlayable, AudioRecordable { }
@@ -60,18 +61,14 @@ public final class AudioService: NSObject, Dependency, ObservableObject {
 	}
 	
 	private func setupNotificationCenter() {
-		NotificationCenter.default
-			.addObserver(self,
-						 selector: #selector(handleRouteChange),
-						 name: AVAudioSession.routeChangeNotification,
-						 object: nil
-			)
-		NotificationCenter.default
-			.addObserver(self,
-						 selector: #selector(handleInteruption),
-						 name: AVAudioSession.interruptionNotification,
-						 object: nil
-			)
+		NotificationCenter.default.addObserver(self,
+											   selector: #selector(handleRouteChange),
+											   name: AVAudioSession.routeChangeNotification,
+											   object: nil)
+		NotificationCenter.default.addObserver(self,
+											   selector: #selector(handleInteruption),
+											   name: AVAudioSession.interruptionNotification,
+											   object: nil)
 	}
 	
 	@objc func handleRouteChange(notification: Notification) {
@@ -134,28 +131,35 @@ extension AudioService: AudioServiceProtocol {
 		self.audioRecorder?.currentTime
 	}
 	
-	public func setupRecorder(completion: (Error?) -> Void) {
+	public func setupRecorder(completion: (CCError?) -> Void) {
 		guard let newRecorder = dependency.repository.makeAudioRecorder() else {
-			print("\(#function) 해당 filePath에 오디오 파일이 없습니다")
-			completion(AnyObject.self as? Error) // TODO: Error 타입 적용 필요
+			completion(.audioServiceFailed(reason: .bindingFailure))
 			return
 		}
 		self.audioRecorder = newRecorder
 		self.audioRecorder?.delegate = self
-		guard let result = self.audioRecorder?.prepareToRecord() else {
-			completion(AnyObject.self as? Error) // TODO: Error 타입 적용 필요
+		guard let isPreparedToRecord = self.audioRecorder?.prepareToRecord() else {
+			completion(.audioServiceFailed(reason: .bindingFailure))
 			return
 		}
-		completion( result ? nil : AnyObject.self as? Error ) // TODO: Error 타입 적용 필요
+		guard isPreparedToRecord else {
+			completion(.audioServiceFailed(reason: .preparedFailure))
+			return
+		}
+		completion(nil)
 	}
 	
-	public func startRecording(completion: (Error?) -> Void) {
+	public func startRecording(completion: (CCError?) -> Void) {
 		guard let isRecording = self.audioRecorder?.record() else {
-			completion(AnyObject.self as? Error) // TODO: Error 타입 적용 필요
+			completion(.audioServiceFailed(reason: .bindingFailure))
 			return
 		}
 		status = isRecording ? .recording : .stopped
-		completion( isRecording ? nil : AnyObject.self as? Error) // TODO: Error 타입 적용 필요
+		guard isRecording else {
+			completion(.audioServiceFailed(reason: .startedFailure))
+			return
+		}
+		completion(nil)
 	}
 	
 	public func pauseRecording() {
@@ -163,16 +167,15 @@ extension AudioService: AudioServiceProtocol {
 		status = .paused
 	}
 	
-	public func stopRecording(completion: (Result<URL, Error>) -> Void) {
+	public func stopRecording(completion: (Result<URL, CCError>) -> Void) {
+		defer { self.audioRecorder = nil }
 		self.audioRecorder?.stop()
-		let savedFilePath = audioRecorder?.url
-		self.audioRecorder = nil
 		status = .stopped
-		guard let filePath = savedFilePath else {
-			completion(.failure(AnyObject.self as! Error)) // TODO: Error 타입 적용 필요
+		guard let savedFilePath = audioRecorder?.url else {
+			completion(.failure(.audioServiceFailed(reason: .fileURLPathSavedFailure)))
 			return
 		}
-		completion(.success(filePath))
+		completion(.success(savedFilePath))
 	}
 	
 }
@@ -184,28 +187,35 @@ extension AudioService {
 		self.audioPlayer?.currentTime
 	}
 	
-	public func setupPlaying(from filePath: URL, completion: (Error?) -> Void) {
+	public func setupPlaying(from filePath: URL, completion: (CCError?) -> Void) {
 		guard let newplayer = dependency.repository.makeAudioPlayer(from: filePath) else {
-			print("\(#function) 해당 filePath에 오디오 파일이 없습니다")
-			completion(AnyObject.self as? Error) // TODO: Error 타입 적용 필요
+			completion(.audioServiceFailed(reason: .bindingFailure))
 			return
 		}
 		self.audioPlayer = newplayer
 		self.audioPlayer?.delegate = self
-		guard let preparedPlay = self.audioPlayer?.prepareToPlay() else {
-			completion(AnyObject.self as? Error) // TODO: Error 타입 적용 필요
+		guard let isPreparedToPlay = self.audioPlayer?.prepareToPlay() else {
+			completion(.audioServiceFailed(reason: .bindingFailure))
 			return
 		}
-		completion( preparedPlay ? nil : AnyObject.self as? Error) // TODO: Error 타입 적용 필요
+		guard isPreparedToPlay else {
+			completion(.audioServiceFailed(reason: .preparedFailure))
+			return
+		}
+		completion(nil)
 	}
 	
-	public func startPlaying(completion: (Error?) -> Void) {
+	public func startPlaying(completion: (CCError?) -> Void) {
 		guard let isPlaying = self.audioPlayer?.play() else {
-			completion(AnyObject.self as? Error) // TODO: Error 타입 적용 필요
+			completion(.audioServiceFailed(reason: .bindingFailure))
 			return
 		}
 		status = isPlaying ? .playing : .stopped
-		completion( isPlaying ? nil : AnyObject.self as? Error) // TODO: Error 타입 적용 필요
+		guard isPlaying else {
+			completion(.audioServiceFailed(reason: .preparedFailure))
+			return
+		}
+		completion(nil)
 	}
 	
 	public func pausePlaying() {
@@ -216,6 +226,10 @@ extension AudioService {
 	public func stopPlaying() {
 		self.audioPlayer?.stop()
 		status = .stopped
+	}
+	
+	public func finishPlaying() {
+		self.audioPlayer = nil
 	}
 	
 }

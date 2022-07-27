@@ -7,11 +7,11 @@
 
 import Common
 
-public protocol NoteUseCaseManagable {
+public protocol NoteManagable {
 	var list: [Note] { get }
-	func add(item: Note, completion: (Error?) -> Void)
-	func edit(newItem: Note, completion: (Error?) -> Void)
-	func delete(item: Note, completion: (Error?) -> Void)
+	func add(item: Note, completion: (CCError?) -> Void)
+	func edit(newItem: Note, completion: (CCError?) -> Void)
+	func delete(item: Note, completion: (CCError?) -> Void)
 }
 
 public final class NoteUseCase: Dependency {
@@ -46,22 +46,22 @@ public final class NoteUseCase: Dependency {
 	
 }
 
-extension NoteUseCase: NoteUseCaseManagable {
+extension NoteUseCase: NoteManagable {
 	
 	public var list: [Note] {
-		self.dependency.repository.list
+		self.dependency.repository.fetchList
 	}
 	
-	public func add(item: Note, completion: (Error?) -> Void) {
-		self.dependency.repository.add(item: item, completion: completion)
+	public func add(item: Note, completion: (CCError?) -> Void) {
+		self.dependency.repository.create(item, completion: completion)
 	}
 	
-	public func edit(newItem: Note, completion: (Error?) -> Void) {
-		self.dependency.repository.edit(newItem: newItem, completion: completion)
+	public func edit(newItem: Note, completion: (CCError?) -> Void) {
+		self.dependency.repository.update(after: newItem, completion: completion)
 	}
 	
-	public func delete(item: Note, completion: (Error?) -> Void) {
-		self.dependency.repository.delete(item: item, completion: completion)
+	public func delete(item: Note, completion: (CCError?) -> Void) {
+		self.dependency.repository.delete(item, completion: completion)
 	}
 
 }

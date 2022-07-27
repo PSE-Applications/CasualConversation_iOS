@@ -9,25 +9,35 @@
 import Foundation
 
 public enum CCError: Error {
-    
+	
     public enum SystemErrorReason {
         case escapingClosureIsLost
         case typeCastingNotWork
         case optionalBindingNotWork
     }
+	
+	case systemErrorOccured(reason: SystemErrorReason)
     
     // MARK: - Domain
     public enum ConversationManageFailureReason {
-        
+		
     }
     
     public enum NoteManageFailureReason {
         
     }
+	
+	public enum AudioServiceManageFailureReason {
+		case bindingFailure
+		case fileURLPathInvalidated
+		case fileURLPathSavedFailure
+		case preparedFailure
+		case startedFailure
+	}
     
-    case systemErrorOccured(reason: SystemErrorReason)
     case conversationManageFailed(reason: ConversationManageFailureReason)
     case noteManageFailed(reason: NoteManageFailureReason)
+	case audioServiceFailed(reason: AudioServiceManageFailureReason)
     
     // MARK: - Data
     public enum RepositoryFailureReason {

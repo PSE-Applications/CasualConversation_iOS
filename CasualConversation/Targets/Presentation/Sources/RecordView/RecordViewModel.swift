@@ -14,9 +14,14 @@ public final class RecordViewModel: Dependency, ObservableObject {
 	
 	public struct Dependency {
 		let useCase: ConversationRecodable
+		let audioService: AudioService
 		
-		public init(useCase: ConversationRecodable) {
+		public init(
+			useCase: ConversationRecodable,
+			audioService: AudioService
+		) {
 			self.useCase = useCase
+			self.audioService = audioService
 		}
 	}
 	

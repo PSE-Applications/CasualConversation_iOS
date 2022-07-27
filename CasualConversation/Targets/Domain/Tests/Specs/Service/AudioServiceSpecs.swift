@@ -6,6 +6,7 @@
 //  Copyright © 2022 pseapplications. All rights reserved.
 //
 
+@testable import Common
 @testable import Domain
 
 import Quick
@@ -37,7 +38,7 @@ final class AudioServiceSpecs: QuickSpec {
 					afterEach { filePath = nil }
 					
 					context("재생을 위해 녹음물 준비 작업을 하면") {
-						var optionalParameter: Error!
+						var optionalParameter: CCError!
 						beforeEach {
 							audioPlayable.setupPlaying(from: filePath) { error in
 								optionalParameter = error
@@ -49,7 +50,7 @@ final class AudioServiceSpecs: QuickSpec {
 						}
 						
 						context("재생시작을 성공하면") {
-							var optionalParameter: Error!
+							var optionalParameter: CCError!
 							beforeEach {
 								audioPlayable.startPlaying() { error in
 									optionalParameter = error
@@ -88,7 +89,7 @@ final class AudioServiceSpecs: QuickSpec {
 				beforeEach { audioRecordable = audioService }
 				
 				context("녹음을 위해 준비 작업을 하면") { // Date() 객체를 이용한 새로운 FilePath 생성됨
-					var optionalParameter: Error!
+					var optionalParameter: CCError!
 					beforeEach {
 						audioRecordable.setupRecorder() { error in
 							optionalParameter = error
@@ -100,7 +101,7 @@ final class AudioServiceSpecs: QuickSpec {
 					}
 					
 					context("녹음 시작을 성공하면") {
-						var startOptionalParameter: Error!
+						var startOptionalParameter: CCError!
 						beforeEach {
 							audioRecordable.startRecording() { error in
 								startOptionalParameter = error
@@ -122,7 +123,7 @@ final class AudioServiceSpecs: QuickSpec {
 					}
 					
 					context("녹음 중에 중단하면") {
-						var stopParameter: Result<URL, Error>!
+						var stopParameter: Result<URL, CCError>!
 						beforeEach {
 							audioRecordable.stopRecording() { result in
 								stopParameter = result

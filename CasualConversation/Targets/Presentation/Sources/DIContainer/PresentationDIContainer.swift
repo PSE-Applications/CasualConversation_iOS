@@ -34,8 +34,7 @@ public final class PresentationDIContainer: Dependency, ObservableObject {
 	// MARK: UseCases
 	lazy var casualConversationUseCase: ConversationUseCase = .init(
 		dependency: .init(
-			repository: self.dependency.conversationRepository,
-			recordService: self.recordService
+			repository: self.dependency.conversationRepository
 		)
 	)
 	lazy var noteUseCase: NoteUseCase = .init(
@@ -44,7 +43,7 @@ public final class PresentationDIContainer: Dependency, ObservableObject {
 			filter: .all
 		)
 	)
-	lazy var recordService: AudioService = .init(
+	lazy var audioService: AudioService = .init(
 		dependency: .init(
 			repository: self.dependency.recordRepository
 		)
@@ -69,7 +68,9 @@ public final class PresentationDIContainer: Dependency, ObservableObject {
 	
 	func RecordView() -> RecordView {
 		let viewModel: RecordViewModel = .init(dependency: .init(
-			useCase: self.casualConversationUseCase)
+				useCase: self.casualConversationUseCase,
+				audioService: self.audioService
+			)
 		)
 		return .init(viewModel: viewModel)
 	}
@@ -79,7 +80,8 @@ public final class PresentationDIContainer: Dependency, ObservableObject {
 		
 		let viewModel: SelectionViewModel = .init(dependency: .init(
 				conversationUseCase: self.casualConversationUseCase,
-				noteUseCase: self.noteUseCase
+				noteUseCase: self.noteUseCase,
+				audioService: self.audioService
 			)
 		)
 		return .init(viewModel: viewModel)
