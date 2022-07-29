@@ -21,7 +21,7 @@ public struct Note: UUIDIdentifiable {
 		)
 	}
         
-    enum Category {
+	enum Category: String {
         case vocabulary
         case sentece
     }

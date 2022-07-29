@@ -23,7 +23,7 @@ public struct Conversation: UUIDIdentifiable {
 	public let id: Identifier
     var title: String?
     var topic: String?
-    let members: [Member]
+    let members: [String]
     let recordFilePath: URL
     let recordedDate: Date
 	let pins: [TimeInterval]
