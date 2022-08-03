@@ -8,7 +8,7 @@
 import Common
 
 public protocol NoteManagable {
-	var list: [Note] { get }
+	func list() -> [Note]
 	func add(item: Note, completion: (CCError?) -> Void)
 	func edit(newItem: Note, completion: (CCError?) -> Void)
 	func delete(item: Note, completion: (CCError?) -> Void)
@@ -36,20 +36,34 @@ public final class NoteUseCase: Dependency {
 	
 	public var dependency: Dependecy
 	
+	private var dataSource: [Note] = []
+	
 	public init(dependency: Dependecy) {
 		self.dependency = dependency
 	}
 	
-	public func changeFilter(to filter: Filter) {
-		self.dependency.filter = filter
+	private func fetchDataSource() {
+		switch dependency.filter {
+		case .all:
+			guard let list = dependency.repository.fetch(filter: nil) else {
+				return
+			}
+			self.dataSource = list
+		case .selected(let item):
+			guard let list = dependency.repository.fetch(filter: item) else {
+				return
+			}
+			self.dataSource = list
+		}
+		
 	}
 	
 }
 
 extension NoteUseCase: NoteManagable {
 	
-	public var list: [Note] {
-		self.dependency.repository.fetchList
+	public func list() -> [Note] {
+		self.dataSource
 	}
 	
 	public func add(item: Note, completion: (CCError?) -> Void) {

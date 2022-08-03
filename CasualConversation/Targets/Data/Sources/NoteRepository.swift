@@ -33,7 +33,7 @@ public struct NoteRepository: Dependency {
 
 extension NoteRepository: NoteRepositoryProtocol {
 	
-	public var fetchList: [Note] {
+	public func fetch(filter item: Conversation? = nil) -> [Note]? {
 		[] // TODO: 처리 필요
 	}
 	
