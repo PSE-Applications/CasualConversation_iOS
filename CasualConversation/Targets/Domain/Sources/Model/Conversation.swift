@@ -20,12 +20,30 @@ public struct Conversation: UUIDIdentifiable {
 		)
 	}
 	
-	public let id: Identifier
-    var title: String?
-    var topic: String?
-    let members: [String]
-    let recordFilePath: URL
-    let recordedDate: Date
-	let pins: [TimeInterval]
+	public var id: Identifier
+	public var title: String?
+	public var topic: String?
+	public var members: [String]
+	public var recordFilePath: URL
+	public var recordedDate: Date
+	public var pins: [TimeInterval]
+	
+	public init(
+		id: Identifier,
+		title: String? = "",
+		topic: String? = "",
+		members: [String],
+		recordFilePath: URL,
+		recordedDate: Date,
+		pins: [TimeInterval]
+	) {
+		self.id = id
+		self.title = title
+		self.topic = topic
+		self.members = members
+		self.recordFilePath = recordFilePath
+		self.recordedDate = recordedDate
+		self.pins = pins
+	}
 	
 }

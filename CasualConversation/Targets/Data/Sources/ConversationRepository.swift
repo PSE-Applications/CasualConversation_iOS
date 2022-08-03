@@ -13,6 +13,11 @@ public struct ConversationRepository: ConversationRepositoryProtocol {
 	
 	public var fetchList: [Conversation] = [] // TODO: 처리 필요
 	
+}
+extension ConversationRepository: ConversationRepositoryProtocol {
+	
+	public func fetchRequest() -> [Conversation]? {
+	}
 	public func create(_ item: Conversation, completion: (CCError?) -> Void) {
 		// TODO: 처리 필요
 	}

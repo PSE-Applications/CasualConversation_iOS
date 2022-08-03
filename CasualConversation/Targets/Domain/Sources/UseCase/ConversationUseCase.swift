@@ -34,10 +34,18 @@ public final class ConversationUseCase: Dependency, ConversationManagable {
 	
 	public let dependency: Dependency
 	
+	private var dataSource: [Conversation] = []
+	
 	public init(dependency: Dependency) {
 		self.dependency = dependency
 	}
 
+	private func fetchDataSource() {
+		guard let list = dependency.repository.fetchRequest() else {
+			return
+		}
+		self.dataSource = list
+	}
 }
 
 // MARK: - ConversationRecodable
@@ -53,7 +61,7 @@ extension ConversationUseCase {
 extension ConversationUseCase {
 	
 	public var list: [Conversation] {
-		self.dependency.repository.fetchList
+		self.dataSource
 	}
 	
 	public func edit(after editedItem: Conversation, completion: (CCError?) -> Void) {
