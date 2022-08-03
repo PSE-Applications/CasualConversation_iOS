@@ -67,15 +67,36 @@ extension NoteUseCase: NoteManagable {
 	}
 	
 	public func add(item: Note, completion: (CCError?) -> Void) {
-		self.dependency.repository.create(item, completion: completion)
+		self.dependency.repository.create(item) { error in
+			guard error == nil else {
+				completion(error)
+				return
+			}
+			fetchDataSource()
+			completion(nil)
+		}
 	}
 	
 	public func edit(newItem: Note, completion: (CCError?) -> Void) {
-		self.dependency.repository.update(after: newItem, completion: completion)
+		self.dependency.repository.update(after: newItem) { error in
+			guard error == nil else {
+				completion(error)
+				return
+			}
+			fetchDataSource()
+			completion(nil)
+		}
 	}
 	
 	public func delete(item: Note, completion: (CCError?) -> Void) {
-		self.dependency.repository.delete(item, completion: completion)
+		self.dependency.repository.delete(item) { error in
+			guard error == nil else {
+				completion(error)
+				return
+			}
+			fetchDataSource()
+			completion(nil)
+		}
 	}
 
 }
