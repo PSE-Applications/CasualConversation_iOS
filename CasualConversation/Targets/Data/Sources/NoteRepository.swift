@@ -9,9 +9,33 @@
 import Common
 import Domain
 
-public struct NoteRepository: NoteRepositoryProtocol {
+import CoreData
+
+public struct NoteRepository: Dependency {
 	
-	public var fetchList: [Note] = [] // TODO: 처리 필요
+	static let entityName = "NoteEntity"
+	
+	public struct Dependency {
+		let coreDataStack: CoreDataStackProtocol
+		
+		public init(coreDataStack: CoreDataStackProtocol) {
+			self.coreDataStack = coreDataStack
+		}
+	}
+	
+	public let dependency: Dependency
+	
+	public init(dependency: Dependency) {
+		self.dependency = dependency
+	}
+	
+}
+
+extension NoteRepository: NoteRepositoryProtocol {
+	
+	public var fetchList: [Note] {
+		[] // TODO: 처리 필요
+	}
 	
 	public func create(_ item: Note, completion: (CCError?) -> Void) {
 		// TODO: 처리 필요
@@ -24,7 +48,5 @@ public struct NoteRepository: NoteRepositoryProtocol {
 	public func delete(_ item: Note, completion: (CCError?) -> Void) {
 		// TODO: 처리 필요
 	}
-	
-	public init() {}
 	
 }

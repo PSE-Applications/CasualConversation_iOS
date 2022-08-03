@@ -9,11 +9,30 @@
 import Common
 import Domain
 
-public struct ConversationRepository: ConversationRepositoryProtocol {
-	
+import CoreData
+
 	public var fetchList: [Conversation] = [] // TODO: 처리 필요
 	
 }
+public struct ConversationRepository: Dependency {
+	
+	public struct Dependency {
+		let coreDataStack: CoreDataStackProtocol
+		
+		public init(coreDataStack: CoreDataStackProtocol) {
+			self.coreDataStack = coreDataStack
+		}
+	}
+	
+	public let dependency: Dependency
+	
+	public init(dependency: Dependency) {
+		self.dependency = dependency
+	}
+
+}
+
+// MARK: - Usa CoreDataRepository
 extension ConversationRepository: ConversationRepositoryProtocol {
 	
 	public func fetchRequest() -> [Conversation]? {
