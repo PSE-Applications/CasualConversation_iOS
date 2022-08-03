@@ -58,7 +58,7 @@ public struct ConversationRepository: Dependency {
 // MARK: - Usa CoreDataRepository
 extension ConversationRepository: ConversationRepositoryProtocol {
 	
-	public func fetchRequest() -> [Conversation]? {
+	public func fetch() -> [Conversation]? {
 		let fetchRequest = ConversationEntity.fetchRequest()
 		let sortDescriptor = NSSortDescriptor.init(
 			key: #keyPath(ConversationEntity.recordedDate),

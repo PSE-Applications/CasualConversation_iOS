@@ -41,7 +41,7 @@ public final class ConversationUseCase: Dependency, ConversationManagable {
 	}
 
 	private func fetchDataSource() {
-		guard let list = dependency.repository.fetchRequest() else {
+		guard let list = dependency.repository.fetch() else {
 			return
 		}
 		self.dataSource = list
