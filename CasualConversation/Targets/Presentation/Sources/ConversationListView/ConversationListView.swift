@@ -22,10 +22,16 @@ public struct ConversationListView: View {
 	
 }
 
-//struct ConversationListView_Previews: PreviewProvider {
-//
-//	static var previews: some View {
-//		ConversationListView()
-//	}
-//
-//}
+#if DEBUG
+struct ConversationListView_Previews: PreviewProvider {
+	
+	static var container: PresentationDIContainer {
+		.preview
+	}
+	
+	static var previews: some View {
+		container.ConversationListView()
+	}
+
+}
+#endif

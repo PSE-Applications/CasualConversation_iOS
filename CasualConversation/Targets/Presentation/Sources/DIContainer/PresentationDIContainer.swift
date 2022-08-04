@@ -75,6 +75,13 @@ public final class PresentationDIContainer: Dependency, ObservableObject {
 		return .init(viewModel: viewModel)
 	}
 	
+	func ConversationListView() -> ConversationListView {
+		let viewModel: ConversationListViewModel = .init(dependency: .init(
+			useCase: self.casualConversationUseCase)
+		)
+		return .init(viewModel: viewModel)
+	}
+	
 	func SelectionView(selected conversation: Conversation) -> SelectionView {
 		self.noteUseCase.changeFilter(to: .selected(conversation))
 		

@@ -21,10 +21,16 @@ public struct SelectionView: View {
 	
 }
 
-//struct SelectionView_Previews: PreviewProvider {
-//
-//	static var previews: some View {
-//		SelectionView()
-//	}
-//
-//}
+#if DEBUG
+struct SelectionView_Previews: PreviewProvider {
+	
+	static var container: PresentationDIContainer {
+		.preview
+	}
+	
+	static var previews: some View {
+		container.SelectionView(selected: .empty)
+	}
+
+}
+#endif

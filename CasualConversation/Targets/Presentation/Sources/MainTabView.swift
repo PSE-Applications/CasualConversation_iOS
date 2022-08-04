@@ -25,11 +25,15 @@ public struct MainTabView: View {
     
 }
 
-//struct MainTabView_Previews: PreviewProvider {
-//
-//	static let viewModel: ViewModelProtocol = MainTabViewModel(dependency: .init())
-//    static var previews: some View {
-//		MainTabView(viewModel: viewModel)
-//    }
-//    
-//}
+#if DEBUG
+struct MainTabView_Previews: PreviewProvider {
+	
+	static var container: PresentationDIContainer {
+		.preview
+	}
+	
+	static var previews: some View {
+		container.MainTabView()
+	}
+}
+#endif

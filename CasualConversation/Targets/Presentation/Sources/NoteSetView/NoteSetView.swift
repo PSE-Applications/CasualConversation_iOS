@@ -21,10 +21,16 @@ public struct NoteSetView: View {
 	
 }
 
-//struct NoteSetView_Previews: PreviewProvider {
-//
-//	static var previews: some View {
-//		SelectionView(viewModel: viewModel)
-//	}
-//
-//}
+#if DEBUG
+struct NoteSetView_Previews: PreviewProvider {
+	
+	static var container: PresentationDIContainer {
+		.preview
+	}
+	
+	static var previews: some View {
+		container.NoteSetView()
+	}
+
+}
+#endif
