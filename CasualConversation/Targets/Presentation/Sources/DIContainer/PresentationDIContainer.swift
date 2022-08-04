@@ -98,3 +98,86 @@ public final class PresentationDIContainer: Dependency, ObservableObject {
 	}
 	
 }
+
+// MARK: - Preview
+#if DEBUG
+
+import AVFAudio
+
+extension AVAudioRecorder: AudioRecorderProtocol { }
+extension AVAudioPlayer: AudioPlayerProtocol { }
+
+struct DebugRecordRepository: RecordRepositoryProtocol {
+	
+	func makeAudioRecorder() -> AudioRecorderProtocol? {
+		let recordSettings: [String: Any] = [
+			AVFormatIDKey: Int(kAudioFormatLinearPCM),
+			AVSampleRateKey: 44100.0,
+			AVNumberOfChannelsKey: 1,
+			AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue
+		]
+		let currentDate = Date().formatted(.dateTime)
+		let newFilePath = FileManager.default.temporaryDirectory.appendingPathComponent(currentDate.description)
+		let recorder = try? AVAudioRecorder(url: newFilePath, settings: recordSettings)
+		return recorder
+	}
+	
+	func makeAudioPlayer(from filePath: URL) -> AudioPlayerProtocol? {
+		guard let player = try? AVAudioPlayer(contentsOf: filePath) else {
+			return nil
+		}
+		return player
+	}
+	
+}
+
+struct DebugConversationRepository: ConversationRepositoryProtocol {
+	var fetchList: [Conversation] {
+		[]
+	}
+	
+	func create(_ item: Conversation, completion: (CCError?) -> Void) {
+		print(#function)
+	}
+	
+	func update(after updatedItem: Conversation, completion: (CCError?) -> Void) {
+		print(#function)
+	}
+	
+	func delete(_ item: Conversation, completion: (CCError?) -> Void) {
+		print(#function)
+	}
+	
+}
+
+struct DebugNoteRepository: NoteRepositoryProtocol {
+	var fetchList: [Note] {
+		[]
+	}
+	
+	func create(_ item: Note, completion: (CCError?) -> Void) {
+		print(#function)
+	}
+	
+	func update(after updatedItem: Note, completion: (CCError?) -> Void) {
+		print(#function)
+	}
+	
+	func delete(_ item: Note, completion: (CCError?) -> Void) {
+		print(#function)
+	}
+	
+}
+
+extension PresentationDIContainer {
+	
+	static var preview: PresentationDIContainer {
+		.init(dependency: .init(
+			conversationRepository: DebugConversationRepository(),
+			noteRepository: DebugNoteRepository(),
+			recordRepository: DebugRecordRepository())
+		)
+	}
+	
+}
+#endif
