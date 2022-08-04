@@ -16,7 +16,7 @@ public struct SelectionView: View {
 	}
 
 	public var body: some View {
-		Text("Hello world")
+		Text("Selection View")
 	}
 	
 }

@@ -17,7 +17,7 @@ public struct ConversationListView: View {
 	}
 
 	public var body: some View {
-		Text("Hello world")
+		Text("ConversationList View")
 	}
 	
 }

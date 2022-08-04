@@ -16,7 +16,7 @@ public struct RecordView: View {
 	}
 
 	public var body: some View {
-		Text("Hello world")
+		Text("Record View")
 	}
 	
 }
