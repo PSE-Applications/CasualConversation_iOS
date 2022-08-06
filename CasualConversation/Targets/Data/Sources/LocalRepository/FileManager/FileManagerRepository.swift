@@ -5,7 +5,11 @@
 //  Created by Yongwoo Marco on 2022/06/23.
 //
 
-import Foundation.NSFileManager
+import Foundation
+
+public protocol FileManagerRepositoryProtocol {
+	var directoryPath: URL { get }
+}
 
 public struct FileManagerRepository {
 	

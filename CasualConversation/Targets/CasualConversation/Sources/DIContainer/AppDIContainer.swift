@@ -17,14 +17,14 @@ final class AppDIContainer {
 	private lazy var appConfigurations = AppConfigurations()
 	
 	// MARK: - Repository
-	private lazy var coreDataRepository: CoreDataRepositoryProtocol = CoreDataRepository()
+	private lazy var coreDataStack: CoreDataStackProtocol = CoreDataStack()
 	private lazy var fileManagerReposotiry: FileManagerRepositoryProtocol = FileManagerRepository()
 	
 	func makePresentationDIContainer() -> PresentationDIContainer {
 		return .init(
 			dependency: .init(
-				conversationRepository: ConversationRepository(),
-				noteRepository: NoteRepository(),
+				conversationRepository: ConversationRepository(dependency: .init(coreDataStack: self.coreDataStack)),
+				noteRepository: NoteRepository(dependency: .init(coreDataStack: self.coreDataStack)),
 				recordRepository: RecordRepository(dependency: .init(repository: self.fileManagerReposotiry))
 			)
 		)
