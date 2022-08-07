@@ -136,7 +136,8 @@ struct DebugRecordRepository: RecordRepositoryProtocol {
 }
 
 struct DebugConversationRepository: ConversationRepositoryProtocol {
-	var fetchList: [Conversation] {
+	
+	func fetch() -> [Conversation]? {
 		[]
 	}
 	
@@ -155,7 +156,8 @@ struct DebugConversationRepository: ConversationRepositoryProtocol {
 }
 
 struct DebugNoteRepository: NoteRepositoryProtocol {
-	var fetchList: [Note] {
+	
+	func fetch(filter item: Conversation?) -> [Note]? {
 		[]
 	}
 	
