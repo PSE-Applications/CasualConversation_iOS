@@ -34,17 +34,32 @@ public final class ConversationUseCase: Dependency, ConversationManagable {
 	
 	public let dependency: Dependency
 	
+	private var dataSource: [Conversation] = []
+	
 	public init(dependency: Dependency) {
 		self.dependency = dependency
 	}
 
+	private func fetchDataSource() {
+		guard let list = dependency.repository.fetch() else {
+			return
+		}
+		self.dataSource = list
+	}
 }
 
 // MARK: - ConversationRecodable
 extension ConversationUseCase {
 	
 	public func add(_ item: Conversation, completion: (CCError?) -> Void) {
-		self.dependency.repository.create(item, completion: completion)
+		self.dependency.repository.create(item) { error in
+			guard error == nil else {
+				completion(error)
+				return
+			}
+			fetchDataSource()
+			completion(nil)
+		}
 	}
 	
 }
@@ -53,15 +68,29 @@ extension ConversationUseCase {
 extension ConversationUseCase {
 	
 	public var list: [Conversation] {
-		self.dependency.repository.fetchList
+		self.dataSource
 	}
 	
 	public func edit(after editedItem: Conversation, completion: (CCError?) -> Void) {
-		self.dependency.repository.update(after: editedItem, completion: completion)
+		self.dependency.repository.update(after: editedItem) { error in
+			guard error == nil else {
+				completion(error)
+				return
+			}
+			fetchDataSource()
+			completion(nil)
+		}
 	}
 	
 	public func delete(_ item: Conversation, completion: (CCError?) -> Void) {
-		self.dependency.repository.delete(item, completion: completion)
+		self.dependency.repository.delete(item) { error in
+			guard error == nil else {
+				completion(error)
+				return
+			}
+			fetchDataSource()
+			completion(nil)
+		}
 	}
 	
 }

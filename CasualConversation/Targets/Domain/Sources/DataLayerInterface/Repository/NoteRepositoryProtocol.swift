@@ -8,7 +8,7 @@
 import Common
 
 public protocol NoteRepositoryProtocol {
-	var fetchList: [Note] { get }
+	func fetch(filter item: Conversation?) -> [Note]?
 	func create(_ item: Note, completion: (CCError?) -> Void)
 	func update(after updatedItem: Note, completion: (CCError?) -> Void)
 	func delete(_ item: Note, completion: (CCError?) -> Void)

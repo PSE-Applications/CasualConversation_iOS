@@ -43,7 +43,7 @@ public enum CCError: Error {
     public enum RepositoryFailureReason {
         case coreDataViewContextUnsaved(Error)
         case coreDataUnloaded(Error)
-        case fileURLPathInvalidated
+        case coreDataUnloadedEntity
     }
     
     case persistenceFailed(reason: RepositoryFailureReason)

@@ -21,16 +21,32 @@ public struct Note: UUIDIdentifiable {
 		)
 	}
         
-    enum Category {
+	public enum Category: String {
         case vocabulary
         case sentece
     }
     
 	public let id: Identifier
-    let original: String
-    let translation: String
-    let category: Category
-	let references: [Identifier]
-    let createdDate: Date
+	public let original: String
+	public let translation: String
+	public let category: Category
+	public let references: [Identifier]
+	public let createdDate: Date
+	
+	public init(
+		id: Identifier,
+		original: String,
+		translation: String,
+		category: Category,
+		references: [Identifier],
+		createdDate: Date
+	) {
+		self.id = id
+		self.original = original
+		self.translation = translation
+		self.category = category
+		self.references = references
+		self.createdDate = createdDate
+	}
     
 }

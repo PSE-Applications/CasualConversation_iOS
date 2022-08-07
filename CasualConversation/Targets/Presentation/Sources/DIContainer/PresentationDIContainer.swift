@@ -37,11 +37,9 @@ public final class PresentationDIContainer: Dependency, ObservableObject {
 			repository: self.dependency.conversationRepository
 		)
 	)
-	lazy var noteUseCase: NoteUseCase = .init(
-		dependency: .init(
-			repository: self.dependency.noteRepository,
-			filter: .all
-		)
+	lazy var noteUseCase: NoteUseCase = .init(dependency: .init(
+		repository: self.dependency.noteRepository,
+		filter: .all)
 	)
 	lazy var audioService: AudioService = .init(
 		dependency: .init(
@@ -53,13 +51,16 @@ public final class PresentationDIContainer: Dependency, ObservableObject {
 		self.dependency = dependency
 	}
 	
-	// MARK: View Factory
-	enum Scene {
-		case mainTab
-		case record
-		case selection
-		case noteSet
+	private func makeNoteUseCase(filter item: Conversation) -> NoteUseCase {
+		return .init(dependency: .init(
+			repository: self.dependency.noteRepository,
+			filter: .selected(item))
+		)
 	}
+	
+}
+
+extension PresentationDIContainer {
 	
 	public func MainTabView() -> MainTabView {
 		let viewModel: MainTabViewModel = .init(dependency: .init())
@@ -83,11 +84,9 @@ public final class PresentationDIContainer: Dependency, ObservableObject {
 	}
 	
 	func SelectionView(selected conversation: Conversation) -> SelectionView {
-		self.noteUseCase.changeFilter(to: .selected(conversation))
-		
 		let viewModel: SelectionViewModel = .init(dependency: .init(
 				conversationUseCase: self.casualConversationUseCase,
-				noteUseCase: self.noteUseCase,
+				noteUseCase: makeNoteUseCase(filter: conversation),
 				audioService: self.audioService
 			)
 		)
@@ -95,8 +94,6 @@ public final class PresentationDIContainer: Dependency, ObservableObject {
 	}
 	
 	func NoteSetView() -> NoteSetView {
-		self.noteUseCase.changeFilter(to: .all)
-		
 		let viewModel: NoteSetViewModel = .init(dependency: .init(
 				useCase: self.noteUseCase
 			)
