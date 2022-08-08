@@ -15,8 +15,8 @@ import Nimble
 extension PresentationDIContainer { // TODO: 외부 모듈 사용 없는 테스트 필요
 	fileprivate static var sut: PresentationDIContainer {
 		self.init(dependency: .init(
-			conversationRepository: ConversationRepository(),
-			noteRepository: NoteRepository(),
+			conversationRepository: DebugConversationRepository(),
+			noteRepository: DebugNoteRepository(),
 			recordRepository: RecordRepository(dependency: .init(repository: FileManagerRepository()))))
 	}
 }

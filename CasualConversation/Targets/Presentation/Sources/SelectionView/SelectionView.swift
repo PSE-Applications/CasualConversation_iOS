@@ -20,9 +20,7 @@ struct SelectionView: View {
 #if DEBUG
 struct SelectionView_Previews: PreviewProvider {
 	
-	static var container: PresentationDIContainer {
-		.preview
-	}
+	static var container: PresentationDIContainer { .preview }
 	
 	static var previews: some View {
 		container.SelectionView(selected: .empty)

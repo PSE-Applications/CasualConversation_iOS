@@ -114,15 +114,15 @@ extension MainTabView {
 }
 
 #if DEBUG
+
 struct MainTabView_Previews: PreviewProvider {
 	
-	static var container: PresentationDIContainer {
-		.preview
-	}
+	static var container: PresentationDIContainer { .preview }
 	
 	static var previews: some View {
 		container.MainTabView()
 			.environmentObject(container)
 	}
 }
+
 #endif
