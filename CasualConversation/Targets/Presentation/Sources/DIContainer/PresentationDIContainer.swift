@@ -90,14 +90,16 @@ extension PresentationDIContainer {
 				audioService: self.audioService
 			)
 		)
-		return .init(viewModel: viewModel)
+		return .init(viewModel: viewModel, item: conversation)
 	}
 	
-	func NoteSetView() -> NoteSetView {
-		let viewModel: NoteSetViewModel = .init(dependency: .init(
-				useCase: self.noteUseCase
-			)
-		)
+	func NoteSetView(by usecase: NoteManagable? = nil) -> NoteSetView {
+		let viewModel: NoteSetViewModel
+		if let bindedUseCase = usecase {
+			viewModel = .init(dependency: .init(useCase: bindedUseCase))
+		} else {
+			viewModel = .init(dependency: .init(useCase: self.noteUseCase))
+		}
 		return .init(viewModel: viewModel)
 	}
 	

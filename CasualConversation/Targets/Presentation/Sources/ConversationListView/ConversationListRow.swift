@@ -38,7 +38,7 @@ struct ConversationListRow: View {
 				}
 			}
 			Spacer()
-			if false { // TODO: 처리방법 구상필요
+			if Bool.random() { // TODO: 처리방법 구상필요
 				Image(systemName: "checkmark.circle.fill")
 					.foregroundColor(.logoLightBlue)
 			} else {

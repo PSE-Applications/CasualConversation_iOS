@@ -10,7 +10,7 @@ import Domain
 
 import Combine
 
-final class SelectionViewModel: Dependency, ObservableObject {
+final class SelectionViewModel: Dependency {
 	
 	struct Dependency {
 		let conversationUseCase: ConversationMaintainable
@@ -24,4 +24,16 @@ final class SelectionViewModel: Dependency, ObservableObject {
 		self.dependency = dependency
 	}
 
+}
+
+extension SelectionViewModel {
+	
+	var list: [Note] { // TODO: DataBinding 형태로 변경 필요
+		self.dependency.noteUseCase.list()
+	}
+	
+	var referenceNoteUseCase: NoteManagable {
+		self.dependency.noteUseCase
+	}
+	
 }
