@@ -10,24 +10,16 @@ import Domain
 
 import Combine
 
-public final class RecordViewModel: Dependency, ObservableObject {
+final class RecordViewModel: Dependency, ObservableObject {
 	
-	public struct Dependency {
+	struct Dependency {
 		let useCase: ConversationRecodable
 		let audioService: AudioService
-		
-		public init(
-			useCase: ConversationRecodable,
-			audioService: AudioService
-		) {
-			self.useCase = useCase
-			self.audioService = audioService
-		}
 	}
 	
-	public let dependency: Dependency
+	let dependency: Dependency
 	
-	public init(dependency: Dependency) {
+	init(dependency: Dependency) {
 		self.dependency = dependency
 	}
 	

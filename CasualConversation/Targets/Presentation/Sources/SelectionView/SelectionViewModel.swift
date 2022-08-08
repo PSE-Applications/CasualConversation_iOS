@@ -10,27 +10,17 @@ import Domain
 
 import Combine
 
-public final class SelectionViewModel: Dependency, ObservableObject {
+final class SelectionViewModel: Dependency, ObservableObject {
 	
-	public struct Dependency {
+	struct Dependency {
 		let conversationUseCase: ConversationMaintainable
 		let noteUseCase: NoteManagable
 		let audioService: AudioService
-		
-		public init(
-			conversationUseCase: ConversationMaintainable,
-			noteUseCase: NoteManagable,
-			audioService: AudioService
-		) {
-			self.conversationUseCase = conversationUseCase
-			self.noteUseCase = noteUseCase
-			self.audioService = audioService
-		}
 	}
 	
-	public let dependency: Dependency
+	let dependency: Dependency
 	
-	public init(dependency: Dependency) {
+	init(dependency: Dependency) {
 		self.dependency = dependency
 	}
 

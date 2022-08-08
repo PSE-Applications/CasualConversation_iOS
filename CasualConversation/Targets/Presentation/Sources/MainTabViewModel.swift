@@ -10,17 +10,15 @@ import Domain
 
 import Combine
 
-public final class MainTabViewModel: Dependency, ObservableObject {
+final class MainTabViewModel: Dependency, ObservableObject {
 	
-	public struct Dependency {
-		public init() {
-			
-		}
+	struct Dependency {
+
 	}
 	
-	public let dependency: Dependency
+	let dependency: Dependency
 
-	public init(dependency: Dependency) {
+	init(dependency: Dependency) {
 		self.dependency = dependency
 	}
 	

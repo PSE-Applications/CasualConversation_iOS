@@ -11,19 +11,15 @@ import Domain
 
 import Combine
 
-public final class ConversationListViewModel: Dependency {
+final class ConversationListViewModel: Dependency {
 	
-	public struct Dependency {
+	struct Dependency {
 		let useCase: ConversationManagable
-		
-		public init(useCase: ConversationManagable) {
-			self.useCase = useCase
-		}
 	}
 	
-	public let dependency: Dependency
+	let dependency: Dependency
 	
-	public init(dependency: Dependency) {
+	init(dependency: Dependency) {
 		self.dependency = dependency
 	}
 	

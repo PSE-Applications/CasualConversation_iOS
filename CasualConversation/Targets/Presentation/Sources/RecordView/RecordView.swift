@@ -7,15 +7,15 @@
 
 import SwiftUI
 
-public struct RecordView: View {
+struct RecordView: View {
 	
 	private let viewModel: RecordViewModel
 	
-	public init(viewModel: RecordViewModel) {
+	init(viewModel: RecordViewModel) {
 		self.viewModel = viewModel
 	}
 
-	public var body: some View {
+	var body: some View {
 		Text("Record View")
 	}
 	
