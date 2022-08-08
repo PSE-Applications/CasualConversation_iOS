@@ -137,8 +137,15 @@ struct DebugRecordRepository: RecordRepositoryProtocol {
 
 struct DebugConversationRepository: ConversationRepositoryProtocol {
 	
+	private var dummyModel: [Conversation] = [
+		.init(id: .init(), title: Date().formattedString, members: [], recordFilePath: .init(fileURLWithPath: ""), recordedDate: Date(), pins: []),
+		.init(id: .init(), title: "지하철 외국인", topic: "인사", members: ["나", "외국인"], recordFilePath: .init(fileURLWithPath: ""), recordedDate: Date(timeIntervalSinceNow: 100.0), pins: []),
+		.init(id: .init(), title: "with Date", topic: "Weather", members: ["Me, Dale"], recordFilePath: .init(fileURLWithPath: ""), recordedDate: Date(timeIntervalSinceNow: 200.0), pins: []),
+		.init(id: .init(), title: Date(timeIntervalSinceNow: 250).formattedString, members: [], recordFilePath: .init(fileURLWithPath: ""), recordedDate: Date(timeIntervalSinceNow: 250), pins: [])
+	]
+	
 	func fetch() -> [Conversation]? {
-		[]
+		dummyModel
 	}
 	
 	func create(_ item: Conversation, completion: (CCError?) -> Void) {

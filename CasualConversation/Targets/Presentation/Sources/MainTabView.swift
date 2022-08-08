@@ -41,7 +41,7 @@ struct MainTabView: View {
 				ZStack {
 					switch selectedIndex {
 					case .conversations:
-						Text("CoversationList View")
+						container.ConversationListView()
 					case .notes:
 						Text("NoteSet View")
 					default:
