@@ -32,7 +32,7 @@ struct NoteSetView: View {
 		.navigationTitle("Notes")
 		.navigationBarTitleDisplayMode(.inline)
 		.sheet(item: $selectedRowItem) { item in
-			Text("Note Detail")
+			NoteDetail(item: item)
 		}
 	}
 	
