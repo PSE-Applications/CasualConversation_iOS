@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public struct MainTabView: View {
+struct MainTabView: View {
 	
 	private enum Tab: Int, CaseIterable, Hashable {
 		case conversations, record, notes
@@ -29,16 +29,12 @@ public struct MainTabView: View {
 		]
 	}
 	
-	@EnvironmentObject private var sceneDIContainer: PresentationDIContainer
-	@ObservedObject private var viewModel: MainTabViewModel
+	let viewModel: MainTabViewModel
+	@EnvironmentObject private var container: PresentationDIContainer
 	@State private var selectedIndex: Tab = .conversations
 	@State private var isPresentedRecordView: Bool = false
-	
-	public init(viewModel: MainTabViewModel) {
-		self.viewModel = viewModel
-	}
 
-	public var body: some View {
+	var body: some View {
 		NavigationView {
 			VStack {
 				Spacer()

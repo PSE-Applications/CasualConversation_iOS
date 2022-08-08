@@ -1,6 +1,6 @@
 //
 //  ConversationListView.swift
-//  Domain
+//  CasualConversation
 //
 //  Created by Yongwoo Marco on 2022/07/04.
 //  Copyright © 2022 pseapplications. All rights reserved.
@@ -8,16 +8,16 @@
 
 import SwiftUI
 
-public struct ConversationListView: View {
+struct ConversationListView: View {
 	
-	private let viewModel: ConversationListViewModel
+	let viewModel: ConversationListViewModel
 	
-	public init(viewModel: ConversationListViewModel) {
-		self.viewModel = viewModel
-	}
+	var body: some View {
+		List {
+}
 
-	public var body: some View {
-		Text("ConversationList View")
+extension ConversationListView {
+	
 	}
 	
 }

@@ -7,15 +7,11 @@
 
 import SwiftUI
 
-public struct SelectionView: View {
+struct SelectionView: View {
 	
-	private let viewModel: SelectionViewModel
-	
-	public init(viewModel: SelectionViewModel) {
-		self.viewModel = viewModel
-	}
+	let viewModel: SelectionViewModel
 
-	public var body: some View {
+	var body: some View {
 		Text("Selection View")
 	}
 	

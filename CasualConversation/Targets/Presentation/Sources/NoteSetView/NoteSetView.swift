@@ -7,15 +7,11 @@
 
 import SwiftUI
 
-public struct NoteSetView: View {
+struct NoteSetView: View {
 	
-	private let viewModel: NoteSetViewModel
+	let viewModel: NoteSetViewModel
 	
-	public init(viewModel: NoteSetViewModel) {
-		self.viewModel = viewModel
-	}
-
-	public var body: some View {
+	var body: some View {
 		Text("NoteSet View")
 	}
 	
