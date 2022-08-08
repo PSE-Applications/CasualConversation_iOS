@@ -43,7 +43,7 @@ struct MainTabView: View {
 					case .conversations:
 						container.ConversationListView()
 					case .notes:
-						Text("NoteSet View")
+						container.NoteSetView()
 					default:
 						Text("Error Page")
 					}

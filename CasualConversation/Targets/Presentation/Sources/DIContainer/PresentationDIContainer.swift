@@ -166,8 +166,21 @@ struct DebugConversationRepository: ConversationRepositoryProtocol {
 
 struct DebugNoteRepository: NoteRepositoryProtocol {
 	
+	private var dummyModel: [Note] = [
+		.init(id: .init(), original: "컴퓨터", translation: "", category: .vocabulary, references: [], createdDate: Date()),
+		.init(id: .init(), original: "", translation: "Conversation", category: .vocabulary, references: [], createdDate: Date(timeIntervalSinceNow: 200)),
+		.init(id: .init(), original: "This is a sentence", translation: "이거슨 문장입니다.", category: .sentece, references: [], createdDate: Date(timeIntervalSinceNow: 150)),
+		.init(id: .init(), original: "", translation: "하고 싶었던 한국말 문장을 저장해 놈", category: .sentece, references: [], createdDate: Date()),
+		.init(id: .init(), original: "Complete", translation: "완성하다", category: .vocabulary, references: [], createdDate: Date(timeIntervalSinceNow: 100)),
+		.init(id: .init(), original: "These are sentences\nThey have sevaral lines.\nlike this", translation: "", category: .sentece, references: [], createdDate: Date(timeIntervalSinceNow: 50))
+	]
+	
 	func fetch(filter item: Conversation?) -> [Note]? {
-		[]
+		if let _ = item {
+			return dummyModel.enumerated().filter { $0.offset % 2 == Int.random(in: 0...1) }.map { $0.element }
+		} else {
+			return dummyModel
+		}
 	}
 	
 	func create(_ item: Note, completion: (CCError?) -> Void) {

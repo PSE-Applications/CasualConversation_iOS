@@ -10,7 +10,7 @@ import Domain
 
 import Combine
 
-final class NoteSetViewModel: Dependency, ObservableObject {
+final class NoteSetViewModel: Dependency {
 	
 	struct Dependency {
 		let useCase: NoteManagable
@@ -22,4 +22,12 @@ final class NoteSetViewModel: Dependency, ObservableObject {
 		self.dependency = dependency
 	}
 
+}
+
+extension NoteSetViewModel {
+	
+	var list: [Note] {
+		self.dependency.useCase.list()
+	}
+	
 }
