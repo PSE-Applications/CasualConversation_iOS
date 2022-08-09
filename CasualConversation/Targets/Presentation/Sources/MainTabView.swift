@@ -59,13 +59,6 @@ struct MainTabView: View {
 				}
 			}
 			.navigationBarTitle(selectedIndex.title)
-			.fullScreenCover(isPresented: $isPresentedRecordView) {
-				Button {
-					isPresentedRecordView.toggle()
-				} label: {
-					Text("FullScreen Cover")
-				}
-			}
 		}
 		.accentColor(.logoDarkGreen)
     }
@@ -105,6 +98,9 @@ extension MainTabView {
 							)
 					}
 					Spacer()
+				}
+				.fullScreenCover(isPresented: $isPresentedRecordView) {
+					container.RecordView()
 				}
 			}
 		}
