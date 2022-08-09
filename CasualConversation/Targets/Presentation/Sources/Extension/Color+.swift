@@ -16,6 +16,8 @@ extension Color {
 	static let logoDarkGreen = Color(hex: "#02681B")
 	static let logoLightBlue = Color(hex: "#0DB0EA")
 	static let logoDarkBlue = Color(hex: "#07387B")
+	static let recordBackground = Color(hex: "#1C1E23")
+	static let recordShadow = Color(hex: "#282A30")
 	
 	init(hex: String) {
 		let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
