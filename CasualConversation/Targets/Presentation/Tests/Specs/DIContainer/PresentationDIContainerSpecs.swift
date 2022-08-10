@@ -7,30 +7,30 @@
 //
 
 @testable import Presentation
-@testable import Data // TODO: 외부 모듈 사용 없는 테스트 필요
 
 import Quick
 import Nimble
 
-extension PresentationDIContainer { // TODO: 외부 모듈 사용 없는 테스트 필요
+extension PresentationDIContainer {
 	fileprivate static var sut: PresentationDIContainer {
 		self.init(dependency: .init(
 			conversationRepository: DebugConversationRepository(),
 			noteRepository: DebugNoteRepository(),
-			recordRepository: RecordRepository(dependency: .init(repository: FileManagerRepository()))))
+			recordRepository: DebugRecordRepository())
+		)
 	}
 }
 
 final class PresentationDIContainerSpecs: QuickSpec {
 	override func spec() {
 		describe("인스턴스 객체") {
-			var presentationDIContainerSpecs: PresentationDIContainer!
-			beforeEach { presentationDIContainerSpecs = .sut }
-			afterEach { presentationDIContainerSpecs = nil }
+			var container: PresentationDIContainer!
+			beforeEach { container = .sut }
+			afterEach { container = nil }
 			
 			context("MainTabView 팩토리메서드 호출하면") {
 				var mainTabView: MainTabView!
-				beforeEach { mainTabView = presentationDIContainerSpecs.MainTabView() }
+				beforeEach { mainTabView = container.MainTabView() }
 				
 				it("MainTabView 객체 생성됨") {
 					expect(mainTabView).notTo(beNil())
@@ -39,16 +39,29 @@ final class PresentationDIContainerSpecs: QuickSpec {
 			
 			context("RecordView 팩토리메서드 호출하면") {
 				var recordView: RecordView!
-				beforeEach { recordView = presentationDIContainerSpecs.RecordView() }
+				beforeEach { recordView = container.RecordView() }
 				
 				it("RecordView 객체 생성됨") {
 					expect(recordView).notTo(beNil())
 				}
 			}
 			
+			context("ConversationListView 팩토리메서드 호출하면") {
+				var conversationListView: ConversationListView!
+				beforeEach {
+					conversationListView = container.ConversationListView()
+				}
+				
+				it("RecordView 객체 생성됨") {
+					expect(conversationListView).notTo(beNil())
+				}
+			}
+			
 			context("선택된 Conversation을 전달하며 SelectionView 팩토리메서드 호출하면") {
 				var selectionView: SelectionView!
-				beforeEach { selectionView = presentationDIContainerSpecs.SelectionView(selected: .empty) }
+				beforeEach {
+					selectionView = container.SelectionView(selected: .empty)
+				}
 				
 				it("SelectionView 객체 생성됨") {
 					expect(selectionView).notTo(beNil())
@@ -57,10 +70,41 @@ final class PresentationDIContainerSpecs: QuickSpec {
 			
 			context("NoteSetView 팩토리메서드 호출하면") {
 				var recordView: NoteSetView!
-				beforeEach { recordView = presentationDIContainerSpecs.NoteSetView() }
+				beforeEach { recordView = container.NoteSetView() }
 				
-				it("MainTabView 객체 생성됨") {
+				it("NoteSetView 객체 생성됨") {
 					expect(recordView).notTo(beNil())
+				}
+			}
+			
+			context("사용할 NoteUseCase를 전달하며 NoteSetView 팩토리메서드 호출하면") {
+				var recordView: NoteSetView!
+				beforeEach {
+					recordView = container.NoteSetView(by: container.noteUseCase)
+				}
+				
+				it("NoteSetView 객체 생성됨") {
+					expect(recordView).notTo(beNil())
+				}
+			}
+			
+			context("SettingView 팩토리메서드 호출하면") {
+				var settingView: SettingView!
+				beforeEach { settingView = container.SettingView() }
+				
+				it("SettingView 객체 생성됨") {
+					expect(settingView).notTo(beNil())
+				}
+			}
+			
+			context("선택된 Note를 전달하며 NoteDetailView 팩토리메서드 호출하면") {
+				var noteDetailView: NoteDetailView!
+				beforeEach {
+					noteDetailView = container.NoteDetailView(selected: .empty)
+				}
+				
+				it("NoteDetailView 객체 생성됨") {
+					expect(noteDetailView).notTo(beNil())
 				}
 			}
 		}
