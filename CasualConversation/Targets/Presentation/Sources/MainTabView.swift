@@ -50,7 +50,7 @@ struct MainTabView: View {
 			.navigationBarTitleDisplayMode(.inline)
 			.toolbar {
 				ToolbarItem(placement: .navigationBarTrailing) {
-					NavigationLink(destination: Text("Setting View")) {
+					NavigationLink(destination: container.SettingView()) {
 						Image(systemName: "gear")
 					}
 				}

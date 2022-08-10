@@ -103,6 +103,10 @@ extension PresentationDIContainer {
 		return .init(viewModel: viewModel)
 	}
 	
+	func SettingView() -> SettingView {
+		return .init()
+	}
+	
 }
 
 // MARK: - Preview
