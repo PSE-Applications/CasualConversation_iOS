@@ -114,6 +114,11 @@ extension PresentationDIContainer {
 		return .init(viewModel: viewModel)
 	}
 	
+	func NoteDetailView(selected note: Note) -> NoteDetailView {
+		let viewModel: NoteDetailViewModel = .init(dependency: .init(
+				useCase: self.noteUseCase,
+				item: note
+			)
 		)
 		return .init(viewModel: viewModel)
 	}

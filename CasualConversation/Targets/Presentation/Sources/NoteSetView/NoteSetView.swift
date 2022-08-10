@@ -11,7 +11,8 @@ import SwiftUI
 
 struct NoteSetView: View {
 	
-	let viewModel: NoteSetViewModel
+	@EnvironmentObject private var container: PresentationDIContainer
+	@ObservedObject var viewModel: NoteSetViewModel
 	@State private var isPresentedNoteDetail = false
 	@State private var selectedRowItem: Note?
 	
@@ -30,7 +31,7 @@ struct NoteSetView: View {
 			.listStyle(.plain)
 		}
 		.sheet(item: $selectedRowItem) { item in
-			NoteDetail(item: item)
+			container.NoteDetailView(selected: item)
 		}
 	}
 	
@@ -44,7 +45,6 @@ extension NoteSetView {
 	
 }
 
-#if DEBUG
 struct NoteSetView_Previews: PreviewProvider {
 	
 	static var container: PresentationDIContainer { .preview }
@@ -55,4 +55,3 @@ struct NoteSetView_Previews: PreviewProvider {
 	}
 
 }
-#endif

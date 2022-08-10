@@ -48,8 +48,6 @@ struct NoteSetRow: View {
 	
 }
 
-#if DEBUG
-
 struct NoteSetRow_Previews: PreviewProvider {
 	
 	static func dummyItem(category: Note.Category) -> Note {
@@ -83,5 +81,3 @@ struct NoteSetRow_Previews: PreviewProvider {
 	}
 	
 }
-
-#endif
