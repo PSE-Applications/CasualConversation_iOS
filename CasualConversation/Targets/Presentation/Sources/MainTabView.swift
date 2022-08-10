@@ -9,23 +9,12 @@ import SwiftUI
 
 struct MainTabView: View {
 	
-	private enum Tab: Int, CaseIterable, Hashable {
-		case conversations, record, notes
-		
-		var imageSystemName: String { Self.tabBarImageNames[self.rawValue] }
-		var tintColor: (light: Color, dark: Color) { Self.tintColors[self.rawValue] }
-		private static let tabBarImageNames = [
-			"rectangle.stack.badge.play.fill", "mic.fill.badge.plus", "checklist"
-		]
-		private static let tintColors: [(Color, Color)] = [
-			(.logoLightRed, .logoDarkRed),
-			(.logoLightGreen, .logoDarkGreen),
-			(.logoLightBlue, .logoDarkBlue)
-		]
+	enum Tab {
+		case conversations, notes
 	}
 	
-	let viewModel: MainTabViewModel
 	@EnvironmentObject private var container: PresentationDIContainer
+	
 	@State private var selectedIndex: Tab = .conversations
 	@State private var isPresentedRecordView: Bool = false
 
@@ -33,15 +22,11 @@ struct MainTabView: View {
 		NavigationView {
 			VStack {
 				Spacer()
-				ZStack {
-					switch selectedIndex {
-					case .conversations:
-						container.ConversationListView()
-					case .notes:
-						container.NoteSetView()
-					default:
-						Text("Error Page")
-					}
+				switch selectedIndex {
+				case .conversations:
+					ConversationList
+				case .notes:
+					NoteSet
 				}
 				Spacer()
 				TabView
@@ -55,49 +40,42 @@ struct MainTabView: View {
 					}
 				}
 			}
+			.fullScreenCover(isPresented: $isPresentedRecordView) {
+				container.RecordView()
+			}
 		}
 		.accentColor(.logoDarkGreen)
     }
-    
-}
-
-extension MainTabView {
 	
+	var ConversationList: some View {
+		container.ConversationListView()
+	}
+	
+	var NoteSet: some View {
+		container.NoteSetView()
+	}
+    
 	var TabView: some View {
 		HStack(alignment: .center) {
-			ForEach(Tab.allCases, id: \.rawValue) { index in
-				Button {
-					if index == .record {
-						isPresentedRecordView.toggle()
-					} else {
-						selectedIndex = index
-					}
-				} label: {
+			TabItem(tab: .conversations)
+			Button(
+				action: {
+					isPresentedRecordView.toggle()
+				}, label: {
 					Spacer()
-					if index == .record {
-						ZStack(alignment: .center) {
-							Circle()
-								.fill(Color.logoLightGreen)
-							Image(systemName: index.imageSystemName)
-								.font(.system(size: 44))
-								.foregroundColor(.white)
-						}
-						.frame(height: 70, alignment: .top)
-						.shadow(color: .gray, radius: 1, x: 2, y: 2)
-					} else {
-						Image(systemName: index.imageSystemName)
-							.font(.system(size: 24, weight: .bold))
-							.foregroundColor(
-								selectedIndex == index ?
-								index.tintColor.light : index.tintColor.dark
-							)
+					ZStack(alignment: .center) {
+						Circle()
+							.fill(Color.logoLightGreen)
+							.frame(height: 74)
+						Image(systemName: "mic.fill.badge.plus")
+							.font(.system(size: 44))
+							.foregroundColor(.white)
 					}
+					.shadow(color: .gray, radius: 1, x: 2, y: 2)
 					Spacer()
 				}
-				.fullScreenCover(isPresented: $isPresentedRecordView) {
-					container.RecordView()
-				}
-			}
+			)
+			TabItem(tab: .notes)
 		}
 		.padding()
 		.background(Color(.systemGroupedBackground))
@@ -105,7 +83,38 @@ extension MainTabView {
 	
 }
 
-#if DEBUG
+extension MainTabView {
+	
+	func TabItem(tab: Tab) -> some View {
+		var systemName: String {
+			switch tab {
+			case .conversations: 	return "rectangle.stack.badge.play.fill"
+			case .notes:			return "checklist"
+			}
+		}
+		var tintColor: (light: Color, dark: Color) {
+			switch tab {
+			case .conversations: 	return (Color.logoLightRed, Color.logoDarkRed)
+			case .notes: 			return (Color.logoLightBlue, Color.logoDarkBlue)
+			}
+		}
+		return Button(
+			action: {
+				selectedIndex = tab
+			}, label: {
+				Spacer()
+				Image(systemName: systemName)
+					.font(.system(size: 28, weight: .bold))
+					.foregroundColor(
+						selectedIndex == tab ?
+						tintColor.light : tintColor.dark
+					)
+				Spacer()
+			}
+		)
+	}
+	
+}
 
 struct MainTabView_Previews: PreviewProvider {
 	
@@ -117,5 +126,3 @@ struct MainTabView_Previews: PreviewProvider {
 	}
 	
 }
-
-#endif

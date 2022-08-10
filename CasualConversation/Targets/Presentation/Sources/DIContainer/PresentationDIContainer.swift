@@ -63,8 +63,7 @@ public final class PresentationDIContainer: Dependency, ObservableObject {
 extension PresentationDIContainer {
 	
 	func MainTabView() -> MainTabView {
-		let viewModel: MainTabViewModel = .init(dependency: .init())
-		return .init(viewModel: viewModel)
+		return .init()
 	}
 	
 	func RecordView() -> RecordView {
