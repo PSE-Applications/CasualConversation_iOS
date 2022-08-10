@@ -7,6 +7,7 @@
 //
 
 @testable import Data
+@testable import Common
 import CoreData
 
 struct TestCoreDataStack {
@@ -33,7 +34,7 @@ extension TestCoreDataStack: CoreDataStackProtocol {
 		self.testableStoreContainer.viewContext
 	}
 	
-	public func saveContext () {
+	public func saveContext(completion: (CCError?) -> Void) {
 		guard mainContext.hasChanges else {
 //			print("--> \(#function) \(mainContext.hasChanges) guard")
 			return
@@ -41,8 +42,10 @@ extension TestCoreDataStack: CoreDataStackProtocol {
 		
 		do {
 			try mainContext.save()
+			completion(nil)
 		} catch let error as NSError {
 			print("Unresolved error \(error), \(error.userInfo)")
+			completion(.persistenceFailed(reason: .coreDataViewContextUnsaved(error)))
 		}
 	}
 	
