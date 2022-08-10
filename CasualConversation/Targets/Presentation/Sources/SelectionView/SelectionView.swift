@@ -15,67 +15,82 @@ struct SelectionView: View {
 	@ObservedObject var viewModel: SelectionViewModel
 	
 	@State private var isEditing: Bool = false
-	@State private var isVocabulary: Bool = true
-	@State private var isOriginal: Bool = true
-	 
+	
 	var body: some View {
 		VStack(alignment: .leading) {
-			InfoView
+			EditableInfos
 			Divider()
-			InputView
+			NoteInput
 			Divider()
-			IncludeNoteSet
+			SelectedNoteSet
 			Spacer()
-			IncludePlayTabView
+			PlayTabView
 		}
 		.padding()
 		.toolbar {
 			ToolbarItem(placement: .navigationBarTrailing) {
 				Toggle(isOn: $isEditing) {
 					Text(isEditing ? "완료" : "수정")
-					EditButton()
 				}
 				.toggleStyle(.button)
 			}
 		}
 	}
 	
-	var InfoView: some View {
+	var EditableInfos: some View {
 		VStack {
-			InfoTextField(label: "제목", prompt: "제목을 입력하세요", text: $viewModel.title)
-			InfoTextField(label: "주제", prompt: "주제를 선택하세요", text: $viewModel.topic)
-			InfoTextField(label: "참여", prompt: "참여인원을 추가하세요", text: $viewModel.members)
+			InfoTextField(
+				label: "제목",
+				prompt: "제목을 입력하세요",
+				text: $viewModel.title
+			)
+			InfoTextField(
+				label: "주제",
+				prompt: "주제를 선택하세요",
+				text: $viewModel.topic
+			)
+			InfoTextField(
+				label: "참여",
+				prompt: "참여인원을 추가하세요",
+				text: $viewModel.members
+			)
 		}
 	}
 	
-	var InputView: some View {
+	var NoteInput: some View {
 		VStack(spacing: 8) {
 			HStack {
-				Toggle(isOn: $isOriginal) {
+				Toggle(isOn: $viewModel.isOriginal) {
 					Label {
-						Text(isOriginal ? "영어" : "한글")
+						Text(viewModel.isOriginal ? "영어" : "한글")
 					} icon: {
-						Image(systemName: isOriginal ? "e.circle.fill" : "k.circle.fill")
+						Image(systemName: viewModel.isOriginal ?
+							  "e.circle.fill" : "k.circle.fill"
+						)
 					}
-					
 				}
-				.toggleStyle(.button)
 				.tint(.logoDarkGreen)
-				Toggle(isOn: $isVocabulary) {
+				Toggle(isOn: $viewModel.isVocabulary) {
 					Label {
-						Text(isVocabulary ? "문장" : "단어")
+						Text(viewModel.isVocabulary ? "문장" : "단어")
 					} icon: {
-						Image(systemName: isVocabulary ? "text.bubble.fill" : "textformat.abc")
+						Image(systemName: viewModel.isVocabulary ?
+							  "text.bubble.fill" : "textformat.abc"
+						)
 					}
 				}
-				.toggleStyle(.button)
 				.tint(.logoLightGreen)
 				Spacer()
 			}
+			.toggleStyle(.button)
 			HStack {
 				TextField("Input Text",
 						  text: $viewModel.inputText,
-						  prompt: Text("\(isOriginal ? "영어" : "한글") \(isVocabulary ? "문장" : "단어") 입력하세요")
+						  prompt: Text(
+							"\(viewModel.isOriginal ? "영어" : "한글") " +
+							"\(viewModel.isVocabulary ? "문장" : "단어") " +
+							"입력하세요"
+						  )
 				)
 				.textFieldStyle(.roundedBorder)
 				Button {
@@ -88,11 +103,11 @@ struct SelectionView: View {
 		.padding()
 	}
 	
-	var IncludeNoteSet: some View {
+	var SelectedNoteSet: some View {
 		container.NoteSetView(by: viewModel.referenceNoteUseCase)
 	}
 	
-	var IncludePlayTabView: some View {
+	var PlayTabView: some View {
 		container.PlayTabView()
 	}
 }
@@ -120,7 +135,6 @@ extension SelectionView {
 	
 }
 
-#if DEBUG
 struct SelectionView_Previews: PreviewProvider {
 	
 	static var container: PresentationDIContainer { .preview }
@@ -131,4 +145,3 @@ struct SelectionView_Previews: PreviewProvider {
 	}
 
 }
-#endif

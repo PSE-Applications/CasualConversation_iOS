@@ -24,6 +24,9 @@ final class SelectionViewModel: Dependency, ObservableObject {
 	@Published var title: String
 	@Published var topic: String
 	@Published var members: String // TODO: 저장 시 (콤마, 공백) 제거처리
+	
+	@Published var isVocabulary: Bool = true
+	@Published var isOriginal: Bool = true
 	@Published var inputText: String = ""
 	
 	init(dependency: Dependency) {
