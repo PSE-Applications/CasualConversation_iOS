@@ -144,10 +144,38 @@ struct DebugRecordRepository: RecordRepositoryProtocol {
 struct DebugConversationRepository: ConversationRepositoryProtocol {
 	
 	private var dummyModel: [Conversation] = [
-		.init(id: .init(), title: Date().formattedString, members: [], recordFilePath: .init(fileURLWithPath: ""), recordedDate: Date(), pins: []),
-		.init(id: .init(), title: "지하철 외국인", topic: "인사", members: ["나", "외국인"], recordFilePath: .init(fileURLWithPath: ""), recordedDate: Date(timeIntervalSinceNow: 100.0), pins: []),
-		.init(id: .init(), title: "with Date", topic: "Weather", members: ["Me, Dale"], recordFilePath: .init(fileURLWithPath: ""), recordedDate: Date(timeIntervalSinceNow: 200.0), pins: []),
-		.init(id: .init(), title: Date(timeIntervalSinceNow: 250).formattedString, members: [], recordFilePath: .init(fileURLWithPath: ""), recordedDate: Date(timeIntervalSinceNow: 250), pins: [])
+		.init(
+			id: .init(),
+			title: Date().formattedString,
+			members: [],
+			recordFilePath: .init(fileURLWithPath: ""),
+			recordedDate: Date(),
+			pins: []
+		),
+		.init(
+			id: .init(),
+			title: "지하철 외국인",
+			topic: "인사",
+			members: ["나", "외국인"],
+			recordFilePath: .init(fileURLWithPath: ""),
+			recordedDate: Date(timeIntervalSinceNow: 100.0),
+			pins: []),
+		.init(
+			id: .init(),
+			title: "with Date",
+			topic: "Weather",
+			members: ["Me, Dale"],
+			recordFilePath: .init(fileURLWithPath: ""),
+			recordedDate: Date(timeIntervalSinceNow: 200.0),
+			pins: []),
+		.init(
+			id: .init(),
+			title: Date(timeIntervalSinceNow: 250).formattedString,
+			members: [],
+			recordFilePath: .init(fileURLWithPath: ""),
+			recordedDate: Date(timeIntervalSinceNow: 250),
+			pins: []
+		)
 	]
 	
 	func fetch() -> [Conversation]? {
@@ -171,12 +199,48 @@ struct DebugConversationRepository: ConversationRepositoryProtocol {
 struct DebugNoteRepository: NoteRepositoryProtocol {
 	
 	private var dummyModel: [Note] = [
-		.init(id: .init(), original: "컴퓨터", translation: "", category: .vocabulary, references: [], createdDate: Date()),
-		.init(id: .init(), original: "", translation: "Conversation", category: .vocabulary, references: [], createdDate: Date(timeIntervalSinceNow: 200)),
-		.init(id: .init(), original: "This is a sentence", translation: "이거슨 문장입니다.", category: .sentece, references: [], createdDate: Date(timeIntervalSinceNow: 150)),
-		.init(id: .init(), original: "", translation: "하고 싶었던 한국말 문장을 저장해 놈", category: .sentece, references: [], createdDate: Date()),
-		.init(id: .init(), original: "Complete", translation: "완성하다", category: .vocabulary, references: [], createdDate: Date(timeIntervalSinceNow: 100)),
-		.init(id: .init(), original: "These are sentences\nThey have sevaral lines.\nlike this", translation: "", category: .sentece, references: [], createdDate: Date(timeIntervalSinceNow: 50))
+		.init(
+			id: .init(),
+			original: "컴퓨터",
+			translation: "",
+			category: .vocabulary,
+			references: [],
+			createdDate: Date()),
+		.init(
+			id: .init(),
+			original: "",
+			translation: "Conversation",
+			category: .vocabulary,
+			references: [],
+			createdDate: Date(timeIntervalSinceNow: 200)),
+		.init(
+			id: .init(),
+			original: "This is a sentence",
+			translation: "이거슨 문장입니다.",
+			category: .sentece,
+			references: [],
+			createdDate: Date(timeIntervalSinceNow: 150)),
+		.init(
+			id: .init(),
+			original: "",
+			translation: "하고 싶었던 한국말 문장을 저장해 놈",
+			category: .sentece,
+			references: [],
+			createdDate: Date()),
+		.init(
+			id: .init(),
+			original: "Complete",
+			translation: "완성하다",
+			category: .vocabulary,
+			references: [],
+			createdDate: Date(timeIntervalSinceNow: 100)),
+		.init(
+			id: .init(),
+			original: "These are sentences\nThey have sevaral lines.\nlike this",
+			translation: "",
+			category: .sentece,
+			references: [],
+			createdDate: Date(timeIntervalSinceNow: 50))
 	]
 	
 	func fetch(filter item: Conversation?) -> [Note]? {

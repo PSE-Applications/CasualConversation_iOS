@@ -103,20 +103,17 @@ struct NoteDetail: View {
 					.foregroundColor(.logoLightBlue)
 				Text("문장 Original")
 			}
-			
 			TextEditor(text: $original)
-			
 			HStack {
 				Image(systemName: "k.circle.fill")
 					.foregroundColor(.logoLightBlue)
 				Text("번역 Translation")
 			}
-			
 			TextEditor(text: $translation)
-		
 			Spacer()
 		}
 	}
+	
 }
 
 extension NoteDetail {
@@ -134,8 +131,22 @@ extension NoteDetail {
 struct NoteDetail_Previews: PreviewProvider {
 	
 	static let dummyList: [Note] = [
-		.init(id: .init(), original: "Way out", translation: "나가는 길", category: .vocabulary, references: [], createdDate: Date()),
-		.init(id: .init(), original: "Hi, I'm Marco.\nI'm glad meet you.\nI'd like to talk to you.", translation: "안녕하세요, 저는 마르코입니다.\n만나서 반갑습니다.\n이야기하기를 바랬어요.", category: .sentece, references: [], createdDate: Date())
+		.init(
+			id: .init(),
+			original: "Way out",
+			translation: "나가는 길",
+			category: .vocabulary,
+			references: [],
+			createdDate: Date()
+		),
+		.init(
+			id: .init(),
+			original: "Hi, I'm Marco.\nI'm glad meet you.\nI'd like to talk to you.",
+			translation: "안녕하세요, 저는 마르코입니다.\n만나서 반갑습니다.\n이야기하기를 바랬어요.",
+			category: .sentece,
+			references: [],
+			createdDate: Date()
+		)
 	]
 	
 	static var previews: some View {

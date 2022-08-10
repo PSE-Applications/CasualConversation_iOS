@@ -12,9 +12,6 @@ import SwiftUI
 struct SelectionView: View {
 	
 	enum Tab: Int, CaseIterable, Hashable {
-		case every
-	}
-	
 	let viewModel: SelectionViewModel
 	let item: Conversation
 	@EnvironmentObject private var container: PresentationDIContainer
@@ -147,7 +144,6 @@ struct SelectionView: View {
 				}
 			}
 		}
-		.background(Color(.systemGroupedBackground))
 	}
 }
 

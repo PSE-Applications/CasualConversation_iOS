@@ -69,7 +69,6 @@ extension MainTabView {
 				Button {
 					if index == .record {
 						isPresentedRecordView.toggle()
-						return
 					} else {
 						selectedIndex = index
 					}
@@ -100,7 +99,8 @@ extension MainTabView {
 				}
 			}
 		}
-		.background(Color(UIColor.systemGroupedBackground))
+		.padding()
+		.background(Color(.systemGroupedBackground))
 	}
 	
 }
@@ -115,6 +115,7 @@ struct MainTabView_Previews: PreviewProvider {
 		container.MainTabView()
 			.environmentObject(container)
 	}
+	
 }
 
 #endif

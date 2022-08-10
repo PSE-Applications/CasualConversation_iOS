@@ -118,9 +118,7 @@ struct RecordView: View {
 #if DEBUG
 struct RecordView_Previews: PreviewProvider {
 	
-	static var container: PresentationDIContainer {
-		.preview
-	}
+	static var container: PresentationDIContainer { .preview }
 	
 	static var previews: some View {
 		container.RecordView()
