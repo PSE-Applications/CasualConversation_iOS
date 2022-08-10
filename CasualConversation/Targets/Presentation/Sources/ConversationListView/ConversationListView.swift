@@ -23,8 +23,6 @@ struct ConversationListView: View {
 			.onDelete(perform: removeRows)
 		}
 		.listStyle(.plain)
-		.navigationTitle("Casual Conversation")
-		.navigationBarTitleDisplayMode(.inline)
 	}
 	
 }

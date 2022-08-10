@@ -12,13 +12,8 @@ struct MainTabView: View {
 	private enum Tab: Int, CaseIterable, Hashable {
 		case conversations, record, notes
 		
-		var title: String { Self.titles[self.rawValue] }
 		var imageSystemName: String { Self.tabBarImageNames[self.rawValue] }
 		var tintColor: (light: Color, dark: Color) { Self.tintColors[self.rawValue] }
-		
-		private static let titles = [
-			"Casual Conversation", "Recording", "Notes"
-		]
 		private static let tabBarImageNames = [
 			"rectangle.stack.badge.play.fill", "mic.fill.badge.plus", "checklist"
 		]
@@ -51,6 +46,8 @@ struct MainTabView: View {
 				Spacer()
 				TabView
 			}
+			.navigationTitle(selectedIndex == .conversations ? "Conversations" : "Notes")
+			.navigationBarTitleDisplayMode(.inline)
 			.toolbar {
 				ToolbarItem(placement: .navigationBarTrailing) {
 					NavigationLink(destination: Text("Setting View")) {
@@ -58,7 +55,6 @@ struct MainTabView: View {
 					}
 				}
 			}
-			.navigationBarTitle(selectedIndex.title)
 		}
 		.accentColor(.logoDarkGreen)
     }

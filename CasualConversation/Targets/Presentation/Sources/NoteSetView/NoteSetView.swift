@@ -29,8 +29,6 @@ struct NoteSetView: View {
 			}
 			.listStyle(.plain)
 		}
-		.navigationTitle("Notes")
-		.navigationBarTitleDisplayMode(.inline)
 		.sheet(item: $selectedRowItem) { item in
 			NoteDetail(item: item)
 		}

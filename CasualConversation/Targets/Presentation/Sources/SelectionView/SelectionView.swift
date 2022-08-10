@@ -62,7 +62,6 @@ struct SelectionView: View {
 		}
 		.onAppear(perform: setupData)
 		.padding()
-		.navigationTitle(item.title ?? "")
 		.toolbar {
 			ToolbarItem(placement: .navigationBarTrailing) {
 				Toggle(isOn: $isEditing) {
