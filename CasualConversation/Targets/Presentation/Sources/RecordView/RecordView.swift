@@ -9,113 +9,132 @@ import SwiftUI
 
 struct RecordView: View {
 	
-	let viewModel: RecordViewModel
-	
 	@Environment(\.presentationMode) private var presentationMode
 	
-	@State private var titleText: String = Date().formattedString
-	@State private var isRecording: Bool = false
+	@ObservedObject var viewModel: RecordViewModel
+	
+	@State private var cancelAlert: Bool = false
+	@State private var stopAlert: Bool = false
 
 	var body: some View {
-		VStack(alignment: .leading) {
-			HStack(alignment: .center) {
-				Button {
-					presentationMode.wrappedValue.dismiss()
-				} label: {
-					Text("취소")
-						.font(.headline)
-						.foregroundColor(.logoLightGreen)
-				}
-				Spacer()
-				Text("Casual Conversation")
-					.font(.headline)
-					.foregroundColor(.white)
-				Spacer()
-				Button {
-					// Update
-					presentationMode.wrappedValue.dismiss()
-				} label: {
-					Text("완료")
-						.font(.headline)
-						.foregroundColor(.logoLightGreen)
-				}
-			}
-			Divider()
-			Spacer()
-			VStack(alignment: .center) {
-				Rectangle()
-					.foregroundColor(.recordShadow)
+		NavigationView {
+			VStack(alignment: .leading) {
+				Visualization
+				RecordControl
 			}
 			.padding()
-			Spacer()
-			RecordControl
-			Spacer()
+			.background(Color.recordBackground)
+			.navigationTitle("Casual Conversation")
+			.navigationBarTitleDisplayMode(.inline)
+			.toolbar {
+				ToolbarItem(placement: .navigationBarLeading) {
+					Button {
+						cancelAlert.toggle()
+					} label: {
+						Text("취소")
+							.font(.headline)
+							.foregroundColor(.logoLightGreen)
+					}
+					.alert("녹음 취소", isPresented: $cancelAlert) {
+						Button("삭제", role: .destructive) {
+							presentationMode.wrappedValue.dismiss()
+						}
+						Button("취소", role: .cancel) { }
+					} message: {
+						Text("녹음물은 저장되지 않습니다")
+					}
+				}
+			}
+		}
+		.preferredColorScheme(.dark)
+	}
+		
+	var Visualization: some View {
+		VStack(alignment: .center) {
+			Rectangle()
+				.foregroundColor(.recordShadow)
 		}
 		.padding()
-		.background(Color.recordBackground)
-		.preferredColorScheme(.dark)
 	}
 	
 	var RecordControl: some View {
 		HStack(alignment: .center) {
-			Button() {
-				isRecording = false
-			} label: {
-				Spacer()
-				ZStack {
-					Image(systemName: "stop.fill")
-						.foregroundColor(.white)
-						.font(.system(size: 34))
-						.shadow(color: .gray, radius: 1, x: 2, y: 2)
+			Button(
+				action: {
+					stopAlert.toggle()
+				}, label: {
+					Spacer()
+					ZStack {
+						Image(systemName: "stop.fill")
+							.foregroundColor(viewModel.isRecording ? .logoLightBlue : .logoDarkBlue)
+							.font(.system(size: 34))
+							.shadow(color: .logoDarkBlue, radius: 1, x: 2, y: 2)
+					}
+					Spacer()
 				}
-				Spacer()
+			)
+			.alert("녹음 완료", isPresented: $stopAlert) {
+				Button("취소", role: .cancel) {
+					
+				}
+				Button("저장") {
+					// TODO: 저장 동작
+					presentationMode.wrappedValue.dismiss()
+				}
+			} message: {
+				Text("녹음을 중지하고 녹음물을 저장하시겠습니까?")
 			}
+			.disabled(!viewModel.isRecording)
 			Spacer()
-			Button() {
-				isRecording.toggle()
-			} label: {
-				ZStack {
-					Circle()
-						.stroke(lineWidth: 2)
-						.frame(width: 66, height: 66, alignment: .center)
-						.foregroundColor(.white)
-					if isRecording {
-						ZStack {
+			Button(
+				action: {
+					viewModel.isRecording.toggle()
+				}, label: {
+					ZStack {
+						Circle()
+							.stroke(lineWidth: 2)
+							.frame(width: 66, height: 66, alignment: .center)
+							.foregroundColor(.white)
+						if viewModel.isRecording {
+							ZStack {
+								Image(systemName: "circle.fill")
+									.foregroundColor(.logoDarkRed)
+									.font(.system(size: 58))
+									.shadow(color: .black, radius: 1, x: 1, y: 1)
+								Image(systemName: "pause.fill")
+									.foregroundColor(.logoLightRed)
+									.font(.system(size: 34))
+									.shadow(color: .black, radius: 1, x: 1, y: 1)
+							}
+						} else {
 							Image(systemName: "circle.fill")
-								.foregroundColor(.logoDarkRed)
-								.font(.system(size: 58))
-								.shadow(color: .black, radius: 1, x: 1, y: 1)
-							Image(systemName: "pause.fill")
 								.foregroundColor(.logoLightRed)
-								.font(.system(size: 34))
-								.shadow(color: .black, radius: 1, x: 1, y: 1)
+								.font(.system(size: 58))
+								.shadow(color: .logoDarkBlue, radius: 1, x: 1, y: 1)
 						}
-					} else {
-						Image(systemName: "circle.fill")
-							.foregroundColor(.logoLightRed)
-							.font(.system(size: 58))
-							.shadow(color: .black, radius: 1, x: 1, y: 1)
 					}
 				}
-			}
+			)
 			Spacer()
-			Button() {
-				
-			} label: {
-				Spacer()
-				ZStack {
-					Image(systemName: "pin")
-						.foregroundColor(.logoLightBlue)
-						.font(.system(size: 26))
-						.shadow(color: .recordShadow, radius: 1, x: 2, y: 2)
+			Button(
+				action: {
+					
+				}, label: {
+					Spacer()
+					ZStack {
+						Image(systemName: "pin")
+							.foregroundColor(viewModel.isRecording ? .logoLightBlue : .logoDarkBlue)
+							.font(.system(size: 26))
+							.shadow(color: .logoDarkBlue, radius: 1, x: 2, y: 2)
+					}
+					Spacer()
 				}
-				Spacer()
-			}
+			)
+			.disabled(!viewModel.isRecording)
 		}
 	}
 }
 
-#if DEBUG
 struct RecordView_Previews: PreviewProvider {
 	
 	static var container: PresentationDIContainer { .preview }
@@ -125,4 +144,3 @@ struct RecordView_Previews: PreviewProvider {
 	}
 
 }
-#endif
