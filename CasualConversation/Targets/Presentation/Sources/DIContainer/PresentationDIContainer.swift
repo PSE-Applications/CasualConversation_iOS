@@ -87,10 +87,10 @@ extension PresentationDIContainer {
 		let viewModel: SelectionViewModel = .init(dependency: .init(
 				conversationUseCase: self.casualConversationUseCase,
 				noteUseCase: makeNoteUseCase(filter: conversation),
-				audioService: self.audioService
+				item: conversation
 			)
 		)
-		return .init(viewModel: viewModel, item: conversation)
+		return .init(viewModel: viewModel)
 	}
 	
 	func NoteSetView(by usecase: NoteManagable? = nil) -> NoteSetView {
@@ -105,6 +105,13 @@ extension PresentationDIContainer {
 	
 	func SettingView() -> SettingView {
 		return .init()
+	}
+	
+	func PlayTabView() -> PlayTabView {
+		let viewModel: PlayTabViewModel = .init(dependency:
+				.init(audioService: self.audioService)
+		)
+		return .init(viewModel: viewModel)
 	}
 	
 }
