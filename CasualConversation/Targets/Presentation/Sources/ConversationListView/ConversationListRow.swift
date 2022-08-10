@@ -23,14 +23,20 @@ struct ConversationListRow: View {
 				Text(item.title ?? "")
 					.font(.title3)
 					.fontWeight(.bold)
+					.lineLimit(1)
+					.truncationMode(.tail)
 				HStack(alignment: .center) {
 					Text(item.topic ?? "")
 						.font(.body)
+						.lineLimit(1)
+						.truncationMode(.tail)
 					Spacer()
 					VStack(alignment: .trailing) {
 						Text(item.members.joined(separator: ", "))
 							.font(.caption)
 							.foregroundColor(.logoDarkGreen)
+							.lineLimit(1)
+							.truncationMode(.tail)
 						Text(item.recordedDate.formattedString)
 							.font(.caption2)
 							.foregroundColor(.gray)
@@ -50,15 +56,13 @@ struct ConversationListRow: View {
 	
 }
 
-#if DEBUG
-
 struct ConversationListRow_Previews: PreviewProvider {
 		
 	static let item: Conversation = .init(
 		id: UUID(),
 		title: "Preview Title",
 		topic: "Preview Topic",
-		members: ["Preview Member 1", "Preview Member 2"],
+		members: ["Member 1", "Member 2", "Member 3"],
 		recordFilePath: URL(fileURLWithPath: "Preview Path"),
 		recordedDate: Date(),
 		pins: []
@@ -70,5 +74,3 @@ struct ConversationListRow_Previews: PreviewProvider {
 	}
 	
 }
-
-#endif

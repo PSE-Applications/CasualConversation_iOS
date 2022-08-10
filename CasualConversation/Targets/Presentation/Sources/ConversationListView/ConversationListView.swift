@@ -10,8 +10,8 @@ import SwiftUI
 
 struct ConversationListView: View {
 	
-	let viewModel: ConversationListViewModel
 	@EnvironmentObject private var container: PresentationDIContainer
+	@ObservedObject var viewModel: ConversationListViewModel
 	
 	var body: some View {
 		List {
@@ -30,14 +30,10 @@ struct ConversationListView: View {
 extension ConversationListView {
 	
 	private func removeRows(at offsets: IndexSet) {
-		for offset in offsets {
-			self.viewModel.remove(at: offset)
-		}
+		print(#function)
 	}
 	
 }
-
-#if DEBUG
 
 struct ConversationListView_Previews: PreviewProvider {
 	
@@ -49,5 +45,3 @@ struct ConversationListView_Previews: PreviewProvider {
 	}
 
 }
-
-#endif
