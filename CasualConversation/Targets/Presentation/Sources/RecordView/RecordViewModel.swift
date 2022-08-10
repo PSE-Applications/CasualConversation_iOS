@@ -8,7 +8,7 @@
 import Common
 import Domain
 
-import Combine
+import SwiftUI
 
 final class RecordViewModel: Dependency, ObservableObject {
 	

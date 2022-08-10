@@ -9,9 +9,9 @@
 import Common
 import Domain
 
-import Combine
+import SwiftUI
 
-final class ConversationListViewModel: Dependency {
+final class ConversationListViewModel: Dependency, ObservableObject {
 	
 	struct Dependency {
 		let useCase: ConversationManagable

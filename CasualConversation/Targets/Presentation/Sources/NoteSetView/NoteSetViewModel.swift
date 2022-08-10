@@ -8,9 +8,9 @@
 import Common
 import Domain
 
-import Combine
+import SwiftUI
 
-final class NoteSetViewModel: Dependency {
+final class NoteSetViewModel: Dependency, ObservableObject {
 	
 	struct Dependency {
 		let useCase: NoteManagable
