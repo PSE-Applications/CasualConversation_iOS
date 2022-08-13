@@ -21,59 +21,86 @@ struct PlayTabView: View {
 		VStack(alignment: .center) {
 			ProgressView(value: viewModel.currentTime, total: viewModel.duration)
 				.progressViewStyle(.linear)
-			HStack(alignment: .top) {
-				Text("\(viewModel.currentTime.toTimeString)")
-				Spacer()
-				Text("\(viewModel.duration.toTimeString)")
-			}
-			.foregroundColor(.gray)
-			.font(.caption)
+			TimeLabels(
+				current: viewModel.currentTime.toTimeString,
+				duration: viewModel.duration.toTimeString
+			)
 			HStack(alignment: .center) {
-				Menu {
-					ForEach(PlayTabViewModel.Speed.allCases, id: \.self) { item in
-						Button(action: {
-							viewModel.speed = item
-						}, label: {
-							Text("\(item.rawValue)x")
-								.foregroundColor(.logoDarkBlue)
-								.font(.caption)
-						})
-					}
-				} label: {
-					Spacer()
-					Text("\(viewModel.speed.rawValue)x")
-						.foregroundColor(.logoDarkBlue)
-						.font(.headline)
-					Spacer()
-				}
-				Button {
-					
-				} label: {
-					Spacer()
-					Image(systemName: "gobackward.5")
-						.font(.system(size: 22))
-					Spacer()
-				}
-				Button {
-					
-				} label: {
-					Spacer()
-					Image(systemName: isPlayingImageName)
-						.font(.system(size: 44))
-					Spacer()
-				}
-				Button {
-					
-				} label: {
-					Spacer()
-					Image(systemName: "goforward.5")
-						.font(.system(size: 22))
-					Spacer()
-				}
+				SpeedMenu()
+				BackwardButton()
+				PlayButton()
+				GowardButton()
 			}
 			.foregroundColor(.logoLightBlue)
 		}
     }
+	
+}
+
+extension PlayTabView {
+	
+	private func TimeLabels(current: String, duration: String) -> some View {
+		HStack(alignment: .top) {
+			Text(current)
+			Spacer()
+			Text(duration)
+		}
+		.foregroundColor(.gray)
+		.font(.caption)
+	}
+	
+	private func SpeedMenu() -> some View {
+		Menu {
+			ForEach(PlayTabViewModel.Speed.allCases, id: \.self) { item in
+				Button(action: {
+					viewModel.speed = item
+				}, label: {
+					Text("\(item.rawValue)x")
+						.foregroundColor(.logoDarkBlue)
+						.font(.caption)
+				})
+			}
+		} label: {
+			Spacer()
+			Text("\(viewModel.speed.rawValue)x")
+				.foregroundColor(.logoDarkBlue)
+				.font(.headline)
+			Spacer()
+		}
+	}
+	
+	private func PlayButton() -> some View {
+		Button {
+			
+		} label: {
+			Spacer()
+			Image(systemName: isPlayingImageName)
+				.font(.system(size: 44))
+			Spacer()
+		}
+	}
+	
+	private func BackwardButton() -> some View {
+		Button {
+			
+		} label: {
+			Spacer()
+			Image(systemName: "gobackward.5")
+				.font(.system(size: 22))
+			Spacer()
+		}
+	}
+	
+	private func GowardButton() -> some View {
+		Button {
+			
+		} label: {
+			Spacer()
+			Image(systemName: "goforward.5")
+				.font(.system(size: 22))
+			Spacer()
+		}
+	}
 	
 }
 

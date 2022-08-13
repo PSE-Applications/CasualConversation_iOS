@@ -17,18 +17,18 @@ struct NoteDetailView: View {
 	
 	var body: some View {
 		VStack(alignment: .leading) {
-			NavigationControl
+			NavigationControl()
 			Divider()
-			if viewModel.isVocabulary {
-				Vocabulary
-			} else {
-				Sentense
-			}
+			NoteContent(by: viewModel.isVocabulary)
 		}
 		.padding()
 	}
 	
-	var NavigationControl: some View {
+}
+
+extension NoteDetailView {
+		
+	private func NavigationControl() -> some View {
 		HStack(alignment: .center) {
 			Button {
 				presentationMode.wrappedValue.dismiss()
@@ -54,7 +54,16 @@ struct NoteDetailView: View {
 		}
 	}
 	
-	var Vocabulary: some View {
+	@ViewBuilder
+	private func NoteContent(by condition: Bool) -> some View {
+		if condition {
+			Vocabulary()
+		} else {
+			Sentense()
+		}
+	}
+	
+	private func Vocabulary() -> some View {
 		VStack(alignment: .leading) {
 			Spacer()
 			InputTextField(
@@ -76,7 +85,21 @@ struct NoteDetailView: View {
 		}
 	}
 	
-	var Sentense: some View {
+	private func InputTextField(title: String, iconName: String, text: Binding<String>) -> some View {
+		Group {
+			Text(title)
+				.font(.headline)
+			HStack {
+				Image(systemName: iconName)
+					.foregroundColor(.logoLightBlue)
+				TextField(title, text: $viewModel.original, prompt: Text(title.components(separatedBy: " ")[0]))
+					.textFieldStyle(.roundedBorder)
+					.shadow(color: .gray, radius: 1, x: 2, y: 2)
+			}
+		}
+	}
+	
+	private func Sentense() -> some View {
 		VStack(alignment: .leading) {
 			HStack {
 				Image(systemName: "e.circle.fill")
@@ -90,24 +113,6 @@ struct NoteDetailView: View {
 				Text("번역 Translation")
 			}
 			TextEditor(text: $viewModel.translation)
-		}
-	}
-	
-}
-
-extension NoteDetailView {
-	
-	private func InputTextField(title: String, iconName: String, text: Binding<String>) -> some View {
-		Group {
-			Text(title)
-				.font(.headline)
-			HStack {
-				Image(systemName: iconName)
-					.foregroundColor(.logoLightBlue)
-				TextField(title, text: $viewModel.original, prompt: Text(title.components(separatedBy: " ")[0]))
-					.textFieldStyle(.roundedBorder)
-					.shadow(color: .gray, radius: 1, x: 2, y: 2)
-			}
 		}
 	}
 	

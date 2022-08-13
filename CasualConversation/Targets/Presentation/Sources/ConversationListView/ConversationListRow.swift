@@ -17,40 +17,57 @@ struct ConversationListRow: View {
 	
 	var body: some View {
 		HStack {
-			Image(systemName: "recordingtape")
-				.foregroundColor(.logoLightRed)
-			VStack(alignment: .leading) {
-				Text(item.title ?? "")
-					.font(.title3)
-					.fontWeight(.bold)
+			RowLeadingImage()
+			RowContent()
+			Spacer()
+			CheckMarkIndicator()
+		}
+	}
+	
+}
+
+extension ConversationListRow {
+	
+	private func RowLeadingImage() -> some View {
+		Image(systemName: "recordingtape")
+			.foregroundColor(.logoLightRed)
+	}
+	
+	private func RowContent() -> some View {
+		VStack(alignment: .leading) {
+			Text(item.title ?? "")
+				.font(.title3)
+				.fontWeight(.bold)
+				.lineLimit(1)
+				.truncationMode(.tail)
+			HStack(alignment: .center) {
+				Text(item.topic ?? "")
+					.font(.body)
 					.lineLimit(1)
 					.truncationMode(.tail)
-				HStack(alignment: .center) {
-					Text(item.topic ?? "")
-						.font(.body)
+				Spacer()
+				VStack(alignment: .trailing) {
+					Text(item.members.joined(separator: ", "))
+						.font(.caption)
+						.foregroundColor(.logoDarkGreen)
 						.lineLimit(1)
 						.truncationMode(.tail)
-					Spacer()
-					VStack(alignment: .trailing) {
-						Text(item.members.joined(separator: ", "))
-							.font(.caption)
-							.foregroundColor(.logoDarkGreen)
-							.lineLimit(1)
-							.truncationMode(.tail)
-						Text(item.recordedDate.formattedString)
-							.font(.caption2)
-							.foregroundColor(.gray)
-					}
+					Text(item.recordedDate.formattedString)
+						.font(.caption2)
+						.foregroundColor(.gray)
 				}
 			}
-			Spacer()
-			if Bool.random() { // TODO: 처리방법 구상필요
-				Image(systemName: "checkmark.circle.fill")
-					.foregroundColor(.logoLightBlue)
-			} else {
-				Image(systemName: "circle")
-					.foregroundColor(.logoDarkBlue)
-			}
+		}
+	}
+	
+	@ViewBuilder
+	private func CheckMarkIndicator() -> some View {
+		if Bool.random() { // TODO: 처리방법 구상필요
+			Image(systemName: "checkmark.circle.fill")
+				.foregroundColor(.logoLightBlue)
+		} else {
+			Image(systemName: "circle")
+				.foregroundColor(.logoDarkBlue)
 		}
 	}
 	

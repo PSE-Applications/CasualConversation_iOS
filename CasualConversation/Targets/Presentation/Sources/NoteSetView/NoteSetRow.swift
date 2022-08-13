@@ -16,34 +16,49 @@ struct NoteSetRow: View {
 	
 	var body: some View {
 		HStack {
-			Image(systemName: item.category == .sentece ? "text.bubble.fill" : "textformat.abc")
-				.foregroundColor(.logoLightRed)
-				.frame(width: 36, alignment: .center)
-			VStack {
-				if item.original.isEmpty {
-					Text(item.translation)
-				} else if item.translation.isEmpty {
-					Text(item.original)
-				} else {
-					Text(item.original)
-					Text(item.translation)
-						.font(.caption)
-						.foregroundColor(.gray)
-				}
-			}
-			Spacer()
-			if item.original.isEmpty {
-				Image(systemName: "k.circle")
-					.foregroundColor(.logoDarkBlue)
-			} else if item.translation.isEmpty {
-				Image(systemName: "e.circle")
-					.foregroundColor(.logoDarkBlue)
-			} else {
-				Image(systemName: "checkmark.circle.fill")
-					.foregroundColor(.logoLightBlue)
-			}
+			CategoryImage(by: item.category == .sentece)
+			NoteContent()
 		}
 		.font(.body)
+	}
+	
+}
+
+extension NoteSetRow {
+	
+	private func CategoryImage(by condition: Bool) -> some View {
+		Image(systemName: condition ? "text.bubble.fill" : "textformat.abc")
+			.foregroundColor(.logoLightRed)
+			.frame(width: 36, alignment: .center)
+	}
+	
+	@ViewBuilder
+	private func NoteContent() -> some View {
+		if item.original.isEmpty {
+			VStack {
+				Text(item.translation)
+			}
+			Spacer()
+			Image(systemName: "k.circle")
+				.foregroundColor(.logoDarkBlue)
+		} else if item.translation.isEmpty {
+			VStack {
+				Text(item.original)
+			}
+			Spacer()
+			Image(systemName: "e.circle")
+				.foregroundColor(.logoDarkBlue)
+		} else {
+			VStack {
+				Text(item.original)
+				Text(item.translation)
+					.font(.caption)
+					.foregroundColor(.gray)
+			}
+			Spacer()
+			Image(systemName: "checkmark.circle.fill")
+				.foregroundColor(.logoLightBlue)
+		}
 	}
 	
 }

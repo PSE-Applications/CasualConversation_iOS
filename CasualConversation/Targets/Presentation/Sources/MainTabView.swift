@@ -22,22 +22,15 @@ struct MainTabView: View {
 		NavigationView {
 			VStack {
 				Spacer()
-				switch selectedIndex {
-				case .conversations:
-					ConversationList
-				case .notes:
-					NoteSet
-				}
+				MainContent(by: selectedIndex)
 				Spacer()
-				TabView
+				MainTabView()
 			}
 			.navigationTitle(selectedIndex == .conversations ? "Conversations" : "Notes")
 			.navigationBarTitleDisplayMode(.inline)
 			.toolbar {
 				ToolbarItem(placement: .navigationBarTrailing) {
-					NavigationLink(destination: container.SettingView()) {
-						Image(systemName: "gear")
-					}
+					SettingToolbarLink()
 				}
 			}
 			.fullScreenCover(isPresented: $isPresentedRecordView) {
@@ -47,17 +40,31 @@ struct MainTabView: View {
 		.accentColor(.logoDarkGreen)
     }
 	
-	var ConversationList: some View {
-		container.ConversationListView()
+	
+	
+}
+
+extension MainTabView {
+	
+	private func SettingToolbarLink() -> some View {
+		NavigationLink(destination: container.SettingView()) {
+			Image(systemName: "gear")
+		}
 	}
 	
-	var NoteSet: some View {
-		container.NoteSetView()
+	@ViewBuilder
+	private func MainContent(by tab: Tab) -> some View {
+		switch tab {
+		case .conversations:
+			container.ConversationListView()
+		case .notes:
+			container.NoteSetView()
+		}
 	}
-    
-	var TabView: some View {
+	
+	private func MainTabView() -> some View {
 		HStack(alignment: .center) {
-			TabItem(tab: .conversations)
+			CCTabItem(tab: .conversations)
 			Button(
 				action: {
 					isPresentedRecordView.toggle()
@@ -75,17 +82,13 @@ struct MainTabView: View {
 					Spacer()
 				}
 			)
-			TabItem(tab: .notes)
+			CCTabItem(tab: .notes)
 		}
 		.padding()
 		.background(Color(.systemGroupedBackground))
 	}
 	
-}
-
-extension MainTabView {
-	
-	func TabItem(tab: Tab) -> some View {
+	private func CCTabItem(tab: Tab) -> some View {
 		var systemName: String {
 			switch tab {
 			case .conversations: 	return "rectangle.stack.badge.play.fill"

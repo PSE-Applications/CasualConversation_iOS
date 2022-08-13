@@ -18,26 +18,34 @@ struct SelectionView: View {
 	
 	var body: some View {
 		VStack(alignment: .leading) {
-			EditableInfos
+			EditableInfos()
 			Divider()
-			NoteInput
+			NoteInput()
 			Divider()
-			SelectedNoteSet
+			SelectedNoteSet()
 			Spacer()
-			PlayTabView
+			PlayTabView()
 		}
 		.padding()
 		.toolbar {
 			ToolbarItem(placement: .navigationBarTrailing) {
-				Toggle(isOn: $isEditing) {
-					Text(isEditing ? "완료" : "수정")
-				}
-				.toggleStyle(.button)
+				EditToolbarToggle(by: $isEditing)
 			}
 		}
 	}
 	
-	var EditableInfos: some View {
+}
+
+extension SelectionView {
+	
+	private func EditToolbarToggle(by condition: Binding<Bool>) -> some View {
+		Toggle(isOn: condition) {
+			Text(condition.wrappedValue ? "완료" : "수정")
+		}
+		.toggleStyle(.button)
+	}
+	
+	private func EditableInfos() -> some View {
 		VStack {
 			InfoTextField(
 				label: "제목",
@@ -57,7 +65,26 @@ struct SelectionView: View {
 		}
 	}
 	
-	var NoteInput: some View {
+	private func InfoTextField(
+		label: String,
+		prompt: String,
+		text: Binding<String>
+	) -> some View {
+		var isEditingShadowColor: Color { isEditing ? .logoLightBlue : .gray }
+		return HStack {
+			HStack {
+				Text(label)
+					.font(.body)
+					.fontWeight(.bold)
+				TextField(label, text: text, prompt: Text(prompt))
+					.textFieldStyle(.roundedBorder)
+					.disabled(!isEditing)
+					.shadow(color: isEditingShadowColor, radius: 1, x: 2, y: 2)
+			}
+		}
+	}
+	
+	private func NoteInput() -> some View {
 		VStack(spacing: 8) {
 			HStack {
 				Toggle(isOn: $viewModel.isOriginal) {
@@ -103,34 +130,12 @@ struct SelectionView: View {
 		.padding()
 	}
 	
-	var SelectedNoteSet: some View {
+	private func SelectedNoteSet() -> some View {
 		container.NoteSetView(by: viewModel.referenceNoteUseCase)
 	}
 	
-	var PlayTabView: some View {
+	private func PlayTabView() -> some View {
 		container.PlayTabView()
-	}
-}
-
-extension SelectionView {
-	
-	private func InfoTextField(
-		label: String,
-		prompt: String,
-		text: Binding<String>
-	) -> some View {
-		var isEditingShadowColor: Color { isEditing ? .logoLightBlue : .gray }
-		return HStack {
-			HStack {
-				Text(label)
-					.font(.body)
-					.fontWeight(.bold)
-				TextField(label, text: text, prompt: Text(prompt))
-					.textFieldStyle(.roundedBorder)
-					.disabled(!isEditing)
-					.shadow(color: isEditingShadowColor, radius: 1, x: 2, y: 2)
-			}
-		}
 	}
 	
 }
