@@ -10,6 +10,8 @@ import SwiftUI
 
 struct SettingView: View {
 	
+	@ObservedObject var viewModel: SettingViewModel
+	
     var body: some View {
 		VStack {
 			List {
@@ -112,7 +114,7 @@ extension SettingView {
 struct SettingView_Previews: PreviewProvider {
 	
     static var previews: some View {
-        SettingView()
+		SettingView(viewModel: .init(dependency: .init()))
     }
 	
 }

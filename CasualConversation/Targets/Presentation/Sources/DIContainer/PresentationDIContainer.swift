@@ -117,7 +117,8 @@ extension PresentationDIContainer {
 	}
 	
 	func SettingView() -> SettingView {
-		return .init()
+		let viewModel: SettingViewModel = .init(dependency: .init())
+		return .init(viewModel: viewModel)
 	}
 	
 	func PlayTabView() -> PlayTabView {
