@@ -16,41 +16,57 @@ struct NoteDetailView: View {
 	@ObservedObject var viewModel: NoteDetailViewModel
 	
 	var body: some View {
-		VStack(alignment: .leading) {
-			NavigationControl()
-			Divider()
-			NoteContent(by: viewModel.isVocabulary)
+		NavigationView {
+			VStack(alignment: .leading) {
+				NoteContent(by: viewModel.isVocabulary)
+			}
+			.padding()
+			.toolbar {
+				ToolbarItem(placement: .navigationBarLeading) {
+					NavigationCancelButton()
+				}
+				ToolbarItem(placement: .principal) {
+					NavigationTitleLabel()
+				}
+				ToolbarItem(placement: .navigationBarTrailing) {
+					NavigationSaveButton()
+				}
+			}
 		}
-		.padding()
 	}
 	
 }
 
 extension NoteDetailView {
-		
-	private func NavigationControl() -> some View {
-		HStack(alignment: .center) {
-			Button {
-				presentationMode.wrappedValue.dismiss()
-			} label: {
-				Text("취소")
-					.font(.headline)
-					.foregroundColor(.logoDarkGreen)
-			}
-			Spacer()
-			Image(systemName: viewModel.isVocabulary ? "textformat.abc" : "text.bubble.fill")
+	
+	@ViewBuilder
+	private func NavigationTitleLabel() -> some View {
+		HStack {
+			Image(systemName: viewModel.navigationTitleIconImageName)
 				.foregroundColor(.logoLightRed)
-			Text(viewModel.isVocabulary ? "Vocabulary" : "Sentense")
+			Text(viewModel.navigationTitle)
 				.font(.headline)
-			Spacer()
-			Button {
-				// Update
-				presentationMode.wrappedValue.dismiss()
-			} label: {
-				Text("완료")
-					.font(.headline)
-					.foregroundColor(.logoDarkGreen)
-			}
+		}
+	}
+	
+	private func NavigationCancelButton() -> some View {
+		Button {
+			presentationMode.wrappedValue.dismiss()
+		} label: {
+			Text("취소")
+				.font(.headline)
+				.foregroundColor(.logoDarkGreen)
+		}
+	}
+	
+	private func NavigationSaveButton() -> some View {
+		Button {
+			// Update
+			presentationMode.wrappedValue.dismiss()
+		} label: {
+			Text("완료")
+				.font(.headline)
+				.foregroundColor(.logoDarkGreen)
 		}
 	}
 	
