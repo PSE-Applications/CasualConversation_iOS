@@ -17,7 +17,7 @@ struct ConversationListView: View {
 		List {
 			ForEach(viewModel.list, id: \.id) { item in
 				NavigationLink(destination: container.SelectionView(selected: item)) {
-					ConversationListRow(item: item)
+					container.ConversationListRow(selected: item)
 				}
 			}
 			.onDelete(perform: removeRows)

@@ -20,7 +20,7 @@ struct NoteSetView: View {
 		VStack {
 			List {
 				ForEach(viewModel.list, id: \.id) { item in
-					NoteSetRow(item: item)
+					container.NoteSetRow(by: item)
 						.onTapGesture {
 							selectedRowItem = item
 							isPresentedNoteDetail.toggle()

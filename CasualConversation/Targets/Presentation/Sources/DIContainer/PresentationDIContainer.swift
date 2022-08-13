@@ -82,6 +82,13 @@ extension PresentationDIContainer {
 		return .init(viewModel: viewModel)
 	}
 	
+	func ConversationListRow(selected conversation: Conversation) -> ConversationListRow {
+		let viewModel: ConversationListRowViewModel = .init(dependency: .init(
+			item: conversation)
+		)
+		return .init(viewModel: viewModel)
+	}
+	
 	func SelectionView(selected conversation: Conversation) -> SelectionView {
 		let viewModel: SelectionViewModel = .init(dependency: .init(
 				conversationUseCase: self.casualConversationUseCase,
@@ -99,6 +106,13 @@ extension PresentationDIContainer {
 		} else {
 			viewModel = .init(dependency: .init(useCase: self.noteUseCase))
 		}
+		return .init(viewModel: viewModel)
+	}
+	
+	func NoteSetRow(by note: Note) -> NoteSetRow {
+		let viewModel: NoteSetRowViewModel = .init(dependency: .init(
+			item: note)
+		)
 		return .init(viewModel: viewModel)
 	}
 	

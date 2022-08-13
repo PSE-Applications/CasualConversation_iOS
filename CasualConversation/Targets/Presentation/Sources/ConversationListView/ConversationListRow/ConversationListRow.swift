@@ -6,14 +6,11 @@
 //  Copyright © 2022 pseapplications. All rights reserved.
 //
 
-import Domain
-
 import SwiftUI
-
 
 struct ConversationListRow: View {
 	
-	let item: Conversation
+	@ObservedObject var viewModel: ConversationListRowViewModel
 	
 	var body: some View {
 		HStack {
@@ -35,24 +32,24 @@ extension ConversationListRow {
 	
 	private func RowContent() -> some View {
 		VStack(alignment: .leading) {
-			Text(item.title ?? "")
+			Text(viewModel.title)
 				.font(.title3)
 				.fontWeight(.bold)
 				.lineLimit(1)
 				.truncationMode(.tail)
 			HStack(alignment: .center) {
-				Text(item.topic ?? "")
+				Text(viewModel.topic)
 					.font(.body)
 					.lineLimit(1)
 					.truncationMode(.tail)
 				Spacer()
 				VStack(alignment: .trailing) {
-					Text(item.members.joined(separator: ", "))
+					Text(viewModel.members)
 						.font(.caption)
 						.foregroundColor(.logoDarkGreen)
 						.lineLimit(1)
 						.truncationMode(.tail)
-					Text(item.recordedDate.formattedString)
+					Text(viewModel.recordedDate)
 						.font(.caption2)
 						.foregroundColor(.gray)
 				}
@@ -74,19 +71,11 @@ extension ConversationListRow {
 }
 
 struct ConversationListRow_Previews: PreviewProvider {
-		
-	static let item: Conversation = .init(
-		id: UUID(),
-		title: "Preview Title",
-		topic: "Preview Topic",
-		members: ["Member 1", "Member 2", "Member 3"],
-		recordFilePath: URL(fileURLWithPath: "Preview Path"),
-		recordedDate: Date(),
-		pins: []
-	)
+
+	static let viewModel = ConversationListRowViewModel.debugViewModel
     
 	static var previews: some View {
-		ConversationListRow(item: item)
+		ConversationListRow(viewModel: viewModel)
 		.previewLayout(.sizeThatFits)
 	}
 	
