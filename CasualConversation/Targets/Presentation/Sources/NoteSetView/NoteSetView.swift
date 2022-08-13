@@ -13,7 +13,8 @@ struct NoteSetView: View {
 	
 	@EnvironmentObject private var container: PresentationDIContainer
 	@ObservedObject var viewModel: NoteSetViewModel
-	@State private var isPresentedNoteDetail = false
+	
+	@State private var isPresentedNoteDetail: Bool = false
 	@State private var selectedRowItem: Note?
 	
 	var body: some View {

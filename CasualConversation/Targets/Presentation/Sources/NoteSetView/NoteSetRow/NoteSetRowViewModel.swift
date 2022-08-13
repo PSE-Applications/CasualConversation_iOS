@@ -32,36 +32,64 @@ final class NoteSetRowViewModel: Dependency, ObservableObject {
 		self.translation = dependency.item.translation
 		self.pronunciation = "" // TODO: Model 추가 필요 - dependency.item.pronunciation
 	}
+	
+}
+
+extension NoteSetRowViewModel {
+	
+	var categoryImageName: String {
+		self.category == .sentece ? "text.bubble.fill" : "textformat.abc"
+	}
+	var noteContentLabel: String {
+		self.original.isEmpty ? self.translation : self.original
+	}
+	var noteContentImageName: String {
+		self.original.isEmpty ? "k.circle" : "e.circle"
+	}
+	
 }
 
 #if DEBUG
 
 extension NoteSetRowViewModel {
 	
-	static let debugViewModels: [NoteSetRowViewModel] = [
-		.init(dependency: .init(
-			item: .init(
-				id: .init(),
-				original: "Hello",
-				translation: "안녕",
-				category: .vocabulary,
-				references: [],
-				createdDate: Date()
+	static var previewViewModels: [NoteSetRowViewModel] {
+		[
+			.init(dependency: .init(
+				item: .init(
+						id: .init(),
+						original: "Hello",
+						translation: "안녕",
+						category: .vocabulary,
+						references: [],
+						createdDate: Date()
+					)
+				)
+			),
+			.init(dependency: .init(
+				item: .init(
+						id: .init(),
+						original: "Nice to meet you.",
+						translation: "",
+						category: .sentece,
+						references: [],
+						createdDate: Date()
+					)
+				)
+			),
+			.init(dependency: .init(
+				item: .init(
+						id: .init(),
+						original: "",
+						translation: "한국말 문장만 있는 노트",
+						category: .sentece,
+						references: [],
+						createdDate: Date()
+					)
 				)
 			)
-		),
-		.init(dependency: .init(
-			item: .init(
-				id: .init(),
-				original: "Nice to meet you.",
-				translation: "",
-				category: .sentece,
-				references: [],
-				createdDate: Date()
-				)
-			)
-		)
-	]
+		]
+	}
 	
 }
 

@@ -10,34 +10,33 @@ import SwiftUI
 
 struct PlayTabView: View {
 	
-	@ObservedObject var viewModel: PlayTabViewModel
 	@EnvironmentObject private var container: PresentationDIContainer
+	@ObservedObject var viewModel: PlayTabViewModel
 	
 	@State private var isPlaying: Bool = false
 	
-	private var isPlayingImageName: String { isPlaying ? "pause.circle.fill" : "play.circle.fill" }
-	
     var body: some View {
 		VStack(alignment: .center) {
-			ProgressView(value: viewModel.currentTime, total: viewModel.duration)
-				.progressViewStyle(.linear)
+			TimeProgress()
 			TimeLabels(
 				current: viewModel.currentTime.toTimeString,
 				duration: viewModel.duration.toTimeString
 			)
-			HStack(alignment: .center) {
-				SpeedMenu()
-				BackwardButton()
-				PlayButton()
-				GowardButton()
-			}
-			.foregroundColor(.logoLightBlue)
+			PlayControl()
 		}
     }
 	
 }
 
 extension PlayTabView {
+	
+	private func TimeProgress() -> some View {
+		ProgressView(
+			value: viewModel.currentTime,
+			total: viewModel.duration
+		)
+		.progressViewStyle(.linear)
+	}
 	
 	private func TimeLabels(current: String, duration: String) -> some View {
 		HStack(alignment: .top) {
@@ -47,6 +46,16 @@ extension PlayTabView {
 		}
 		.foregroundColor(.gray)
 		.font(.caption)
+	}
+	
+	private func PlayControl() -> some View {
+		HStack(alignment: .center) {
+			SpeedMenu()
+			BackwardButton()
+			PlayButton()
+			GowardButton()
+		}
+		.foregroundColor(.logoLightBlue)
 	}
 	
 	private func SpeedMenu() -> some View {
@@ -74,7 +83,7 @@ extension PlayTabView {
 			
 		} label: {
 			Spacer()
-			Image(systemName: isPlayingImageName)
+			Image(systemName: viewModel.isPlayingImageName(by: isPlaying))
 				.font(.system(size: 44))
 			Spacer()
 		}

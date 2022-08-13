@@ -5,8 +5,6 @@
 //  Created by Yongwoo Marco on 2022/06/23.
 //
 
-import Domain
-
 import SwiftUI
 
 struct SelectionView: View {
@@ -14,7 +12,7 @@ struct SelectionView: View {
 	@EnvironmentObject private var container: PresentationDIContainer
 	@ObservedObject var viewModel: SelectionViewModel
 	
-	@State private var isEditing: Bool = false
+	@State var isEditing: Bool = false
 	
 	var body: some View {
 		VStack(alignment: .leading) {
@@ -29,7 +27,7 @@ struct SelectionView: View {
 		.padding()
 		.toolbar {
 			ToolbarItem(placement: .navigationBarTrailing) {
-				EditToolbarToggle(by: $isEditing)
+				EditToolbarToggle()
 			}
 		}
 	}
@@ -38,9 +36,9 @@ struct SelectionView: View {
 
 extension SelectionView {
 	
-	private func EditToolbarToggle(by condition: Binding<Bool>) -> some View {
-		Toggle(isOn: condition) {
-			Text(condition.wrappedValue ? "완료" : "수정")
+	private func EditToolbarToggle() -> some View {
+		Toggle(isOn: $isEditing) {
+			Text(viewModel.editToggleLabel(by: isEditing))
 		}
 		.toggleStyle(.button)
 	}
@@ -70,7 +68,6 @@ extension SelectionView {
 		prompt: String,
 		text: Binding<String>
 	) -> some View {
-		var isEditingShadowColor: Color { isEditing ? .logoLightBlue : .gray }
 		return HStack {
 			HStack {
 				Text(label)
@@ -79,7 +76,10 @@ extension SelectionView {
 				TextField(label, text: text, prompt: Text(prompt))
 					.textFieldStyle(.roundedBorder)
 					.disabled(!isEditing)
-					.shadow(color: isEditingShadowColor, radius: 1, x: 2, y: 2)
+					.shadow(
+						color: viewModel.isEditingShadowColor(by: isEditing),
+						radius: 1, x: 2, y: 2
+					)
 			}
 		}
 	}
@@ -89,20 +89,18 @@ extension SelectionView {
 			HStack {
 				Toggle(isOn: $viewModel.isOriginal) {
 					Label {
-						Text(viewModel.isOriginal ? "영어" : "한글")
+						Text(viewModel.isOriginalSwitchLabel)
 					} icon: {
-						Image(systemName: viewModel.isOriginal ?
-							  "e.circle.fill" : "k.circle.fill"
+						Image(systemName: viewModel.isOriginalSwitchImageName
 						)
 					}
 				}
 				.tint(.logoDarkGreen)
 				Toggle(isOn: $viewModel.isVocabulary) {
 					Label {
-						Text(viewModel.isVocabulary ? "문장" : "단어")
+						Text(viewModel.isVocabularySwitchLabel)
 					} icon: {
-						Image(systemName: viewModel.isVocabulary ?
-							  "text.bubble.fill" : "textformat.abc"
+						Image(systemName: viewModel.isVocabularySwitchImageName
 						)
 					}
 				}
@@ -113,11 +111,7 @@ extension SelectionView {
 			HStack {
 				TextField("Input Text",
 						  text: $viewModel.inputText,
-						  prompt: Text(
-							"\(viewModel.isOriginal ? "영어" : "한글") " +
-							"\(viewModel.isVocabulary ? "문장" : "단어") " +
-							"입력하세요"
-						  )
+						  prompt: Text(viewModel.inputTextFieldPrompt)
 				)
 				.textFieldStyle(.roundedBorder)
 				Button {
@@ -140,6 +134,7 @@ extension SelectionView {
 	
 }
 
+// MARK: - Preview
 struct SelectionView_Previews: PreviewProvider {
 	
 	static var container: PresentationDIContainer { .preview }

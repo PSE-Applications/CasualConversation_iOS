@@ -38,6 +38,14 @@ final class PlayTabViewModel: Dependency, ObservableObject {
 
 extension PlayTabViewModel {
 	
+	func isPlayingImageName(by condition: Bool) -> String {
+		condition ? "pause.circle.fill" : "play.circle.fill"
+	}
+	
+}
+
+extension PlayTabViewModel {
+	
 	var currentTime: TimeInterval {
 		self.dependency.audioService.currentPlayingTime ?? 0
 	}

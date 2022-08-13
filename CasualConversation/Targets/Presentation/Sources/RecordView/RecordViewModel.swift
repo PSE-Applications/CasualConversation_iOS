@@ -29,3 +29,11 @@ final class RecordViewModel: Dependency, ObservableObject {
 	}
 	
 }
+
+extension RecordViewModel {
+	
+	var buttonColorByisEditing: Color {
+		isRecording ? .logoLightBlue : .logoDarkBlue
+	}
+	
+}

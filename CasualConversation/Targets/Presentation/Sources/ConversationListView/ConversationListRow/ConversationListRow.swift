@@ -59,7 +59,7 @@ extension ConversationListRow {
 	
 	@ViewBuilder
 	private func CheckMarkIndicator() -> some View {
-		if Bool.random() { // TODO: 처리방법 구상필요
+		if viewModel.isChecked {
 			Image(systemName: "checkmark.circle.fill")
 				.foregroundColor(.logoLightBlue)
 		} else {
@@ -72,7 +72,7 @@ extension ConversationListRow {
 
 struct ConversationListRow_Previews: PreviewProvider {
 
-	static let viewModel = ConversationListRowViewModel.debugViewModel
+	static let viewModel = ConversationListRowViewModel.previewViewModel
     
 	static var previews: some View {
 		ConversationListRow(viewModel: viewModel)

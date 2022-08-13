@@ -40,7 +40,34 @@ final class SelectionViewModel: Dependency, ObservableObject {
 	var referenceNoteUseCase: NoteManagable {
 		self.dependency.noteUseCase
 	}
+	
+}
 
+extension SelectionViewModel {
+	
+	var isOriginalSwitchLabel: String {
+		self.isOriginal ? "영어" : "한글"
+	}
+	var isOriginalSwitchImageName: String {
+		self.isOriginal ? "e.circle.fill" : "k.circle.fill"
+	}
+	var isVocabularySwitchLabel: String {
+		self.isVocabulary ? "문장" : "단어"
+	}
+	var isVocabularySwitchImageName: String {
+		self.isVocabulary ? "text.bubble.fill" : "textformat.abc"
+	}
+	var inputTextFieldPrompt: String {
+		"\(self.isOriginalSwitchLabel) \(self.isVocabularySwitchLabel) 입력하세요"
+	}
+	
+	func editToggleLabel(by condition: Bool) -> String {
+		condition ? "완료" : "수정"
+	}
+	func isEditingShadowColor(by condition: Bool) -> Color {
+		condition ? .clear : .gray
+	}
+	
 }
 
 extension SelectionViewModel {

@@ -83,7 +83,7 @@ extension RecordView {
 				Spacer()
 				ZStack {
 					Image(systemName: "stop.fill")
-						.foregroundColor(viewModel.isRecording ? .logoLightBlue : .logoDarkBlue)
+						.foregroundColor(viewModel.buttonColorByisEditing)
 						.font(.system(size: 34))
 						.shadow(color: .logoDarkBlue, radius: 1, x: 2, y: 2)
 				}
@@ -144,7 +144,7 @@ extension RecordView {
 				Spacer()
 				ZStack {
 					Image(systemName: "pin")
-						.foregroundColor(viewModel.isRecording ? .logoLightBlue : .logoDarkBlue)
+						.foregroundColor(viewModel.buttonColorByisEditing)
 						.font(.system(size: 26))
 						.shadow(color: .logoDarkBlue, radius: 1, x: 2, y: 2)
 				}
