@@ -54,6 +54,53 @@ extension NoteSetRow {
 	
 }
 
+// MARK: - Preview
+#if DEBUG
+
+extension NoteSetRowViewModel {
+	
+	static var previewViewModels: [NoteSetRowViewModel] {
+		[
+			.init(dependency: .init(
+				item: .init(
+						id: .init(),
+						original: "Hello",
+						translation: "안녕",
+						category: .vocabulary,
+						references: [],
+						createdDate: Date()
+					)
+				)
+			),
+			.init(dependency: .init(
+				item: .init(
+						id: .init(),
+						original: "Nice to meet you.",
+						translation: "",
+						category: .sentece,
+						references: [],
+						createdDate: Date()
+					)
+				)
+			),
+			.init(dependency: .init(
+				item: .init(
+						id: .init(),
+						original: "",
+						translation: "한국말 문장만 있는 노트",
+						category: .sentece,
+						references: [],
+						createdDate: Date()
+					)
+				)
+			)
+		]
+	}
+	
+}
+
+#endif
+
 struct NoteSetRow_Previews: PreviewProvider {
 	
 	static let viewModels = NoteSetRowViewModel.previewViewModels

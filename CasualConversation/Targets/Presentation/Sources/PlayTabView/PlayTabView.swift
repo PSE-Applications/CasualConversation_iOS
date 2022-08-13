@@ -10,7 +10,6 @@ import SwiftUI
 
 struct PlayTabView: View {
 	
-	@EnvironmentObject private var container: PresentationDIContainer
 	@ObservedObject var viewModel: PlayTabViewModel
 	
 	@State private var isPlaying: Bool = false
@@ -113,13 +112,13 @@ extension PlayTabView {
 	
 }
 
+// MARK: - Preview
 struct PlayTabView_Previews: PreviewProvider {
     
 	static var container: PresentationDIContainer { .preview }
 	
 	static var previews: some View {
 		container.PlayTabView()
-			.environmentObject(container)
 			.previewLayout(.sizeThatFits)
     }
 	

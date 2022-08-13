@@ -111,6 +111,7 @@ extension SettingView {
 	
 }
 
+// MARK: - Preview
 struct SettingView_Previews: PreviewProvider {
 	
     static var previews: some View {
