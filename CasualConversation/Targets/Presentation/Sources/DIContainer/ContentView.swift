@@ -20,8 +20,6 @@ public struct ContentView: View {
 	
 }
 
-#if DEBUG
-
 struct ContentView_Previews: PreviewProvider {
 	
 	static var container: PresentationDIContainer { .preview }
@@ -31,5 +29,3 @@ struct ContentView_Previews: PreviewProvider {
 			.environmentObject(container)
     }
 }
-
-#endif
