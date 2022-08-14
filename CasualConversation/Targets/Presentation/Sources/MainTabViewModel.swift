@@ -34,7 +34,7 @@ extension MainTabViewModel {
 		tab == .conversations ? "Conversations" : "Notes"
 	}
 	
-	func CCTabItemImageName(by tab: Tab) -> String {
+	func tabItemImageName(by tab: Tab) -> String {
 		switch tab {
 		case .conversations: 	return "rectangle.stack.badge.play.fill"
 		case .notes:			return "checklist"
@@ -48,7 +48,7 @@ extension MainTabViewModel {
 		}
 	}
 	
-	func CCTabItemTintColor(from tab: Tab, by selectedIndex: Tab) -> Color {
+	func tabItemTintColor(from tab: Tab, by selectedIndex: Tab) -> Color {
 		var tintColor: (light: Color, dark: Color) { tabTintColor(by: tab) }
 		return tab == selectedIndex ? tintColor.light : tintColor.dark
 	}

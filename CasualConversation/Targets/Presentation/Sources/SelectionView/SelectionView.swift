@@ -9,25 +9,47 @@ import SwiftUI
 
 struct SelectionView: View {
 	
+	enum Field {
+		case infoTitle
+		case infoTopic
+		case infoMember
+		case inputNote
+	}
+	
 	@EnvironmentObject private var container: PresentationDIContainer
 	@ObservedObject var viewModel: SelectionViewModel
 	
 	@State var isEditing: Bool = false
+	@FocusState var focusedField: Field?
 	
 	var body: some View {
 		VStack(alignment: .leading) {
 			EditableInfos()
-			Divider()
 			NoteInput()
-			Divider()
 			SelectedNoteSet()
 			Spacer()
 			PlayTabView()
 		}
-		.padding()
 		.toolbar {
 			ToolbarItem(placement: .navigationBarTrailing) {
 				EditToolbarToggle()
+			}
+			ToolbarItemGroup(placement: .keyboard) {
+				Button(
+					action: {
+						dismissKeyboard()
+					}, label: {
+						Image(systemName: "keyboard.chevron.compact.down")
+					}
+				)
+				Spacer()
+				Button(
+					action: {
+						// TODO: Note 추가 동작 구현
+					}, label: {
+						Text("추가")
+					}
+				)
 			}
 		}
 	}
@@ -43,23 +65,32 @@ extension SelectionView {
 		.toggleStyle(.button)
 	}
 	
+	@ViewBuilder
 	private func EditableInfos() -> some View {
-		VStack {
-			InfoTextField(
-				label: "제목",
-				prompt: "제목을 입력하세요",
-				text: $viewModel.title
-			)
-			InfoTextField(
-				label: "주제",
-				prompt: "주제를 선택하세요",
-				text: $viewModel.topic
-			)
-			InfoTextField(
-				label: "참여",
-				prompt: "참여인원을 추가하세요",
-				text: $viewModel.members
-			)
+		if focusedField != .inputNote {
+			GroupBox {
+				VStack {
+					InfoTextField(
+						label: "제목",
+						prompt: "제목을 입력하세요",
+						text: $viewModel.title
+					)
+					.focused($focusedField, equals: .infoTitle)
+					InfoTextField(
+						label: "주제",
+						prompt: "주제를 선택하세요",
+						text: $viewModel.topic
+					)
+					.focused($focusedField, equals: .infoTopic)
+					InfoTextField(
+						label: "참여",
+						prompt: "참여인원을 추가하세요",
+						text: $viewModel.members
+					)
+					.focused($focusedField, equals: .infoMember)
+				}
+			}
+			.padding([.leading, .trailing])
 		}
 	}
 	
@@ -85,43 +116,47 @@ extension SelectionView {
 	}
 	
 	private func NoteInput() -> some View {
-		VStack(spacing: 8) {
-			HStack {
-				Toggle(isOn: $viewModel.isOriginal) {
-					Label {
-						Text(viewModel.isOriginalSwitchLabel)
-					} icon: {
-						Image(systemName: viewModel.isOriginalSwitchImageName
-						)
+		GroupBox {
+			VStack(spacing: 8) {
+				HStack {
+					Toggle(isOn: $viewModel.isOriginal) {
+						Label {
+							Text(viewModel.isOriginalSwitchLabel)
+						} icon: {
+							Image(systemName: viewModel.isOriginalSwitchImageName
+							)
+						}
 					}
-				}
-				.tint(.logoDarkGreen)
-				Toggle(isOn: $viewModel.isVocabulary) {
-					Label {
-						Text(viewModel.isVocabularySwitchLabel)
-					} icon: {
-						Image(systemName: viewModel.isVocabularySwitchImageName
-						)
+					.tint(.logoDarkGreen)
+					Toggle(isOn: $viewModel.isVocabulary) {
+						Label {
+							Text(viewModel.isVocabularySwitchLabel)
+						} icon: {
+							Image(systemName: viewModel.isVocabularySwitchImageName
+							)
+						}
 					}
+					.tint(.logoLightGreen)
+					Spacer()
 				}
-				.tint(.logoLightGreen)
-				Spacer()
-			}
-			.toggleStyle(.button)
-			HStack {
-				TextField("Input Text",
-						  text: $viewModel.inputText,
-						  prompt: Text(viewModel.inputTextFieldPrompt)
-				)
-				.textFieldStyle(.roundedBorder)
-				Button {
-					// TODO: Note 추가 동작 구현
-				} label: {
-					Image(systemName: "plus")
+				.toggleStyle(.button)
+				HStack {
+					TextField("Input Text",
+							  text: $viewModel.inputText,
+							  prompt: Text(viewModel.inputTextFieldPrompt)
+					)
+					.textFieldStyle(.roundedBorder)
+					.showClearButton($viewModel.inputText)
+					.focused($focusedField, equals: .inputNote)
+					Button {
+						// TODO: Note 추가 동작 구현
+					} label: {
+						Image(systemName: "plus.circle.fill")
+					}
 				}
 			}
 		}
-		.padding()
+		.padding([.leading, .trailing])
 	}
 	
 	private func SelectedNoteSet() -> some View {

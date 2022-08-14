@@ -42,6 +42,10 @@ extension PlayTabViewModel {
 		condition ? "pause.circle.fill" : "play.circle.fill"
 	}
 	
+	func nextPinButtonOpacity(by condition: Bool) -> Double {
+		condition ? 1 : 0.3
+	}
+	
 }
 
 extension PlayTabViewModel {

@@ -13,10 +13,12 @@ struct PlayTabView: View {
 	@ObservedObject var viewModel: PlayTabViewModel
 	
 	@State private var isPlaying: Bool = false
+	@State private var isEditing: Bool = false
+	@State private var currentPoint: TimeInterval = 0
 	
     var body: some View {
 		VStack(alignment: .center) {
-			TimeProgress()
+			TimeSlider()
 			TimeLabels(
 				current: viewModel.currentTime.toTimeString,
 				duration: viewModel.duration.toTimeString
@@ -29,12 +31,15 @@ struct PlayTabView: View {
 
 extension PlayTabView {
 	
-	private func TimeProgress() -> some View {
-		ProgressView(
-			value: viewModel.currentTime,
-			total: viewModel.duration
+	private func TimeSlider() -> some View {
+		Slider(
+			value: $currentPoint,
+			in: viewModel.currentTime...viewModel.duration,
+			onEditingChanged: { editing in
+				self.isEditing = editing
+			}
 		)
-		.progressViewStyle(.linear)
+		.padding([.leading, .trailing])
 	}
 	
 	private func TimeLabels(current: String, duration: String) -> some View {
@@ -43,6 +48,7 @@ extension PlayTabView {
 			Spacer()
 			Text(duration)
 		}
+		.padding([.leading, .trailing])
 		.foregroundColor(.gray)
 		.font(.caption)
 	}
@@ -53,6 +59,7 @@ extension PlayTabView {
 			BackwardButton()
 			PlayButton()
 			GowardButton()
+			NextPinButton()
 		}
 		.foregroundColor(.logoLightBlue)
 	}
@@ -79,7 +86,7 @@ extension PlayTabView {
 	
 	private func PlayButton() -> some View {
 		Button {
-			
+			isPlaying.toggle()
 		} label: {
 			Spacer()
 			Image(systemName: viewModel.isPlayingImageName(by: isPlaying))
@@ -108,6 +115,22 @@ extension PlayTabView {
 				.font(.system(size: 22))
 			Spacer()
 		}
+	}
+	
+	private func NextPinButton() -> some View {
+		Button(
+			action: {
+				
+			}, label: {
+				Spacer()
+				Image(systemName: "forward.end.alt.fill")
+					.font(.system(size: 16))
+				Spacer()
+			}
+		)
+		.foregroundColor(.logoDarkBlue)
+		.disabled(!isPlaying)
+		.opacity(viewModel.nextPinButtonOpacity(by: isPlaying))
 	}
 	
 }

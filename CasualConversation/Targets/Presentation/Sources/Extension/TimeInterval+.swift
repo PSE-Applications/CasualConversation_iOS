@@ -10,10 +10,15 @@ import Foundation
 
 extension TimeInterval {
 	
-	static let formmater = DateComponentsFormatter()
+	static let formmatter = DateComponentsFormatter()
 	
 	var toTimeString: String {
-		return Self.formmater.string(from: self) ?? "00:00"
+		Self.formmatter.allowedUnits = [.hour, .minute, .second]
+		if self.isZero {
+			return "00:00:00"
+		} else {
+			return Self.formmatter.string(from: self) ?? "00:00:00"
+		}
 	}
 	
 }

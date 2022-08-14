@@ -93,10 +93,10 @@ extension MainTabView {
 				selectedIndex = tab
 			}, label: {
 				Spacer()
-				Image(systemName: viewModel.CCTabItemImageName(by: tab))
+				Image(systemName: viewModel.tabItemImageName(by: tab))
 					.font(.system(size: 28, weight: .bold))
 					.foregroundColor(
-						viewModel.CCTabItemTintColor(from: tab, by: selectedIndex)
+						viewModel.tabItemTintColor(from: tab, by: selectedIndex)
 					)
 				Spacer()
 			}
@@ -113,6 +113,10 @@ struct MainTabView_Previews: PreviewProvider {
 	static var previews: some View {
 		container.MainTabView()
 			.environmentObject(container)
+			.preferredColorScheme(.light)
+		container.MainTabView()
+			.environmentObject(container)
+			.preferredColorScheme(.dark)
 	}
 	
 }
