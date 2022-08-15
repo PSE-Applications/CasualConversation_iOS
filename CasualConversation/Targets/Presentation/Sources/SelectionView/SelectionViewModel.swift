@@ -13,6 +13,30 @@ import Foundation
 
 final class SelectionViewModel: Dependency, ObservableObject {
 	
+	enum Language: CaseIterable, CustomStringConvertible {
+		case original
+		case translation
+		
+		var description: String {
+			switch self {
+			case .original:		return "영어"
+			case .translation:	return "한글"
+			}
+		}
+	}
+	
+	enum Category: CaseIterable, CustomStringConvertible {
+		case sentense
+		case vocabulary
+		
+		var description: String {
+			switch self {
+			case .sentense:			return "문장"
+			case .vocabulary:		return "단어"
+			}
+		}
+	}
+	
 	struct Dependency {
 		let conversationUseCase: ConversationMaintainable
 		let noteUseCase: NoteManagable
@@ -25,8 +49,8 @@ final class SelectionViewModel: Dependency, ObservableObject {
 	@Published var topic: String
 	@Published var members: String // TODO: 저장 시 (콤마, 공백) 제거처리
 	
-	@Published var isVocabulary: Bool = true
-	@Published var isOriginal: Bool = true
+	@Published var language: Language = .original
+	@Published var category: Category = .sentense
 	@Published var inputText: String = ""
 	
 	init(dependency: Dependency) {
@@ -45,20 +69,8 @@ final class SelectionViewModel: Dependency, ObservableObject {
 
 extension SelectionViewModel {
 	
-	var isOriginalSwitchLabel: String {
-		self.isOriginal ? "영어" : "한글"
-	}
-	var isOriginalSwitchImageName: String {
-		self.isOriginal ? "e.circle.fill" : "k.circle.fill"
-	}
-	var isVocabularySwitchLabel: String {
-		self.isVocabulary ? "문장" : "단어"
-	}
-	var isVocabularySwitchImageName: String {
-		self.isVocabulary ? "text.bubble.fill" : "textformat.abc"
-	}
 	var inputTextFieldPrompt: String {
-		"\(self.isOriginalSwitchLabel) \(self.isVocabularySwitchLabel) 입력하세요"
+		"\(self.language.description) \(self.category.description) 입력하세요"
 	}
 	
 	func editToggleLabel(by condition: Bool) -> String {

@@ -16,6 +16,8 @@ struct SelectionView: View {
 		case inputNote
 	}
 	
+	@Environment(\.colorScheme) var colorScheme
+	
 	@EnvironmentObject private var container: PresentationDIContainer
 	@ObservedObject var viewModel: SelectionViewModel
 	
@@ -119,25 +121,21 @@ extension SelectionView {
 		GroupBox {
 			VStack(spacing: 8) {
 				HStack {
-					Toggle(isOn: $viewModel.isOriginal) {
-						Label {
-							Text(viewModel.isOriginalSwitchLabel)
-						} icon: {
-							Image(systemName: viewModel.isOriginalSwitchImageName
-							)
+					Picker("Language", selection: $viewModel.language) {
+						ForEach(SelectionViewModel.Language.allCases, id: \.self) { condition in
+							Text(condition.description)
+								.tag(condition)
 						}
 					}
-					.tint(.logoDarkGreen)
-					Toggle(isOn: $viewModel.isVocabulary) {
-						Label {
-							Text(viewModel.isVocabularySwitchLabel)
-						} icon: {
-							Image(systemName: viewModel.isVocabularySwitchImageName
-							)
-						}
-					}
-					.tint(.logoLightGreen)
+					.pickerStyle(.segmented)
 					Spacer()
+					Picker("Category", selection: $viewModel.category) {
+						ForEach(SelectionViewModel.Category.allCases, id: \.self) { condition in
+							Text(condition.description)
+								.tag(condition)
+						}
+					}
+					.pickerStyle(.segmented)
 				}
 				.toggleStyle(.button)
 				HStack {
@@ -157,6 +155,10 @@ extension SelectionView {
 			}
 		}
 		.padding([.leading, .trailing])
+		.onAppear {
+			UISegmentedControl.appearance().selectedSegmentTintColor = UIColor
+				.init(self.colorScheme == .dark ? .logoDarkGreen : .logoLightGreen)
+		}
 	}
 	
 	private func SelectedNoteSet() -> some View {
