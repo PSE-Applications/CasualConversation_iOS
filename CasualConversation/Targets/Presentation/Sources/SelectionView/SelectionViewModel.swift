@@ -48,6 +48,7 @@ final class SelectionViewModel: Dependency, ObservableObject {
 	@Published var title: String
 	@Published var topic: String
 	@Published var members: String // TODO: 저장 시 (콤마, 공백) 제거처리
+	@Published var recordedDate: String
 	
 	@Published var language: Language = .original
 	@Published var category: Category = .sentense
@@ -59,6 +60,7 @@ final class SelectionViewModel: Dependency, ObservableObject {
 		self.title = dependency.item.title ?? ""
 		self.topic = dependency.item.topic ?? ""
 		self.members = dependency.item.members.joined(separator: ", ")
+		self.recordedDate = dependency.item.recordedDate.description
 	}
 	
 	var referenceNoteUseCase: NoteManagable {
@@ -76,8 +78,15 @@ extension SelectionViewModel {
 	func editToggleLabel(by condition: Bool) -> String {
 		condition ? "완료" : "수정"
 	}
+	
 	func isEditingShadowColor(by condition: Bool) -> Color {
 		condition ? .clear : .gray
+	}
+	
+	func setEmptyTitleToDefault(by newValue: Bool) {
+		if !newValue, self.title.isEmpty {
+			self.title = self.recordedDate
+		} 
 	}
 	
 }

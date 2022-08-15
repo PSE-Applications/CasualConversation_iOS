@@ -21,20 +21,24 @@ struct SelectionView: View {
 	@EnvironmentObject private var container: PresentationDIContainer
 	@ObservedObject var viewModel: SelectionViewModel
 	
-	@State var isEditing: Bool = false
+	@State var isEditing: Bool = false {
+		willSet {
+			viewModel.setEmptyTitleToDefault(by: newValue)
+		}
+	}
 	@FocusState var focusedField: Field?
 	
 	var body: some View {
 		VStack(alignment: .leading) {
-			EditableInfos()
+			EditableInfoSection()
 			NoteInput()
 			SelectedNoteSet()
 			Spacer()
 			PlayTabView()
 		}
 		.toolbar {
-			ToolbarItem(placement: .navigationBarTrailing) {
-				EditToolbarToggle()
+			ToolbarItem(placement: .navigation) {
+				EditableNavigationTitle()
 			}
 			ToolbarItemGroup(placement: .keyboard) {
 				Button(
@@ -60,60 +64,94 @@ struct SelectionView: View {
 
 extension SelectionView {
 	
-	private func EditToolbarToggle() -> some View {
-		Toggle(isOn: $isEditing) {
-			Text(viewModel.editToggleLabel(by: isEditing))
+	@ViewBuilder
+	private func EditableNavigationTitle() -> some View {
+		HStack {
+			if isEditing {
+				HStack {
+					TextField("Title",
+							  text: $viewModel.title,
+							  prompt: Text(viewModel.recordedDate)
+					)
+					.textFieldStyle(.roundedBorder)
+					.shadow(
+						color: viewModel.isEditingShadowColor(by: isEditing),
+						radius: 1, x: 1, y: 1
+					)
+					.focused($focusedField, equals: .infoTitle)
+					Spacer()
+				}
+			} else {
+				Text(viewModel.title)
+					.font(.headline)
+			}
 		}
-		.toggleStyle(.button)
 	}
 	
 	@ViewBuilder
-	private func EditableInfos() -> some View {
+	private func EditableInfoSection() -> some View {
 		if focusedField != .inputNote {
 			GroupBox {
-				VStack {
-					InfoTextField(
-						label: "제목",
-						prompt: "제목을 입력하세요",
-						text: $viewModel.title
-					)
-					.focused($focusedField, equals: .infoTitle)
-					InfoTextField(
-						label: "주제",
-						prompt: "주제를 선택하세요",
-						text: $viewModel.topic
-					)
-					.focused($focusedField, equals: .infoTopic)
-					InfoTextField(
-						label: "참여",
-						prompt: "참여인원을 추가하세요",
-						text: $viewModel.members
-					)
-					.focused($focusedField, equals: .infoMember)
+				Button(
+					action: {
+						withAnimation {
+							isEditing.toggle()
+						}
+					}, label: {
+						HStack {
+							Text("Information")
+								.font(.headline)
+							Spacer()
+							if isEditing {
+								Text("완료")
+							}
+							Image(systemName: "chevron.right")
+								.foregroundColor(.logoDarkGreen)
+								.rotationEffect(.degrees(isEditing ? 90.0 : 0.0))
+						}
+					}
+				)
+				if isEditing {
+					EditableInfos()
 				}
 			}
 			.padding([.leading, .trailing])
 		}
 	}
 	
-	private func InfoTextField(
-		label: String,
-		prompt: String,
-		text: Binding<String>
-	) -> some View {
-		return HStack {
+	@ViewBuilder
+	private func EditableInfos() -> some View {
+		VStack {
 			HStack {
-				Text(label)
+				Text("주제")
 					.font(.body)
 					.fontWeight(.bold)
-				TextField(label, text: text, prompt: Text(prompt))
-					.textFieldStyle(.roundedBorder)
-					.disabled(!isEditing)
-					.shadow(
-						color: viewModel.isEditingShadowColor(by: isEditing),
-						radius: 1, x: 2, y: 2
-					)
+				TextField("Topic",
+						  text: $viewModel.topic,
+						  prompt: Text("주제를 선택하세요")
+				)
+				.textFieldStyle(.roundedBorder)
+				.shadow(
+					color: viewModel.isEditingShadowColor(by: isEditing),
+					radius: 1, x: 1, y: 1
+				)
 			}
+			.focused($focusedField, equals: .infoTopic)
+			HStack {
+				Text("참여")
+					.font(.body)
+					.fontWeight(.bold)
+				TextField("Member",
+						  text: $viewModel.members,
+						  prompt: Text("참여인원을 추가하세요")
+				)
+				.textFieldStyle(.roundedBorder)
+				.shadow(
+					color: viewModel.isEditingShadowColor(by: isEditing),
+					radius: 1, x: 1, y: 1
+				)
+			}
+			.focused($focusedField, equals: .infoMember)
 		}
 	}
 	
