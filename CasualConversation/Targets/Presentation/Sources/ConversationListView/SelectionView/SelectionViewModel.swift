@@ -15,16 +15,16 @@ public final class SelectionViewModel: Dependency, ObservableObject {
 	public struct Dependency {
 		let conversationUseCase: ConversationMaintainable
 		let noteUseCase: NoteManagable
-		let audioService: AudioService
+		let audioPlayService: CCPlayer
 		
 		public init(
 			conversationUseCase: ConversationMaintainable,
 			noteUseCase: NoteManagable,
-			audioService: AudioService
+			audioPlayService: CCPlayer
 		) {
 			self.conversationUseCase = conversationUseCase
 			self.noteUseCase = noteUseCase
-			self.audioService = audioService
+			self.audioPlayService = audioPlayService
 		}
 	}
 	

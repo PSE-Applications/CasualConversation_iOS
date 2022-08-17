@@ -31,7 +31,7 @@ public final class PresentationDIContainer: Dependency, ObservableObject {
 	
 	public var dependency: Dependency
 	
-	// MARK: UseCases
+	// MARK: UseCase
 	lazy var casualConversationUseCase: ConversationUseCase = .init(
 		dependency: .init(
 			repository: self.dependency.conversationRepository
@@ -41,7 +41,14 @@ public final class PresentationDIContainer: Dependency, ObservableObject {
 		repository: self.dependency.noteRepository,
 		filter: .all)
 	)
-	lazy var audioService: AudioService = .init(
+	
+	// MARK: Service
+	lazy var audioRecordService: CCRecorder = AudioRecordService(
+		dependency: .init(
+			repository: self.dependency.recordRepository
+		)
+	)
+	lazy var audioPlayService: CCPlayer = AudioPlayService(
 		dependency: .init(
 			repository: self.dependency.recordRepository
 		)
@@ -70,7 +77,7 @@ extension PresentationDIContainer {
 	func RecordView() -> RecordView {
 		let viewModel: RecordViewModel = .init(dependency: .init(
 				useCase: self.casualConversationUseCase,
-				audioService: self.audioService
+				audioRecordService: self.audioRecordService
 			)
 		)
 		return .init(viewModel: viewModel)
@@ -80,7 +87,7 @@ extension PresentationDIContainer {
 		let viewModel: SelectionViewModel = .init(dependency: .init(
 				conversationUseCase: self.casualConversationUseCase,
 				noteUseCase: makeNoteUseCase(filter: conversation),
-				audioService: self.audioService
+				audioPlayService: self.audioPlayService
 			)
 		)
 		return .init(viewModel: viewModel)

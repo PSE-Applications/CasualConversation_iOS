@@ -14,14 +14,14 @@ public final class RecordViewModel: Dependency, ObservableObject {
 	
 	public struct Dependency {
 		let useCase: ConversationRecodable
-		let audioService: AudioService
+		let audioRecordService: CCRecorder
 		
 		public init(
 			useCase: ConversationRecodable,
-			audioService: AudioService
+			audioRecordService: CCRecorder
 		) {
 			self.useCase = useCase
-			self.audioService = audioService
+			self.audioRecordService = audioRecordService
 		}
 	}
 	
