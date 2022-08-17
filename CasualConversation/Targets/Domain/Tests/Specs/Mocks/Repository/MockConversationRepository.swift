@@ -16,7 +16,7 @@ struct MockConversationRepository {
 
 extension MockConversationRepository: ConversationRepositoryProtocol {
 	
-	var fetchList: [Conversation] {
+	func fetch() -> [Conversation]? {
 		[]
 	}
 	
