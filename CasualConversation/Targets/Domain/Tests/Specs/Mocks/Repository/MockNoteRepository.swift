@@ -16,7 +16,7 @@ struct MockNoteRepository {
 
 extension MockNoteRepository: NoteRepositoryProtocol {
 	
-	var fetchList: [Note] {
+	func fetch(filter item: Conversation?) -> [Note]? {
 		[]
 	}
 	

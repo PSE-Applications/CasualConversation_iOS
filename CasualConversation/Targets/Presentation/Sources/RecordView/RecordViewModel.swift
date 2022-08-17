@@ -8,27 +8,32 @@
 import Common
 import Domain
 
-import Combine
+import SwiftUI
+import Foundation
 
-public final class RecordViewModel: Dependency, ObservableObject {
+final class RecordViewModel: Dependency, ObservableObject {
 	
-	public struct Dependency {
+	struct Dependency {
 		let useCase: ConversationRecodable
-		let audioService: AudioService
-		
-		public init(
-			useCase: ConversationRecodable,
-			audioService: AudioService
-		) {
-			self.useCase = useCase
-			self.audioService = audioService
-		}
+		let audioService: AudioRecordable
 	}
 	
-	public let dependency: Dependency
+	let dependency: Dependency
 	
-	public init(dependency: Dependency) {
+	@Published var isRecording: Bool
+	
+	init(dependency: Dependency) {
 		self.dependency = dependency
+		
+		self.isRecording = dependency.audioService.status == .recording
+	}
+	
+}
+
+extension RecordViewModel {
+	
+	var buttonColorByisEditing: Color {
+		isRecording ? .logoLightBlue : .logoDarkBlue
 	}
 	
 }

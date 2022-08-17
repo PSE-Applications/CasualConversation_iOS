@@ -38,6 +38,7 @@ public final class ConversationUseCase: Dependency, ConversationManagable {
 	
 	public init(dependency: Dependency) {
 		self.dependency = dependency
+		fetchDataSource()
 	}
 
 	private func fetchDataSource() {
@@ -46,6 +47,7 @@ public final class ConversationUseCase: Dependency, ConversationManagable {
 		}
 		self.dataSource = list
 	}
+	
 }
 
 // MARK: - ConversationRecodable

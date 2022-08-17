@@ -81,7 +81,7 @@ extension NoteRepository: NoteRepositoryProtocol {
 	public func create(_ item: Note, completion: (CCError?) -> Void) {
 		let entity = NoteEntity(context: dependency.coreDataStack.mainContext)
 		item.setValues(entity)
-		self.dependency.coreDataStack.saveContext()
+		self.dependency.coreDataStack.saveContext(completion: completion)
 		completion(nil)
 	}
 	
@@ -93,7 +93,7 @@ extension NoteRepository: NoteRepositoryProtocol {
 				return
 			}
 			editedItem.setValues(object)
-			self.dependency.coreDataStack.saveContext()
+			self.dependency.coreDataStack.saveContext(completion: completion)
 			completion(nil)
 		} catch let error {
 			completion(.persistenceFailed(reason: .coreDataUnloaded(error)))
@@ -108,7 +108,7 @@ extension NoteRepository: NoteRepositoryProtocol {
 				return
 			}
 			self.dependency.coreDataStack.mainContext.delete(object)
-			self.dependency.coreDataStack.saveContext()
+			self.dependency.coreDataStack.saveContext(completion: completion)
 			completion(nil)
 		} catch let error {
 			completion(.persistenceFailed(reason: .coreDataUnloaded(error)))

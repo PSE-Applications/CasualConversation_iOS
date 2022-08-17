@@ -9,22 +9,32 @@
 import Common
 import Domain
 
-import Combine
+import SwiftUI
 
-public final class ConversationListViewModel: Dependency, ObservableObject {
+final class ConversationListViewModel: Dependency, ObservableObject {
 	
-	public struct Dependency {
+	struct Dependency {
 		let useCase: ConversationManagable
-		
-		public init(useCase: ConversationManagable) {
-			self.useCase = useCase
-		}
 	}
 	
-	public let dependency: Dependency
+	let dependency: Dependency
 	
-	public init(dependency: Dependency) {
+	init(dependency: Dependency) {
 		self.dependency = dependency
+	}
+	
+}
+
+extension ConversationListViewModel {
+	
+	var list: [Conversation] { // TODO: DataBinding 형태로 변경 필요
+		self.dependency.useCase.list
+	}
+	
+	func remove(at index: Int) {
+		self.dependency.useCase.delete(list[index]) { error in
+			// TODO: 삭제 프로세스 고민 필요
+		}
 	}
 	
 }

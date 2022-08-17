@@ -62,7 +62,7 @@ public final class PresentationDIContainer: Dependency, ObservableObject {
 
 extension PresentationDIContainer {
 	
-	public func MainTabView() -> MainTabView {
+	func MainTabView() -> MainTabView {
 		let viewModel: MainTabViewModel = .init(dependency: .init())
 		return .init(viewModel: viewModel)
 	}
@@ -76,19 +76,64 @@ extension PresentationDIContainer {
 		return .init(viewModel: viewModel)
 	}
 	
+	func ConversationListView() -> ConversationListView {
+		let viewModel: ConversationListViewModel = .init(dependency: .init(
+			useCase: self.casualConversationUseCase)
+		)
+		return .init(viewModel: viewModel)
+	}
+	
+	func ConversationListRow(selected conversation: Conversation) -> ConversationListRow {
+		let viewModel: ConversationListRowViewModel = .init(dependency: .init(
+			item: conversation)
+		)
+		return .init(viewModel: viewModel)
+	}
+	
 	func SelectionView(selected conversation: Conversation) -> SelectionView {
 		let viewModel: SelectionViewModel = .init(dependency: .init(
 				conversationUseCase: self.casualConversationUseCase,
 				noteUseCase: makeNoteUseCase(filter: conversation),
+				item: conversation
+			)
+		)
+		return .init(viewModel: viewModel)
+	}
+	
+	func NoteSetView(by usecase: NoteManagable? = nil) -> NoteSetView {
+		let viewModel: NoteSetViewModel
+		if let bindedUseCase = usecase {
+			viewModel = .init(dependency: .init(useCase: bindedUseCase))
+		} else {
+			viewModel = .init(dependency: .init(useCase: self.noteUseCase))
+		}
+		return .init(viewModel: viewModel)
+	}
+	
+	func NoteSetRow(by note: Note) -> NoteSetRow {
+		let viewModel: NoteSetRowViewModel = .init(dependency: .init(
+			item: note)
+		)
+		return .init(viewModel: viewModel)
+	}
+	
+	func SettingView() -> SettingView {
+		let viewModel: SettingViewModel = .init(dependency: .init())
+		return .init(viewModel: viewModel)
+	}
+	
+	func PlayTabView() -> PlayTabView {
+		let viewModel: PlayTabViewModel = .init(dependency: .init(
 				audioService: self.audioService
 			)
 		)
 		return .init(viewModel: viewModel)
 	}
 	
-	func NoteSetView() -> NoteSetView {
-		let viewModel: NoteSetViewModel = .init(dependency: .init(
-				useCase: self.noteUseCase
+	func NoteDetailView(selected note: Note) -> NoteDetailView {
+		let viewModel: NoteDetailViewModel = .init(dependency: .init(
+				useCase: self.noteUseCase,
+				item: note
 			)
 		)
 		return .init(viewModel: viewModel)
