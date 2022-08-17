@@ -32,11 +32,11 @@ class AppDIContainerSpecs: QuickSpec {
 			
 			describe("앱 EntryPoint ContentView를 생성하기 위해서") {
 				context("뷰 팩토리메서드 호출하면") {
-					var mainTabView: MainTabView!
-					beforeEach { mainTabView = appDIContainer.PresentationEntryPoint() }
+					var contentView: ContentView!
+					beforeEach { contentView = appDIContainer.ContentView() }
 
 					it("MainTabView 생성됨") {
-						expect(mainTabView).notTo(beNil())
+						expect(contentView).notTo(beNil())
 					}
 				}
 			}

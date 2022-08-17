@@ -5,26 +5,55 @@
 //  Created by Yongwoo Marco on 2022/06/23.
 //
 
+import Domain
+
 import SwiftUI
 
-public struct NoteSetView: View {
+struct NoteSetView: View {
 	
-	private let viewModel: NoteSetViewModel
+	@EnvironmentObject private var container: PresentationDIContainer
+	@ObservedObject var viewModel: NoteSetViewModel
 	
-	public init(viewModel: NoteSetViewModel) {
-		self.viewModel = viewModel
-	}
-
-	public var body: some View {
-		Text("Hello world")
+	@State private var isPresentedNoteDetail: Bool = false
+	@State private var selectedRowItem: Note?
+	
+	var body: some View {
+		VStack {
+			List {
+				ForEach(viewModel.list, id: \.id) { item in
+					container.NoteSetRow(by: item)
+						.onTapGesture {
+							selectedRowItem = item
+							isPresentedNoteDetail.toggle()
+						}
+				}
+				.onDelete(perform: removeRow)
+			}
+			.listStyle(.plain)
+		}
+		.sheet(item: $selectedRowItem) { item in
+			container.NoteDetailView(selected: item)
+		}
 	}
 	
 }
 
-//struct NoteSetView_Previews: PreviewProvider {
-//
-//	static var previews: some View {
-//		SelectionView(viewModel: viewModel)
-//	}
-//
-//}
+extension NoteSetView {
+	
+	private func removeRow(at indexSet: IndexSet) {
+		print(#function)
+	}
+	
+}
+
+// MARK: - Preview
+struct NoteSetView_Previews: PreviewProvider {
+	
+	static var container: PresentationDIContainer { .preview }
+	
+	static var previews: some View {
+		container.NoteSetView()
+			.environmentObject(container)
+	}
+
+}

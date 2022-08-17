@@ -1,6 +1,6 @@
 //
 //  ConversationListView.swift
-//  Domain
+//  CasualConversation
 //
 //  Created by Yongwoo Marco on 2022/07/04.
 //  Copyright © 2022 pseapplications. All rights reserved.
@@ -8,24 +8,41 @@
 
 import SwiftUI
 
-public struct ConversationListView: View {
+struct ConversationListView: View {
 	
-	private let viewModel: ConversationListViewModel
+	@EnvironmentObject private var container: PresentationDIContainer
+	@ObservedObject var viewModel: ConversationListViewModel
 	
-	public init(viewModel: ConversationListViewModel) {
-		self.viewModel = viewModel
-	}
-
-	public var body: some View {
-		Text("Hello world")
+	var body: some View {
+		List {
+			ForEach(viewModel.list, id: \.id) { item in
+				NavigationLink(destination: container.SelectionView(selected: item)) {
+					container.ConversationListRow(selected: item)
+				}
+			}
+			.onDelete(perform: removeRows)
+		}
+		.listStyle(.plain)
 	}
 	
 }
 
-//struct ConversationListView_Previews: PreviewProvider {
-//
-//	static var previews: some View {
-//		ConversationListView()
-//	}
-//
-//}
+extension ConversationListView {
+	
+	private func removeRows(at offsets: IndexSet) {
+		print(#function)
+	}
+	
+}
+
+// MARK: - Preview
+struct ConversationListView_Previews: PreviewProvider {
+	
+	static var container: PresentationDIContainer { .preview }
+	
+	static var previews: some View {
+		container.ConversationListView()
+			.environmentObject(container)
+	}
+
+}

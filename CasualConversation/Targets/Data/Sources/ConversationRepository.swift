@@ -79,8 +79,7 @@ extension ConversationRepository: ConversationRepositoryProtocol {
 	public func create(_ item: Conversation, completion: (CCError?) -> Void) {
 		let entity = ConversationEntity(context: dependency.coreDataStack.mainContext)
 		item.setValues(entity)
-		self.dependency.coreDataStack.saveContext()
-		completion(nil)
+		self.dependency.coreDataStack.saveContext(completion: completion)
 	}
 	
 	public func update(after editedItem: Conversation, completion: (CCError?) -> Void) {
@@ -91,7 +90,7 @@ extension ConversationRepository: ConversationRepositoryProtocol {
 				return
 			}
 			editedItem.setValues(object)
-			self.dependency.coreDataStack.saveContext()
+			self.dependency.coreDataStack.saveContext(completion: completion)
 			completion(nil)
 		} catch let error {
 			completion(.persistenceFailed(reason: .coreDataUnloaded(error)))
@@ -106,7 +105,7 @@ extension ConversationRepository: ConversationRepositoryProtocol {
 				return
 			}
 			self.dependency.coreDataStack.mainContext.delete(object)
-			self.dependency.coreDataStack.saveContext()
+			self.dependency.coreDataStack.saveContext(completion: completion)
 			completion(nil)
 		} catch let error {
 			completion(.persistenceFailed(reason: .coreDataUnloaded(error)))

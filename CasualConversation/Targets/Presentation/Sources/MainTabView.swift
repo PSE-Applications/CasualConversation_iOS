@@ -7,29 +7,116 @@
 
 import SwiftUI
 
-public struct MainTabView: View {
+struct MainTabView: View {
 	
-	@EnvironmentObject
-	private var sceneDIContainer: PresentationDIContainer
+	@EnvironmentObject private var container: PresentationDIContainer
+	@ObservedObject var viewModel: MainTabViewModel
 	
-	@ObservedObject
-	private var viewModel: MainTabViewModel
-	
-	public init(viewModel: MainTabViewModel) {
-		self.viewModel = viewModel
-	}
+	@State private var selectedIndex: MainTabViewModel.Tab = .conversations
+	@State private var isPresentedRecordView: Bool = false
 
-	public var body: some View {
-        Text("Hello world")
+	var body: some View {
+		NavigationView {
+			VStack {
+				Spacer()
+				MainContent()
+				Spacer()
+				MainTabView()
+			}
+			.navigationTitle(viewModel.title(by: selectedIndex))
+			.navigationBarTitleDisplayMode(.inline)
+			.toolbar {
+				ToolbarItem(placement: .navigationBarTrailing) {
+					SettingToolbarLink()
+				}
+			}
+			.fullScreenCover(isPresented: $isPresentedRecordView) {
+				container.RecordView()
+			}
+		}
+		.accentColor(.logoDarkGreen)
     }
-    
+
 }
 
-//struct MainTabView_Previews: PreviewProvider {
-//
-//	static let viewModel: ViewModelProtocol = MainTabViewModel(dependency: .init())
-//    static var previews: some View {
-//		MainTabView(viewModel: viewModel)
-//    }
-//    
-//}
+extension MainTabView {
+	
+	private func SettingToolbarLink() -> some View {
+		NavigationLink(destination: container.SettingView()) {
+			Image(systemName: "gear")
+		}
+	}
+	
+	@ViewBuilder
+	private func MainContent() -> some View {
+		switch selectedIndex {
+		case .conversations:
+			container.ConversationListView()
+		case .notes:
+			container.NoteSetView()
+		}
+	}
+	
+	private func MainTabView() -> some View {
+		HStack(alignment: .center) {
+			CCTabItem(tab: .conversations)
+			RecordButton()
+			CCTabItem(tab: .notes)
+		}
+		.padding()
+		.background(Color(.systemGroupedBackground))
+	}
+	
+	private func RecordButton() -> some View {
+		Button(
+			action: {
+				isPresentedRecordView.toggle()
+			}, label: {
+				Spacer()
+				ZStack(alignment: .center) {
+					Circle()
+						.fill(Color.logoLightGreen)
+						.frame(height: 74)
+					Image(systemName: "mic.fill.badge.plus")
+						.font(.system(size: 44))
+						.foregroundColor(.white)
+				}
+				.shadow(color: .gray, radius: 1, x: 2, y: 2)
+				Spacer()
+			}
+		)
+	}
+	
+	private func CCTabItem(tab: MainTabViewModel.Tab) -> some View {
+		Button(
+			action: {
+				selectedIndex = tab
+			}, label: {
+				Spacer()
+				Image(systemName: viewModel.tabItemImageName(by: tab))
+					.font(.system(size: 28, weight: .bold))
+					.foregroundColor(
+						viewModel.tabItemTintColor(from: tab, by: selectedIndex)
+					)
+				Spacer()
+			}
+		)
+	}
+	
+}
+
+// MARK: - Preview
+struct MainTabView_Previews: PreviewProvider {
+	
+	static var container: PresentationDIContainer { .preview }
+	
+	static var previews: some View {
+		container.MainTabView()
+			.environmentObject(container)
+			.preferredColorScheme(.light)
+		container.MainTabView()
+			.environmentObject(container)
+			.preferredColorScheme(.dark)
+	}
+	
+}

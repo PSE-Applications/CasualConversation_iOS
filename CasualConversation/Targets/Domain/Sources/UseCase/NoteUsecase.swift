@@ -40,6 +40,7 @@ public final class NoteUseCase: Dependency {
 	
 	public init(dependency: Dependecy) {
 		self.dependency = dependency
+		fetchDataSource()
 	}
 	
 	private func fetchDataSource() {
@@ -54,8 +55,7 @@ public final class NoteUseCase: Dependency {
 				return
 			}
 			self.dataSource = list
-		}
-		
+		} 
 	}
 	
 }
