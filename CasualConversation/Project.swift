@@ -58,6 +58,7 @@ func makeModule(layer: CleanArchitecture, dependencies: [CleanArchitecture]) -> 
 		platform: .iOS,
 		product: .unitTests,
 		bundleId: "\(PSE.bundleId).DomainTests",
+		deploymentTarget: PSE.deploymentTarget,
 		infoPlist: .default,
 		sources: ["Targets/\(layer.name)/Tests/**"],
 		resources: [],
