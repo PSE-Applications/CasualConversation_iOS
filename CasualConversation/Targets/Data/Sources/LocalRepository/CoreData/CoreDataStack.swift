@@ -10,7 +10,7 @@ import CoreData
 
 public protocol CoreDataStackProtocol {
 	var mainContext: NSManagedObjectContext { get }
-	func saveContext()
+	func saveContext(completion: (CCError?) -> Void)
 }
 
 public final class CoreDataStack {
@@ -49,14 +49,16 @@ extension CoreDataStack: CoreDataStackProtocol {
 		self.storeContainer.viewContext
 	}
 	
-	public func saveContext () {
+	public func saveContext(completion: (CCError?) -> Void) {
 		guard mainContext.hasChanges else { return }
 		
 		do {
 			try mainContext.save()
 		} catch let error as NSError {
 			print("Unresolved error \(error), \(error.userInfo)")
+			completion(.persistenceFailed(reason: .coreDataViewContextUnsaved(error)))
 		}
+		completion(nil)
 	}
 	
 //	public func entityDescription(forEntityName: String) -> NSEntityDescription? {
