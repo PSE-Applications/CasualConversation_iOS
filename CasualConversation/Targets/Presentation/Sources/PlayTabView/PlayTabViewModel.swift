@@ -23,7 +23,7 @@ final class PlayTabViewModel: Dependency, ObservableObject {
 	}
 	
 	struct Dependency {
-		let audioService: AudioPlayable
+		let audioPlayService: CCPlayer
 	}
 	
 	let dependency: Dependency
@@ -51,11 +51,11 @@ extension PlayTabViewModel {
 extension PlayTabViewModel {
 	
 	var currentTime: TimeInterval {
-		self.dependency.audioService.currentPlayingTime ?? 0
+		self.dependency.audioPlayService.currentPlayingTime ?? 0
 	}
 	
 	var duration: TimeInterval {
-		self.dependency.audioService.playDuration ?? 0
+		0
 	}
 	
 }

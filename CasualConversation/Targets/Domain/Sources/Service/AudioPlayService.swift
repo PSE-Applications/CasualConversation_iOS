@@ -1,17 +1,16 @@
 //
-//  RecordService.swift
-//  CasualConversation
+//  AudioPlayService.swift
+//  Domain
 //
-//  Created by Yongwoo Marco on 2022/07/03.
+//  Created by Yongwoo Marco on 2022/08/16.
 //  Copyright © 2022 pseapplications. All rights reserved.
 //
 
 import Common
 
-import Foundation
 import AVFAudio
 
-public protocol AudioPlayable {
+public protocol CCPlayer {
 	var status: AudioStatus { get }
 	var currentPlayingTime: TimeInterval? { get }
 	func setupPlaying(from filePath: URL, completion: (CCError?) -> Void)
@@ -21,25 +20,9 @@ public protocol AudioPlayable {
 	func finishPlaying()
 }
 
-public protocol AudioRecordable {
-	var status: AudioStatus { get }
-	var currentRecordingTime: TimeInterval? { get }
-	func setupRecorder(completion: (CCError?) -> Void)
-	func startRecording(completion: (CCError?) -> Void)
-	func pauseRecording()
-	func stopRecording(completion: (Result<URL, CCError>) -> Void)
-}
-
-public protocol AudioServiceProtocol: AudioPlayable, AudioRecordable { }
-
-public final class AudioService: NSObject, Dependency, ObservableObject {
+public final class AudioPlayService: NSObject, Dependency {
 	
 	@Published public var status: AudioStatus = .stopped
-	
-	public var dependency: Dependency
-	
-	private var audioRecorder: AudioRecorderProtocol?
-	private var audioPlayer: AudioPlayerProtocol?
 		
 	public struct Dependency {
 		let repository: RecordRepositoryProtocol
@@ -48,6 +31,10 @@ public final class AudioService: NSObject, Dependency, ObservableObject {
 			self.repository = repository
 		}
 	}
+	
+	public var dependency: Dependency
+	
+	private var audioPlayer: AudioPlayerProtocol?
 	
 	public init(dependency: Dependency) {
 		self.dependency = dependency
@@ -107,8 +94,6 @@ public final class AudioService: NSObject, Dependency, ObservableObject {
 		case .began:
 			if status == .playing {
 				pausePlaying()
-			} else if status == .recording {
-				pauseRecording()
 			}
 			status = .paused
 		case .ended:
@@ -124,64 +109,15 @@ public final class AudioService: NSObject, Dependency, ObservableObject {
 	
 }
 
-// MARK: - AudioRecodable
-extension AudioService: AudioServiceProtocol {
+extension AudioPlayService: AVAudioPlayerDelegate {
 	
-	public var currentRecordingTime: TimeInterval? {
-		self.audioRecorder?.currentTime
-	}
-	
-	public func setupRecorder(completion: (CCError?) -> Void) {
-		guard let newRecorder = dependency.repository.makeAudioRecorder() else {
-			completion(.audioServiceFailed(reason: .bindingFailure))
-			return
-		}
-		self.audioRecorder = newRecorder
-		self.audioRecorder?.delegate = self
-		guard let isPreparedToRecord = self.audioRecorder?.prepareToRecord() else {
-			completion(.audioServiceFailed(reason: .bindingFailure))
-			return
-		}
-		guard isPreparedToRecord else {
-			completion(.audioServiceFailed(reason: .preparedFailure))
-			return
-		}
-		completion(nil)
-	}
-	
-	public func startRecording(completion: (CCError?) -> Void) {
-		guard let isRecording = self.audioRecorder?.record() else {
-			completion(.audioServiceFailed(reason: .bindingFailure))
-			return
-		}
-		status = isRecording ? .recording : .stopped
-		guard isRecording else {
-			completion(.audioServiceFailed(reason: .startedFailure))
-			return
-		}
-		completion(nil)
-	}
-	
-	public func pauseRecording() {
-		self.audioRecorder?.pause()
-		status = .paused
-	}
-	
-	public func stopRecording(completion: (Result<URL, CCError>) -> Void) {
-		defer { self.audioRecorder = nil }
-		self.audioRecorder?.stop()
+	public func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
 		status = .stopped
-		guard let savedFilePath = audioRecorder?.url else {
-			completion(.failure(.audioServiceFailed(reason: .fileURLPathSavedFailure)))
-			return
-		}
-		completion(.success(savedFilePath))
 	}
 	
 }
 
-// MARK: - AudioPlayable
-extension AudioService {
+extension AudioPlayService: CCPlayer {
 
 	public var currentPlayingTime: TimeInterval? {
 		self.audioPlayer?.currentTime
@@ -230,22 +166,6 @@ extension AudioService {
 	
 	public func finishPlaying() {
 		self.audioPlayer = nil
-	}
-	
-}
-
-extension AudioService: AVAudioRecorderDelegate {
-	
-	public func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {
-		status = .stopped
-	}
-	
-}
-
-extension AudioService: AVAudioPlayerDelegate {
-	
-	public func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-		status = .stopped
 	}
 	
 }

@@ -15,7 +15,15 @@ final class RecordViewModel: Dependency, ObservableObject {
 	
 	struct Dependency {
 		let useCase: ConversationRecodable
-		let audioService: AudioRecordable
+		let audioRecordService: CCRecorder
+		
+		public init(
+			useCase: ConversationRecodable,
+			audioRecordService: CCRecorder
+		) {
+			self.useCase = useCase
+			self.audioRecordService = audioRecordService
+		}
 	}
 	
 	let dependency: Dependency
@@ -25,7 +33,7 @@ final class RecordViewModel: Dependency, ObservableObject {
 	init(dependency: Dependency) {
 		self.dependency = dependency
 		
-		self.isRecording = dependency.audioService.status == .recording
+		self.isRecording = dependency.audioRecordService.status == .recording
 	}
 	
 }
