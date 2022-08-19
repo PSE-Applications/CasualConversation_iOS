@@ -20,17 +20,9 @@ struct ConversationListView: View {
 					container.ConversationListRow(selected: item)
 				}
 			}
-			.onDelete(perform: removeRows)
+			.onDelete(perform: viewModel.removeRows)
 		}
 		.listStyle(.plain)
-	}
-	
-}
-
-extension ConversationListView {
-	
-	private func removeRows(at offsets: IndexSet) {
-		print(#function)
 	}
 	
 }

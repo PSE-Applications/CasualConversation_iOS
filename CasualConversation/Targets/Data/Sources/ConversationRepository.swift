@@ -62,7 +62,7 @@ extension ConversationRepository: ConversationRepositoryProtocol {
 		let fetchRequest = ConversationEntity.fetchRequest()
 		let sortDescriptor = NSSortDescriptor.init(
 			key: #keyPath(ConversationEntity.recordedDate),
-			ascending: true
+			ascending: false
 		)
 		fetchRequest.sortDescriptors = [sortDescriptor]
 		do {
