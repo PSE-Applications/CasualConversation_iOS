@@ -49,6 +49,7 @@ extension RecordView {
 		}
 		.alert("녹음 취소", isPresented: $cancelAlert) {
 			Button("삭제", role: .destructive) {
+				viewModel.cancelRecording()
 				presentationMode.wrappedValue.dismiss()
 			}
 			Button("취소", role: .cancel) { }
@@ -59,10 +60,20 @@ extension RecordView {
 	
 	private func RecordContent() -> some View {
 		VStack(alignment: .center) {
-			Rectangle()
-				.foregroundColor(.recordShadow)
+			Spacer()
+			InputTitle()
+			Spacer()
 		}
+		.background(Color.recordShadow)
 		.padding()
+	}
+	
+	private func InputTitle() -> some View {
+		TextField("InputTitle",
+				  text: $viewModel.inputTitle,
+				  prompt: Text("녹음 제목을 입력하세요")
+		)
+		.multilineTextAlignment(.center)
 	}
 	
 	private func RecordControl() -> some View {
@@ -91,30 +102,33 @@ extension RecordView {
 			}
 		)
 		.alert("녹음 완료", isPresented: $stopAlert) {
-			Button("취소", role: .cancel) {
-				
-			}
+			Button("취소", role: .cancel) { }
 			Button("저장") {
-				// TODO: 저장 동작
+				viewModel.stopRecording()
 				presentationMode.wrappedValue.dismiss()
 			}
 		} message: {
 			Text("녹음을 중지하고 녹음물을 저장하시겠습니까?")
 		}
-		.disabled(!viewModel.isRecording)
+		.disabled(!viewModel.isStartedRecording)
 	}
 	
 	private func RecordButton() -> some View {
 		Button(
 			action: {
-				viewModel.isRecording.toggle()
+				if viewModel.isStartedRecording {
+					viewModel.pauseRecording()
+				} else {
+					viewModel.startRecording()
+				}
+				viewModel.isStartedRecording.toggle()
 			}, label: {
 				ZStack {
 					Circle()
 						.stroke(lineWidth: 2)
 						.frame(width: 66, height: 66, alignment: .center)
 						.foregroundColor(.white)
-					if viewModel.isRecording {
+					if viewModel.isStartedRecording {
 						ZStack {
 							Image(systemName: "circle.fill")
 								.foregroundColor(.logoDarkRed)
@@ -139,7 +153,7 @@ extension RecordView {
 	private func PinButton() -> some View {
 		Button(
 			action: {
-				
+				viewModel.putOnPin()
 			}, label: {
 				Spacer()
 				ZStack {
@@ -151,7 +165,7 @@ extension RecordView {
 				Spacer()
 			}
 		)
-		.disabled(!viewModel.isRecording)
+		.disabled(!viewModel.isStartedRecording)
 	}
 	
 }
