@@ -32,8 +32,15 @@ final class NoteSetViewModel: Dependency, ObservableObject {
 
 extension NoteSetViewModel {
 	
-	
-	
+	func removeRows(at offsets: IndexSet) {
+		for offset in offsets.sorted(by: >) {
+			self.dependency.useCase.delete(item: list[offset]) { error in
+				guard error == nil else {
+					print(error?.localizedDescription ?? "\(#function)") // TODO: Error 처리 필요
+					return
+				}
+			}
+		}
 	}
 	
 }

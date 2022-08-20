@@ -27,21 +27,13 @@ struct NoteSetView: View {
 							isPresentedNoteDetail.toggle()
 						}
 				}
-				.onDelete(perform: removeRow)
+				.onDelete(perform: viewModel.removeRows)
 			}
 			.listStyle(.plain)
 		}
 		.sheet(item: $selectedRowItem) { item in
 			container.NoteDetailView(selected: item)
 		}
-	}
-	
-}
-
-extension NoteSetView {
-	
-	private func removeRow(at indexSet: IndexSet) {
-		print(#function)
 	}
 	
 }
