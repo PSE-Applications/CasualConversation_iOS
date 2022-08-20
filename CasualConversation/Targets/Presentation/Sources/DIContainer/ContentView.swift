@@ -32,7 +32,7 @@ import Foundation
 import Combine
 
 // MARK: Data Layer
-struct DebugRecordRepository: RecordRepositoryProtocol {
+struct DebugRecordRepository: RecordDataControllerProtocol {
 	
 	func makeAudioRecorder() -> AudioRecorderProtocol? {
 		let recordSettings: [String: Any] = [
@@ -56,7 +56,7 @@ struct DebugRecordRepository: RecordRepositoryProtocol {
 	
 }
 
-struct DebugConversationRepository: ConversationRepositoryProtocol {
+struct DebugConversationRepository: ConversationDataControllerProtocol {
 	
 	private var dummyModel: [Conversation] = [
 		.init(
@@ -111,7 +111,7 @@ struct DebugConversationRepository: ConversationRepositoryProtocol {
 	
 }
 
-struct DebugNoteRepository: NoteRepositoryProtocol {
+struct DebugNoteRepository: NoteDataControllerProtocol {
 	
 	private var dummyModel: [Note] = [
 		.init(

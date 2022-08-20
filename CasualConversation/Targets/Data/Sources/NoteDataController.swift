@@ -1,5 +1,5 @@
 //
-//  NoteRepository.swift
+//  NoteDataController.swift
 //  CasualConversation
 //
 //  Created by Yongwoo Marco on 2022/07/03.
@@ -34,7 +34,7 @@ extension Note {
 	}
 }
 
-public struct NoteRepository: Dependency {
+public struct NoteDataController: Dependency {
 	
 	static let entityName = "NoteEntity"
 	
@@ -55,7 +55,7 @@ public struct NoteRepository: Dependency {
 }
 
 // MARK: - Usa CoreDataRepository
-extension NoteRepository: NoteRepositoryProtocol {
+extension NoteDataController: NoteDataControllerProtocol {
 	
 	public func fetch(filter item: Conversation? = nil) -> [Note]? {
 		let fetchRequest = NoteEntity.fetchRequest()

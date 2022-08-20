@@ -1,5 +1,5 @@
 //
-//  MockNoteRepository.swift
+//  MockNoteDataController.swift
 //  DomainTests
 //
 //  Created by Yongwoo Marco on 2022/07/20.
@@ -9,12 +9,12 @@
 @testable import Common
 @testable import Domain
 
-struct MockNoteRepository {
+struct MockNoteDataController {
 	let `case`: Bool
 	let error: CCError?
 }
 
-extension MockNoteRepository: NoteRepositoryProtocol {
+extension MockNoteDataController: NoteDataControllerProtocol {
 	
 	func fetch(filter item: Conversation?) -> [Note]? {
 		[]

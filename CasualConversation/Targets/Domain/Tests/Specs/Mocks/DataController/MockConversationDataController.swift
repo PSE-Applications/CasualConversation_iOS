@@ -1,5 +1,5 @@
 //
-//  MockConversationRepository.swift
+//  MockConversationDataController.swift
 //  DomainTests
 //
 //  Created by Yongwoo Marco on 2022/07/20.
@@ -9,12 +9,12 @@
 @testable import Common
 @testable import Domain
 
-struct MockConversationRepository {
+struct MockConversationDataController {
 	let `case`: Bool
 	let error: CCError?
 }
 
-extension MockConversationRepository: ConversationRepositoryProtocol {
+extension MockConversationDataController: ConversationDataControllerProtocol {
 	
 	func fetch() -> [Conversation]? {
 		[]

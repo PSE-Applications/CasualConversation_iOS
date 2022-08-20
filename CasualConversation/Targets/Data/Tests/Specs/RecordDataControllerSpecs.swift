@@ -1,5 +1,5 @@
 //
-//  RecordRepositorySpecs.swift
+//  RecordDataControllerSpecs.swift
 //  CasualConversation
 //
 //  Created by Yongwoo Marco on 2022/07/18.
@@ -13,16 +13,16 @@ import Nimble
 
 import AVFAudio
 
-extension RecordRepository {
+extension RecordDataController {
 	fileprivate static var sut: Self {
 		Self.init(dependency: .init(repository: FileManagerRepository()))
 	}
 }
 
-final class RecordRepositorySpecs: QuickSpec {
+final class RecordDataControllerSpecs: QuickSpec {
 	override func spec() {
 		describe("인스턴스 객체") {
-			var recordRepository: RecordRepository!
+			var recordRepository: RecordDataController!
 			beforeEach { recordRepository = .sut }
 			afterEach { recordRepository = nil }
 			

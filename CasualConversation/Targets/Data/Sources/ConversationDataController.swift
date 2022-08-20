@@ -1,5 +1,5 @@
 //
-//  ConversationRepository.swift
+//  ConversationDataController.swift
 //  CasualConversation
 //
 //  Created by Yongwoo Marco on 2022/07/03.
@@ -37,7 +37,7 @@ extension Conversation {
 	
 }
 
-public struct ConversationRepository: Dependency {
+public struct ConversationDataController: Dependency {
 	
 	public struct Dependency {
 		let coreDataStack: CoreDataStackProtocol
@@ -56,7 +56,7 @@ public struct ConversationRepository: Dependency {
 }
 
 // MARK: - Usa CoreDataRepository
-extension ConversationRepository: ConversationRepositoryProtocol {
+extension ConversationDataController: ConversationDataControllerProtocol {
 	
 	public func fetch() -> [Conversation]? {
 		let fetchRequest = ConversationEntity.fetchRequest()

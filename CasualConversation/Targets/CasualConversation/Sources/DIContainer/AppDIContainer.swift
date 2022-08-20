@@ -22,9 +22,9 @@ final class AppDIContainer {
 	
 	func makePresentationDIContainer() -> PresentationDIContainer {
 		return .init(dependency: .init(
-				conversationRepository: ConversationRepository(dependency: .init(coreDataStack: self.coreDataStack)),
-				noteRepository: NoteRepository(dependency: .init(coreDataStack: self.coreDataStack)),
-				recordRepository: RecordRepository(dependency: .init(repository: self.fileManagerReposotiry))
+				conversationRepository: ConversationDataController(dependency: .init(coreDataStack: self.coreDataStack)),
+				noteRepository: NoteDataController(dependency: .init(coreDataStack: self.coreDataStack)),
+				recordRepository: RecordDataController(dependency: .init(repository: self.fileManagerReposotiry))
 		)
 		)
 	}

@@ -24,10 +24,10 @@ public final class AudioRecordService: NSObject, Dependency {
 	@Published public var status: AudioStatus = .stopped
 	
 	public struct Dependency {
-		let repository: RecordRepositoryProtocol
+		let dataController: RecordDataControllerProtocol
 		
-		public init(repository: RecordRepositoryProtocol) {
-			self.repository = repository
+		public init(dataController: RecordDataControllerProtocol) {
+			self.dataController = dataController
 		}
 	}
 	
@@ -123,7 +123,7 @@ extension AudioRecordService: CCRecorder {
 	}
 	
 	public func setupRecorder(completion: (CCError?) -> Void) {
-		guard let newRecorder = dependency.repository.makeAudioRecorder() else {
+		guard let newRecorder = dependency.dataController.makeAudioRecorder() else {
 			completion(.audioServiceFailed(reason: .bindingFailure))
 			return
 		}

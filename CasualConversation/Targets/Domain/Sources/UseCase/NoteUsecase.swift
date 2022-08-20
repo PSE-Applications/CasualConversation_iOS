@@ -24,14 +24,14 @@ public final class NoteUseCase: Dependency {
 	}
 	
 	public struct Dependecy {
-		let repository: NoteRepositoryProtocol
+		let dataController: NoteDataControllerProtocol
 		var filter: Filter
 		
 		public init(
-			repository: NoteRepositoryProtocol,
+			dataController: NoteDataControllerProtocol,
 			filter: Filter
 		) {
-			self.repository = repository
+			self.dataController = dataController
 			self.filter = filter
 		}
 	}
@@ -50,9 +50,9 @@ public final class NoteUseCase: Dependency {
 		let fetcedList: [Note]
 		switch dependency.filter {
 		case .all:
-			fetcedList = dependency.repository.fetch(filter: nil) ?? []
+			fetcedList = dependency.dataController.fetch(filter: nil) ?? []
 		case .selected(let item):
-			fetcedList = dependency.repository.fetch(filter: item) ?? []
+			fetcedList = dependency.dataController.fetch(filter: item) ?? []
 		}
 		self.dataSource = fetcedList
 	}
@@ -62,7 +62,7 @@ public final class NoteUseCase: Dependency {
 extension NoteUseCase: NoteManagable {
 	
 	public func add(item: Note, completion: (CCError?) -> Void) {
-		self.dependency.repository.create(item) { error in
+		self.dependency.dataController.create(item) { error in
 			guard error == nil else {
 				completion(error)
 				return
@@ -73,7 +73,7 @@ extension NoteUseCase: NoteManagable {
 	}
 	
 	public func edit(newItem: Note, completion: (CCError?) -> Void) {
-		self.dependency.repository.update(after: newItem) { error in
+		self.dependency.dataController.update(after: newItem) { error in
 			guard error == nil else {
 				completion(error)
 				return
@@ -84,7 +84,7 @@ extension NoteUseCase: NoteManagable {
 	}
 	
 	public func delete(item: Note, completion: (CCError?) -> Void) {
-		self.dependency.repository.delete(item) { error in
+		self.dependency.dataController.delete(item) { error in
 			guard error == nil else {
 				completion(error)
 				return

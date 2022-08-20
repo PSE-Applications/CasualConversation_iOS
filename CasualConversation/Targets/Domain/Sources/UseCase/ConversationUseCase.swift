@@ -25,10 +25,10 @@ public protocol ConversationMaintainable {
 public final class ConversationUseCase: Dependency, ConversationManagable {
 	
 	public struct Dependency {
-		let repository: ConversationRepositoryProtocol
+		let dataController: ConversationDataControllerProtocol
 		
-		public init(repository: ConversationRepositoryProtocol) {
-			self.repository = repository
+		public init(dataController: ConversationDataControllerProtocol) {
+			self.dataController = dataController
 		}
 	}
 	
@@ -43,7 +43,7 @@ public final class ConversationUseCase: Dependency, ConversationManagable {
 	}
 	
 	private func fetchDataSource() {
-		guard let fetcedList = dependency.repository.fetch() else {
+		guard let fetcedList = dependency.dataController.fetch() else {
 			print("Failure fetchDataSource") // TODO: Error 처리 고민필요
 			return
 		}
@@ -56,7 +56,7 @@ public final class ConversationUseCase: Dependency, ConversationManagable {
 extension ConversationUseCase {
 	
 	public func add(_ item: Conversation, completion: (CCError?) -> Void) {
-		self.dependency.repository.create(item) { error in
+		self.dependency.dataController.create(item) { error in
 			guard error == nil else {
 				completion(error)
 				return
@@ -72,7 +72,7 @@ extension ConversationUseCase {
 extension ConversationUseCase {
 	
 	public func edit(after editedItem: Conversation, completion: (CCError?) -> Void) {
-		self.dependency.repository.update(after: editedItem) { error in
+		self.dependency.dataController.update(after: editedItem) { error in
 			guard error == nil else {
 				completion(error)
 				return
@@ -83,7 +83,7 @@ extension ConversationUseCase {
 	}
 	
 	public func delete(_ item: Conversation, completion: (CCError?) -> Void) {
-		self.dependency.repository.delete(item) { error in
+		self.dependency.dataController.delete(item) { error in
 			guard error == nil else {
 				completion(error)
 				return

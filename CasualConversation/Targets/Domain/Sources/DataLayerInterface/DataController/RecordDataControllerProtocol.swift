@@ -1,5 +1,5 @@
 //
-//  RecordRepositoryProtocol.swift
+//  RecordDataControllerProtocol.swift
 //  Domain
 //
 //  Created by Yongwoo Marco on 2022/07/04.
@@ -8,7 +8,7 @@
 
 import Foundation.NSURL
 
-public protocol RecordRepositoryProtocol {
+public protocol RecordDataControllerProtocol {
 	func makeAudioRecorder() -> AudioRecorderProtocol?
 	func makeAudioPlayer(from filePath: URL) -> AudioPlayerProtocol?
 }

@@ -16,7 +16,7 @@ import Foundation.NSURL
 
 extension AudioPlayService {
 	static var sut: Self {
-		Self.init(dependency: .init(repository: MockRecordRepository()))
+		Self.init(dependency: .init(repository: MockRecordDataController()))
 	}
 }
 

@@ -1,5 +1,5 @@
 //
-//  NoteRepositorySpecs.swift
+//  NoteDataControllerSpecs.swift
 //  Data
 //
 //  Created by Yongwoo Marco on 2022/08/03.
@@ -13,18 +13,18 @@
 import Quick
 import Nimble
 
-extension NoteRepository {
+extension NoteDataController {
 	fileprivate static var sut: Self {
 		Self.init(dependency: .init(coreDataStack: TestCoreDataStack())
 		)
 	}
 }
 
-final class NoteRepositorySpecs: QuickSpec {
+final class NoteDataControllerSpecs: QuickSpec {
 	override func spec() {
 		describe("인스턴스 객체가") {
-			var noteRepository: NoteRepositoryProtocol!
-			beforeEach { noteRepository = NoteRepository.sut }
+			var noteRepository: NoteDataControllerProtocol!
+			beforeEach { noteRepository = NoteDataController.sut }
 			afterEach { noteRepository = nil }
 			
 			describe("새 데이터를") {

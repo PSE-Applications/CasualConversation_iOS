@@ -25,10 +25,10 @@ public final class AudioPlayService: NSObject, Dependency {
 	@Published public var status: AudioStatus = .stopped
 		
 	public struct Dependency {
-		let repository: RecordRepositoryProtocol
+		let dataController: RecordDataControllerProtocol
 		
-		public init(repository: RecordRepositoryProtocol) {
-			self.repository = repository
+		public init(dataController: RecordDataControllerProtocol) {
+			self.dataController = dataController
 		}
 	}
 	
@@ -124,7 +124,7 @@ extension AudioPlayService: CCPlayer {
 	}
 	
 	public func setupPlaying(from filePath: URL, completion: (CCError?) -> Void) {
-		guard let newplayer = dependency.repository.makeAudioPlayer(from: filePath) else {
+		guard let newplayer = dependency.dataController.makeAudioPlayer(from: filePath) else {
 			completion(.audioServiceFailed(reason: .bindingFailure))
 			return
 		}
