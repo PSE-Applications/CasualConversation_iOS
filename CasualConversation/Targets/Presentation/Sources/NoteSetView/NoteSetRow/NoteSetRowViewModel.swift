@@ -38,7 +38,7 @@ final class NoteSetRowViewModel: Dependency, ObservableObject {
 extension NoteSetRowViewModel {
 	
 	var categoryImageName: String {
-		self.category == .sentece ? "text.bubble.fill" : "textformat.abc"
+		self.category == .sentence ? "text.bubble.fill" : "textformat.abc"
 	}
 	var noteContentLabel: String {
 		self.original.isEmpty ? self.translation : self.original

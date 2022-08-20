@@ -44,7 +44,7 @@ final class SelectionViewModel: Dependency, ObservableObject {
 	}
 	
 	let dependency: Dependency
-	
+		
 	@Published var title: String
 	@Published var topic: String
 	@Published var members: String // TODO: 저장 시 (콤마, 공백) 제거처리
@@ -91,10 +91,47 @@ extension SelectionViewModel {
 	
 }
 
-extension SelectionViewModel {
+extension SelectionViewModel: LanguageCheckable {
 	
-	var list: [Note] { // TODO: DataBinding 형태로 변경 필요
-		self.dependency.noteUseCase.list()
+	func addNote() -> Bool {
+		guard checkConditions() else { return false }
+		let newItem: Note = .init(
+			id: .init(),
+			original: language == .original ? self.inputText : "",
+			translation: language == .translation ? self.inputText : "",
+			category: category == .vocabulary ? .vocabulary : .sentence,
+			references: [self.dependency.item.id],
+			createdDate: Date()
+		)
+		self.dependency.noteUseCase.add(item: newItem) { error in
+			guard error == nil else {
+				print("add Note 실패") // TODO: Error 처리 필요
+				return
+			}
+			self.inputText = ""
+		}
+		return true
 	}
-
+	
+	private func checkConditions() -> Bool {
+		guard !inputText.isEmpty else { return false }
+		guard checkLanguage() else { return false }
+		guard checkCategory() else { return false }
+		return true
+	}
+	
+	private func checkLanguage() -> Bool {
+		switch self.language {
+		case .original:		return !containsKorean(by: self.inputText)
+		case .translation:	return !containsEnglish(by: self.inputText)
+		}
+	}
+	
+	private func checkCategory() -> Bool {
+		switch self.category {
+		case .sentense:		return hasTwoMoreSpace(by: self.inputText)
+		case .vocabulary:	return !hasTwoMoreSpace(by: self.inputText)
+		}
+	}
+	
 }

@@ -51,12 +51,23 @@ struct SelectionView: View {
 				Spacer()
 				Button(
 					action: {
-						// TODO: Note 추가 동작 구현
+						if !viewModel.addNote() {
+							addAlert.toggle()
+						}
 					}, label: {
 						Text("추가")
 					}
 				)
 			}
+		}
+		.alert("추가 실패", isPresented: $addAlert) {
+			Button("확인", role: .cancel) { }
+		} message: {
+			Text("올바른 조건으로 입력해주세요")
+		}
+		.onAppear {
+			UITextField.appearance().backgroundColor = UIColor
+				.init(colorScheme == .dark ? Color.recordShadow : Color.white)
 		}
 	}
 	
@@ -185,7 +196,9 @@ extension SelectionView {
 					.showClearButton($viewModel.inputText)
 					.focused($focusedField, equals: .inputNote)
 					Button {
-						// TODO: Note 추가 동작 구현
+						if !viewModel.addNote() {
+							addAlert.toggle()
+						}
 					} label: {
 						Image(systemName: "plus.circle.fill")
 					}

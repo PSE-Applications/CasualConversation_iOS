@@ -77,7 +77,7 @@ extension NoteSetRowViewModel {
 						id: .init(),
 						original: "Nice to meet you.",
 						translation: "",
-						category: .sentece,
+						category: .sentence,
 						references: [],
 						createdDate: Date()
 					)
@@ -88,7 +88,7 @@ extension NoteSetRowViewModel {
 						id: .init(),
 						original: "",
 						translation: "한국말 문장만 있는 노트",
-						category: .sentece,
+						category: .sentence,
 						references: [],
 						createdDate: Date()
 					)

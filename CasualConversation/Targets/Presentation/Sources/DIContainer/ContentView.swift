@@ -131,14 +131,14 @@ struct DebugNoteRepository: NoteRepositoryProtocol {
 			id: .init(),
 			original: "This is a sentence",
 			translation: "이거슨 문장입니다.",
-			category: .sentece,
+			category: .sentence,
 			references: [],
 			createdDate: Date(timeIntervalSinceNow: 150)),
 		.init(
 			id: .init(),
 			original: "",
 			translation: "하고 싶었던 한국말 문장을 저장해 놈",
-			category: .sentece,
+			category: .sentence,
 			references: [],
 			createdDate: Date()),
 		.init(
@@ -152,7 +152,7 @@ struct DebugNoteRepository: NoteRepositoryProtocol {
 			id: .init(),
 			original: "These are sentences\nThey have sevaral lines.\nlike this",
 			translation: "",
-			category: .sentece,
+			category: .sentence,
 			references: [],
 			createdDate: Date(timeIntervalSinceNow: 50))
 	]
