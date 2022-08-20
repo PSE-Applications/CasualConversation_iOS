@@ -29,6 +29,7 @@ import Data
 
 import AVFAudio
 import Foundation
+import Combine
 
 // MARK: Data Layer
 struct DebugRecordRepository: RecordRepositoryProtocol {
@@ -180,11 +181,10 @@ struct DebugNoteRepository: NoteRepositoryProtocol {
 }
 
 // MARK: Domain Layer
-struct DebugNoteUseCase: NoteManagable {
+final class DebugNoteUseCase: NoteManagable {
 	
-	func list() -> [Note] {
-		[]
-	}
+	@Published private var list: [Note] = []
+	var dataSourcePublisher: Published<[Note]>.Publisher { $list }
 	
 	func add(item: Note, completion: (CCError?) -> Void) {
 		
@@ -214,7 +214,6 @@ extension PresentationDIContainer {
 }
 
 #endif
-
 
 struct ContentView_Previews: PreviewProvider {
 	

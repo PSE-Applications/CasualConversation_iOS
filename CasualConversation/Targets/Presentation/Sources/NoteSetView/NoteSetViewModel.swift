@@ -18,16 +18,22 @@ final class NoteSetViewModel: Dependency, ObservableObject {
 	
 	let dependency: Dependency
 	
+	@Published var list: [Note] = []
+	
 	init(dependency: Dependency) {
 		self.dependency = dependency
+		
+		self.dependency.useCase.dataSourcePublisher
+			.assign(to: &self.$list)
 	}
-
+	
+	
 }
 
 extension NoteSetViewModel {
 	
-	var list: [Note] {
-		self.dependency.useCase.list()
+	
+	
 	}
 	
 }

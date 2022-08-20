@@ -28,7 +28,6 @@ final class ConversationListViewModel: Dependency, ObservableObject {
 		self.dependency = dependency
 			
 		self.dependency.useCase.dataSourcePublisher
-			.receive(on: RunLoop.main)
 			.assign(to: &self.$list)
 	}
 	

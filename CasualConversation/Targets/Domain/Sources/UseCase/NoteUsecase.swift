@@ -7,8 +7,10 @@
 
 import Common
 
+import Combine
+
 public protocol NoteManagable {
-	func list() -> [Note]
+	var dataSourcePublisher: Published<[Note]>.Publisher { get }
 	func add(item: Note, completion: (CCError?) -> Void)
 	func edit(newItem: Note, completion: (CCError?) -> Void)
 	func delete(item: Note, completion: (CCError?) -> Void)
@@ -36,7 +38,8 @@ public final class NoteUseCase: Dependency {
 	
 	public var dependency: Dependecy
 	
-	private var dataSource: [Note] = []
+	@Published private var dataSource: [Note] = []
+	public var dataSourcePublisher: Published<[Note]>.Publisher { $dataSource }
 	
 	public init(dependency: Dependecy) {
 		self.dependency = dependency
@@ -44,27 +47,19 @@ public final class NoteUseCase: Dependency {
 	}
 	
 	private func fetchDataSource() {
+		let fetcedList: [Note]
 		switch dependency.filter {
 		case .all:
-			guard let list = dependency.repository.fetch(filter: nil) else {
-				return
-			}
-			self.dataSource = list
+			fetcedList = dependency.repository.fetch(filter: nil) ?? []
 		case .selected(let item):
-			guard let list = dependency.repository.fetch(filter: item) else {
-				return
-			}
-			self.dataSource = list
-		} 
+			fetcedList = dependency.repository.fetch(filter: item) ?? []
+		}
+		self.dataSource = fetcedList
 	}
 	
 }
 
 extension NoteUseCase: NoteManagable {
-	
-	public func list() -> [Note] {
-		self.dataSource
-	}
 	
 	public func add(item: Note, completion: (CCError?) -> Void) {
 		self.dependency.repository.create(item) { error in

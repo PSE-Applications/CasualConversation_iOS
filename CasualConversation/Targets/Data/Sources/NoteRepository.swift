@@ -61,7 +61,7 @@ extension NoteRepository: NoteRepositoryProtocol {
 		let fetchRequest = NoteEntity.fetchRequest()
 		let sortDescriptor = NSSortDescriptor.init(
 			key: #keyPath(NoteEntity.createdDate),
-			ascending: true
+			ascending: false
 		)
 		fetchRequest.sortDescriptors = [sortDescriptor]
 		do {
