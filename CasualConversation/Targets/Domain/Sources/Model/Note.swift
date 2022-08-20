@@ -23,7 +23,7 @@ public struct Note: UUIDIdentifiable {
         
 	public enum Category: String {
         case vocabulary
-        case sentece
+        case sentence
     }
     
 	public let id: Identifier
