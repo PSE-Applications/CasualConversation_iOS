@@ -47,7 +47,7 @@ final class SelectionViewModel: Dependency, ObservableObject {
 		
 	@Published var title: String
 	@Published var topic: String
-	@Published var members: String // TODO: 저장 시 (콤마, 공백) 제거처리
+	@Published var members: String 
 	@Published var recordedDate: String
 	
 	@Published var language: Language = .original
@@ -60,7 +60,7 @@ final class SelectionViewModel: Dependency, ObservableObject {
 		self.title = dependency.item.title ?? ""
 		self.topic = dependency.item.topic ?? ""
 		self.members = dependency.item.members.joined(separator: ", ")
-		self.recordedDate = dependency.item.recordedDate.description
+		self.recordedDate = dependency.item.recordedDate.formattedString
 	}
 	
 	var referenceNoteUseCase: NoteManagable {
@@ -81,12 +81,6 @@ extension SelectionViewModel {
 	
 	func isEditingShadowColor(by condition: Bool) -> Color {
 		condition ? .clear : .gray
-	}
-	
-	func setEmptyTitleToDefault(by newValue: Bool) {
-		if !newValue, self.title.isEmpty {
-			self.title = self.recordedDate
-		} 
 	}
 	
 }
@@ -134,4 +128,42 @@ extension SelectionViewModel: LanguageCheckable {
 		}
 	}
 	
+	func updateEditing(by newCondition: Bool) {
+		if !newCondition {
+			self.updateInfo()
+		}
+	}
+	
+	private func updateInfo() {
+		let conversation = self.dependency.item
+		let beforeInfo = (
+			title: conversation.title,
+			topic: conversation.topic,
+			memebers: conversation.members
+		)
+		let afterInfo = (
+			title: self.title.isEmpty ? conversation.recordedDate.formattedString : title,
+			topic: self.topic,
+			members: self.members
+							.components(separatedBy: [",", " "] )
+							.filter({ !$0.isEmpty })
+		)
+		if beforeInfo != afterInfo {
+			let newItem: Conversation = .init(
+				id: conversation.id,
+				title: afterInfo.title,
+				topic: afterInfo.topic,
+				members: afterInfo.members,
+				recordFilePath: conversation.recordFilePath,
+				recordedDate: conversation.recordedDate,
+				pins: conversation.pins)
+			self.dependency.conversationUseCase.edit(after: newItem) { error in
+				guard error == nil else {
+					print(error?.localizedDescription) // TODO: Error 처리 필요
+					return
+				}
+			}
+		}
+	}
+
 }
