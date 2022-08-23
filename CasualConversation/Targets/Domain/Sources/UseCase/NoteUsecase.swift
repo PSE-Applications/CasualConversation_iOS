@@ -12,7 +12,7 @@ import Combine
 public protocol NoteManagable {
 	var dataSourcePublisher: Published<[Note]>.Publisher { get }
 	func add(item: Note, completion: (CCError?) -> Void)
-	func edit(newItem: Note, completion: (CCError?) -> Void)
+	func edit(_ newItem: Note, completion: (CCError?) -> Void)
 	func delete(item: Note, completion: (CCError?) -> Void)
 }
 
@@ -72,7 +72,7 @@ extension NoteUseCase: NoteManagable {
 		}
 	}
 	
-	public func edit(newItem: Note, completion: (CCError?) -> Void) {
+	public func edit(_ newItem: Note, completion: (CCError?) -> Void) {
 		self.dependency.dataController.update(after: newItem) { error in
 			guard error == nil else {
 				completion(error)

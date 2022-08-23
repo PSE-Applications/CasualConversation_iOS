@@ -24,6 +24,7 @@ final class NoteDetailViewModel: Dependency, ObservableObject {
 	@Published var translation: String
 	@Published var pronunciation: String
 	@Published var isVocabulary: Bool
+	@Published var isEdited: Bool = false
 	
 	init(dependency: Dependency) {
 		self.dependency = dependency
@@ -43,6 +44,28 @@ extension NoteDetailViewModel {
 	}
 	var navigationTitle: String {
 		self.isVocabulary ? "Vocabulary" : "Sentense"
+	}
+	
+}
+
+extension NoteDetailViewModel {
+	
+	func updateChanges() {
+		guard isEdited else { return }
+		let newItem: Note = .init(
+			id: self.dependency.item.id,
+			original: self.original,
+			translation: self.translation,
+			category: self.dependency.item.category,
+			references: self.dependency.item.references,
+			createdDate: self.dependency.item.createdDate
+		)
+		self.dependency.useCase.edit(newItem) { error in
+			guard error == nil else {
+				print(error?.localizedDescription) // TODO: Error 처리 필요
+				return
+			}
+		}
 	}
 	
 }

@@ -22,9 +22,6 @@ struct NoteDetailView: View {
 			}
 			.padding()
 			.toolbar {
-				ToolbarItem(placement: .navigationBarLeading) {
-					NavigationCancelButton()
-				}
 				ToolbarItem(placement: .principal) {
 					NavigationTitleLabel()
 				}
@@ -49,25 +46,17 @@ extension NoteDetailView {
 		}
 	}
 	
-	private func NavigationCancelButton() -> some View {
-		Button {
-			presentationMode.wrappedValue.dismiss()
-		} label: {
-			Text("취소")
-				.font(.headline)
-				.foregroundColor(.logoDarkGreen)
-		}
-	}
-	
 	private func NavigationSaveButton() -> some View {
 		Button {
-			// Update
+			viewModel.updateChanges()
 			presentationMode.wrappedValue.dismiss()
 		} label: {
-			Text("완료")
+			Text("저장")
 				.font(.headline)
 				.foregroundColor(.logoDarkGreen)
 		}
+		.disabled(!viewModel.isEdited)
+		.opacity(viewModel.isEdited ? 1 : 0.3)
 	}
 	
 	@ViewBuilder
@@ -99,6 +88,9 @@ extension NoteDetailView {
 			)
 			Spacer()
 		}
+		.onChange(of: viewModel.original) { _ in
+			viewModel.isEdited = true
+		}
 	}
 	
 	private func InputTextField(
@@ -113,10 +105,9 @@ extension NoteDetailView {
 				Image(systemName: iconName)
 					.foregroundColor(.logoLightBlue)
 				TextField(title,
-						  text: $viewModel.original,
+						  text: text,
 						  prompt: Text(title.components(separatedBy: " ")[0]))
 					.textFieldStyle(.roundedBorder)
-					.shadow(color: .gray, radius: 1, x: 2, y: 2)
 			}
 		}
 	}
@@ -137,6 +128,9 @@ extension NoteDetailView {
 			}
 			TextEditor(text: $viewModel.translation)
 			Spacer()
+		}
+		.onChange(of: viewModel.original) { _ in
+			viewModel.isEdited = true
 		}
 	}
 	

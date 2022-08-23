@@ -190,7 +190,7 @@ final class DebugNoteUseCase: NoteManagable {
 		
 	}
 	
-	func edit(newItem: Note, completion: (CCError?) -> Void) {
+	func edit(_ newItem: Note, completion: (CCError?) -> Void) {
 		
 	}
 	
