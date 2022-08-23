@@ -60,7 +60,7 @@ extension ConversationListRow {
 	@ViewBuilder
 	private func CheckMarkIndicator() -> some View {
 		if viewModel.isChecked {
-			Image(systemName: "checkmark.circle.fill")
+			Image(systemName: "info.circle.fill")
 				.foregroundColor(.logoLightBlue)
 		} else {
 			Image(systemName: "circle")

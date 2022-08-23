@@ -23,7 +23,6 @@ final class ConversationListRowViewModel: Dependency, ObservableObject {
 	@Published var topic: String
 	@Published var members: String
 	@Published var recordedDate: String
-	@Published var isChecked: Bool
 	
 	init(dependency: Dependency) {
 		self.dependency = dependency
@@ -32,7 +31,14 @@ final class ConversationListRowViewModel: Dependency, ObservableObject {
 		self.topic = dependency.item.topic ?? ""
 		self.members = dependency.item.members.joined(separator: ", ")
 		self.recordedDate = dependency.item.recordedDate.formattedString
-		self.isChecked = Bool.random() // TODO: 처리방법 구상필요
+	}
+	
+}
+
+extension ConversationListRowViewModel {
+	
+	var isChecked: Bool {
+		!self.title.isEmpty && !self.topic.isEmpty && !self.members.isEmpty
 	}
 	
 }
