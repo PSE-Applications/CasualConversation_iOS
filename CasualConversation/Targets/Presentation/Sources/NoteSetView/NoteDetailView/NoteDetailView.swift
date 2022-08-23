@@ -81,15 +81,7 @@ extension NoteDetailView {
 				iconName: "k.circle.fill",
 				text: $viewModel.translation
 			)
-			InputTextField(
-				title: "발음 Pronunciation",
-				iconName: "person.wave.2.fill",
-				text: $viewModel.pronunciation
-			)
 			Spacer()
-		}
-		.onChange(of: viewModel.original) { _ in
-			viewModel.isEdited = true
 		}
 	}
 	
@@ -108,6 +100,9 @@ extension NoteDetailView {
 						  text: text,
 						  prompt: Text(title.components(separatedBy: " ")[0]))
 					.textFieldStyle(.roundedBorder)
+					.onChange(of: text.wrappedValue) { value in
+						viewModel.isEdited = true
+					}
 			}
 		}
 	}
@@ -121,16 +116,19 @@ extension NoteDetailView {
 				Text("문장 Original")
 			}
 			TextEditor(text: $viewModel.original)
+				.onChange(of: viewModel.original) { value in
+					viewModel.isEdited = true
+				}
 			HStack {
 				Image(systemName: "k.circle.fill")
 					.foregroundColor(.logoLightBlue)
 				Text("번역 Translation")
 			}
 			TextEditor(text: $viewModel.translation)
+				.onChange(of: viewModel.translation) { value in
+					viewModel.isEdited = true
+				}
 			Spacer()
-		}
-		.onChange(of: viewModel.original) { _ in
-			viewModel.isEdited = true
 		}
 	}
 	

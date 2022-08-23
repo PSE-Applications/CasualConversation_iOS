@@ -32,7 +32,7 @@ extension NoteSetRow {
 	
 	@ViewBuilder
 	private func NoteContent() -> some View {
-		if !viewModel.original.isEmpty, !viewModel.translation.isEmpty {
+		if viewModel.isDone {
 			VStack(alignment: .leading) {
 				Text(viewModel.original)
 				Text(viewModel.translation)

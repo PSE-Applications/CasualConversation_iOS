@@ -48,5 +48,9 @@ public struct Note: UUIDIdentifiable {
 		self.references = references
 		self.createdDate = createdDate
 	}
+	
+	public var isDone: Bool {
+		!self.original.isEmpty && !self.translation.isEmpty
+	}
     
 }

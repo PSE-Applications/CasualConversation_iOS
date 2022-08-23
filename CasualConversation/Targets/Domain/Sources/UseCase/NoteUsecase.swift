@@ -54,7 +54,7 @@ public final class NoteUseCase: Dependency {
 		case .selected(let item):
 			fetcedList = dependency.dataController.fetch(filter: item) ?? []
 		}
-		self.dataSource = fetcedList
+		self.dataSource = fetcedList.filter({ !$0.isDone }) + fetcedList.filter({ $0.isDone })
 	}
 	
 }
