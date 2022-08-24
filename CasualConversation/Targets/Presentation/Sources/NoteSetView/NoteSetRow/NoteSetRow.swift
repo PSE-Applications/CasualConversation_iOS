@@ -106,12 +106,19 @@ struct NoteSetRow_Previews: PreviewProvider {
 	static let viewModels = NoteSetRowViewModel.previewViewModels
 	
     static var previews: some View {
-		NoteSetRow(viewModel: viewModels[0])
-			.previewLayout(.sizeThatFits)
-		NoteSetRow(viewModel: viewModels[1])
-			.previewLayout(.sizeThatFits)
-		NoteSetRow(viewModel: viewModels[2])
-			.previewLayout(.sizeThatFits)
+		Group {
+			NoteSetRow(viewModel: viewModels[0])
+			NoteSetRow(viewModel: viewModels[1])
+		}
+		.previewLayout(.sizeThatFits)
+		.preferredColorScheme(.light)
+		Group {
+			NoteSetRow(viewModel: viewModels[0])
+			NoteSetRow(viewModel: viewModels[2])
+		}
+		.previewLayout(.sizeThatFits)
+		.preferredColorScheme(.dark)
+		
 	}
 	
 }

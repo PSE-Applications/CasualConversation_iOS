@@ -78,6 +78,10 @@ struct ConversationListRow_Previews: PreviewProvider {
 	static var previews: some View {
 		ConversationListRow(viewModel: viewModel)
 		.previewLayout(.sizeThatFits)
+		.preferredColorScheme(.light)
+		ConversationListRow(viewModel: viewModel)
+		.previewLayout(.sizeThatFits)
+		.preferredColorScheme(.dark)
 	}
 	
 }

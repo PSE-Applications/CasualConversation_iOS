@@ -54,6 +54,10 @@ struct NoteSetView_Previews: PreviewProvider {
 	static var previews: some View {
 		container.NoteSetView()
 			.environmentObject(container)
+			.preferredColorScheme(.light)
+		container.NoteSetView()
+			.environmentObject(container)
+			.preferredColorScheme(.dark)
 	}
 
 }

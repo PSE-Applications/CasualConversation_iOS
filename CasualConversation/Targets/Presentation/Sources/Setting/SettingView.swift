@@ -116,6 +116,9 @@ struct SettingView_Previews: PreviewProvider {
 	
     static var previews: some View {
 		SettingView(viewModel: .init(dependency: .init()))
+			.preferredColorScheme(.light)
+		SettingView(viewModel: .init(dependency: .init()))
+			.preferredColorScheme(.dark)
     }
 	
 }
