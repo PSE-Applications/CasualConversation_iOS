@@ -14,15 +14,18 @@ import Combine
 public final class PresentationDIContainer: Dependency, ObservableObject {
 	
 	public struct Dependency {
+		let configurations: PresentationConfiguarations
 		let conversationRepository: ConversationRepositoryProtocol
 		let noteRepository: NoteRepositoryProtocol
 		let recordRepository: RecordRepositoryProtocol
 		
 		public init(
+			configurations: PresentationConfiguarations,
 			conversationRepository: ConversationRepositoryProtocol,
 			noteRepository: NoteRepositoryProtocol,
 			recordRepository: RecordRepositoryProtocol
 		) {
+			self.configurations = configurations
 			self.conversationRepository = conversationRepository
 			self.noteRepository = noteRepository
 			self.recordRepository = recordRepository
@@ -68,6 +71,10 @@ public final class PresentationDIContainer: Dependency, ObservableObject {
 }
 
 extension PresentationDIContainer {
+	
+	var configurations: PresentationConfiguarations {
+		self.dependency.configurations
+	}
 	
 	func MainTabView() -> MainTabView {
 		let viewModel: MainTabViewModel = .init(dependency: .init())

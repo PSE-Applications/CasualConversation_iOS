@@ -11,6 +11,7 @@ import SwiftUI
 struct SettingView: View {
 	
 	@Environment(\.colorScheme) var colorScheme
+	@EnvironmentObject private var configurations: PresentationConfiguarations
 	
 	@ObservedObject var viewModel: SettingViewModel
 	
@@ -83,26 +84,13 @@ extension SettingView {
 	@ViewBuilder
 	private func AcademyPages() -> some View {
 		Group {
-			Link("🔍 프린서플어학원 알아보기",
-				 destination: URL(string: "https://pseenglish.modoo.at")!
-			)
-			Link("☕️ 네이버카페",
-				 destination: URL(string: "https://m.cafe.naver.com/ca-fe/psecafe")!
-			)
-			Link("🖥 e-Learning",
-				 destination: URL(string: "http://pse-learning.site/de/board.php?board=home")!
-			)
-			Link("👀 정규반 맛보기 강의",
-				 destination: URL(string: "https://pseenglish.modoo.at/?link=e8gh4487")!
-			)
-			Link("📄 온라인 레벨테스트",
-				 destination: URL(string: "https://pseenglish.modoo.at/?link=dc89m2n4")!
-			)
+			Link("🔍 프린서플어학원 알아보기", destination: configurations.mainURL)
+			Link("☕️ 네이버카페", destination: configurations.cafeURL)
+			Link("🖥 e-Learning", destination: configurations.eLearningURL)
+			Link("👀 정규반 맛보기 강의", destination: configurations.tasteURL)
+			Link("📄 온라인 레벨테스트", destination: configurations.testURL)
 			Button("📞 문의전화") {
-				let phone = "tel://"
-				let phoneNumber = "02-539-8963"
-				let url = URL(string: phone + phoneNumber)!
-				UIApplication.shared.open(url)
+				UIApplication.shared.open(configurations.receptionTel)
 			}
 		}
 		.tint(.logoDarkGreen)

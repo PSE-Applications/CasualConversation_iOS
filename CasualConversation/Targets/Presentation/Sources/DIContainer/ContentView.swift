@@ -16,6 +16,7 @@ public struct ContentView: View {
 	
 	public var body: some View {
 		container.MainTabView()
+			.environmentObject(container.configurations)
     }
 	
 }
@@ -205,6 +206,7 @@ extension PresentationDIContainer {
 	
 	static var preview: PresentationDIContainer {
 		.init(dependency: .init(
+			configurations: PresentationConfiguarations.preview,
 			conversationRepository: DebugConversationRepository(),
 			noteRepository: DebugNoteRepository(),
 			recordRepository: DebugRecordRepository())
@@ -213,7 +215,24 @@ extension PresentationDIContainer {
 	
 }
 
+extension PresentationConfiguarations {
+	
+	static var preview: Self {
+		Self.init(dependency: .init(
+			mainURL: URL(fileURLWithPath: ""),
+			cafeURL: URL(fileURLWithPath: ""),
+			eLearningURL: URL(fileURLWithPath: ""),
+			tasteURL: URL(fileURLWithPath: ""),
+			testURL: URL(fileURLWithPath: ""),
+			receptionTel: URL(fileURLWithPath: ""))
+		)
+	}
+	
+}
+
 #endif
+
+
 
 
 struct ContentView_Previews: PreviewProvider {
