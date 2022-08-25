@@ -14,6 +14,8 @@ struct SettingView: View {
 	
 	@ObservedObject var viewModel: SettingViewModel
 	
+	@State private var isShowingMailView: Bool = false
+	
     var body: some View {
 		VStack {
 			Form {
@@ -150,10 +152,16 @@ extension SettingView {
 	
 	private func FeedbackSection() -> some View {
 		Section {
-			Text("문의하기")
-				.onTapGesture {
-					print(#function)
-				}
+			Button("문의하기") {
+				self.isShowingMailView.toggle()
+			}
+			.tint(.primary)
+			.sheet(isPresented: $isShowingMailView) {
+				MailView(
+					isShowing: $isShowingMailView,
+					result: $viewModel.mailSendedResult
+				)
+			}
 			Text("리뷰하기")
 				.onTapGesture {
 					print(#function)
