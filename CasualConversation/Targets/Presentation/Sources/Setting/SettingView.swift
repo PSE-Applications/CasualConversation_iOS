@@ -28,7 +28,7 @@ struct SettingView: View {
 			}
 			.listStyle(.grouped)
 			
-			Text("@2022. Team Marcoda. All rights reserved.")
+			Text("@2022. All rights reserved by Team Marcoda.")
 				.foregroundColor(.gray)
 				.font(.caption)
 		}
@@ -53,7 +53,7 @@ extension SettingView {
 				HStack {
 					Image(colorScheme == .dark ? "pse_logo_border" : "pse_logo")
 						.resizable()
-						.frame(width: 40, height: 40)
+						.frame(width: 41.7, height: 48)
 					Text("What is Casual Conversation?")
 						.font(.headline)
 				}
@@ -120,20 +120,10 @@ extension SettingView {
 	}
 	
 	private func DarkMode() -> some View {
-		HStack {
-			Text("다크모드")
-			Spacer()
-			Picker("DarkMode", selection: $viewModel.darkMode) {
-				ForEach(SettingViewModel.ColorScheme.allCases, id: \.self) { condition in
-					Text(condition.description)
-						.tag(condition)
-				}
-			}
-			.frame(width: 200)
-			.pickerStyle(.segmented)
-			.onAppear {
-				UISegmentedControl.appearance().selectedSegmentTintColor = UIColor
-					.init(self.colorScheme == .dark ? .logoDarkGreen : .logoLightGreen)
+		Picker("디스플레이 모드 설정", selection: $viewModel.darkMode) {
+			ForEach(SettingViewModel.ColorScheme.allCases, id: \.self) { condition in
+				Text(condition.description)
+					.tag(condition)
 			}
 		}
 	}
@@ -143,7 +133,6 @@ extension SettingView {
 			Button("문의하기") {
 				self.isShowingMailView.toggle()
 			}
-			.tint(.primary)
 			.sheet(isPresented: $isShowingMailView) {
 				MailView(
 					isShowing: $isShowingMailView,
@@ -154,9 +143,13 @@ extension SettingView {
 				.onTapGesture {
 					print(#function)
 				}
+			Button("공유하기") {
+				
+			}
 		} header: {
 			Text("소통")
 		}
+		.tint(.primary)
 	}
 	
 	private func UnclassifiedSection() -> some View {
