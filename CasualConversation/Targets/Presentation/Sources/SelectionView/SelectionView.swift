@@ -193,10 +193,6 @@ extension SelectionView {
 			}
 		}
 		.padding([.leading, .trailing])
-		.onAppear {
-			UISegmentedControl.appearance().selectedSegmentTintColor = UIColor
-				.init(self.colorScheme == .dark ? .logoDarkGreen : .logoLightGreen)
-		}
 	}
 	
 	private func SelectedNoteSet() -> some View {

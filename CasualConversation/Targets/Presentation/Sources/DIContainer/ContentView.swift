@@ -12,7 +12,9 @@ public struct ContentView: View {
 	
 	@EnvironmentObject private var container: PresentationDIContainer
 	
-	public init() {}
+	public init() {
+		AppAppearance.setup()
+	}
 	
 	public var body: some View {
 		container.MainTabView()
