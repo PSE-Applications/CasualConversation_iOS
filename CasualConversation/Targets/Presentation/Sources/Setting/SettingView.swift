@@ -120,20 +120,10 @@ extension SettingView {
 	}
 	
 	private func DarkMode() -> some View {
-		HStack {
-			Text("다크모드")
-			Spacer()
-			Picker("DarkMode", selection: $viewModel.darkMode) {
-				ForEach(SettingViewModel.ColorScheme.allCases, id: \.self) { condition in
-					Text(condition.description)
-						.tag(condition)
-				}
-			}
-			.frame(width: 200)
-			.pickerStyle(.segmented)
-			.onAppear {
-				UISegmentedControl.appearance().selectedSegmentTintColor = UIColor
-					.init(self.colorScheme == .dark ? .logoDarkGreen : .logoLightGreen)
+		Picker("디스플레이 모드 설정", selection: $viewModel.darkMode) {
+			ForEach(SettingViewModel.ColorScheme.allCases, id: \.self) { condition in
+				Text(condition.description)
+					.tag(condition)
 			}
 		}
 	}
