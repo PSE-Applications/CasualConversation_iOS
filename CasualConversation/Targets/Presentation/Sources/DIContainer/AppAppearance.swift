@@ -14,7 +14,7 @@ final class AppAppearance {
 
 	static func setup() {
 		UISegmentedControl.appearance().selectedSegmentTintColor = UIColor
-			.init(self.colorScheme == .dark ? .logoDarkGreen : .logoLightGreen)
+			.init(.ccTintColor)
 	}
 	
 }

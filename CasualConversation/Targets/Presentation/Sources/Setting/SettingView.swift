@@ -51,7 +51,7 @@ extension SettingView {
 				}
 			}, label: {
 				HStack {
-					Image(colorScheme == .dark ? "pse_logo_border" : "pse_logo")
+					Image(viewModel.logoImageName(by: colorScheme))
 						.resizable()
 						.frame(width: 41.7, height: 48)
 					Text("What is Casual Conversation?")
@@ -64,8 +64,9 @@ extension SettingView {
 	@ViewBuilder
 	private func AcademyInfo() -> some View {
 		VStack(alignment: .center) {
-			Image(colorScheme == .dark ? "pse_title_border" : "pse_title")
+			Image(viewModel.titleImageName(by: colorScheme))
 				.resizable()
+				.aspectRatio(contentMode: .fit)
 				.frame(height: 100)
 			Text("프린서플어학원 CC Time 프로그램")
 				.font(.headline)
@@ -73,7 +74,7 @@ extension SettingView {
 		VStack(alignment: .leading) {
 			Text("언제 어디서나 영어회화로 가벼운 인사부터 다양한 주제의 대화를 나누는 영어회화 학습방법입니다.")
 				.font(.subheadline)
-			Text("Topics 및 발음기호 등 관련 정보는 PSE에서 제공합니다.")
+			Text("주제 및 발음기호 등 학습 정보는 PSE에서 제공합니다.")
 				.font(.caption)
 				.foregroundColor(.gray)
 		}
@@ -107,7 +108,7 @@ extension SettingView {
 	private func LockScreen() -> some View {
 		HStack {
 			Toggle("화면잠금 방지", isOn: $viewModel.lockScreen)
-				.tint(self.colorScheme == .dark ? .logoDarkGreen : .logoLightGreen)
+				.tint(.ccTintColor)
 		}
 	}
 	
@@ -120,8 +121,8 @@ extension SettingView {
 	}
 	
 	private func DarkMode() -> some View {
-		Picker("디스플레이 모드 설정", selection: $viewModel.darkMode) {
-			ForEach(SettingViewModel.ColorScheme.allCases, id: \.self) { condition in
+		Picker("디스플레이 모드 설정", selection: $viewModel.displayMode) {
+			ForEach(SettingViewModel.DisplayMode.allCases, id: \.self) { condition in
 				Text(condition.description)
 					.tag(condition)
 			}
@@ -167,6 +168,14 @@ extension SettingView {
 					.font(.subheadline)
 					.foregroundColor(.gray)
 			}
+			
+			NavigationLink(destination: {
+				Text("개발자 정보")
+			}, label: {
+				Text("개발자 정보")
+			})
+		} header: {
+			Text("앱 정보")
 		}
 	}
 	
