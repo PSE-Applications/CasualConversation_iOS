@@ -32,7 +32,9 @@ struct NoteSetView: View {
 			.listStyle(.plain)
 		}
 		.sheet(item: $selectedRowItem) { item in
-			container.NoteDetailView(selected: item)
+			HalfSheet(isFlexible: item.category == .sentence) {
+				container.NoteDetailView(selected: item)
+			}
 		}
 	}
 	
