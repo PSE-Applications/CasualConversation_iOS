@@ -9,6 +9,7 @@
 import Common
 
 import Foundation
+import MessageUI
 
 final class SettingViewModel: Dependency, ObservableObject {
 	

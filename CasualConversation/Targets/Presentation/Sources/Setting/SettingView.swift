@@ -28,7 +28,7 @@ struct SettingView: View {
 			}
 			.listStyle(.grouped)
 			
-			Text("@2022. Team Marcoda. All rights reserved.")
+			Text("@2022. All rights reserved by Team Marcoda.")
 				.foregroundColor(.gray)
 				.font(.caption)
 		}
@@ -53,7 +53,7 @@ extension SettingView {
 				HStack {
 					Image(colorScheme == .dark ? "pse_logo_border" : "pse_logo")
 						.resizable()
-						.frame(width: 40, height: 40)
+						.frame(width: 41.7, height: 48)
 					Text("What is Casual Conversation?")
 						.font(.headline)
 				}
@@ -143,7 +143,6 @@ extension SettingView {
 			Button("문의하기") {
 				self.isShowingMailView.toggle()
 			}
-			.tint(.primary)
 			.sheet(isPresented: $isShowingMailView) {
 				MailView(
 					isShowing: $isShowingMailView,
@@ -154,9 +153,13 @@ extension SettingView {
 				.onTapGesture {
 					print(#function)
 				}
+			Button("공유하기") {
+				
+			}
 		} header: {
 			Text("소통")
 		}
+		.tint(.primary)
 	}
 	
 	private func UnclassifiedSection() -> some View {
