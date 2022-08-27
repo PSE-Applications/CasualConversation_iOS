@@ -178,9 +178,17 @@ struct NoteDetail_Previews: PreviewProvider {
 	static let viewModels = NoteDetailViewModel.previewViewModels
 	
 	static var previews: some View {
-		NoteDetailView(viewModel: viewModels[0])
+		Group {
+			NoteDetailView(viewModel: viewModels[0])
+			NoteDetailView(viewModel: viewModels[1])
+		}
 		.previewLayout(.sizeThatFits)
-		NoteDetailView(viewModel: viewModels[1])
+		.preferredColorScheme(.light)
+		Group {
+			NoteDetailView(viewModel: viewModels[0])
+			NoteDetailView(viewModel: viewModels[1])
+		}
 		.previewLayout(.sizeThatFits)
+		.preferredColorScheme(.dark)
 	}
 }

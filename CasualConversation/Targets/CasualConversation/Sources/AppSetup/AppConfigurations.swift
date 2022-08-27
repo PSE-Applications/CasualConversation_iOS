@@ -10,9 +10,22 @@ import Foundation
 
 final class AppConfigurations {
 	
-// MARK: - Example
-//	lazy var apiKey = Bundle.main.object(forInfoDictionaryKey: "ApiKey") as! String
-//	lazy var apiBaseURL = Bundle.main.object(forInfoDictionaryKey: "ApiBaseURL") as! String
-//	lazy var imagesBaseURL = Bundle.main.object(forInfoDictionaryKey: "ImageBaseURL") as! String
-
+	private let pageList: NSDictionary
+	
+	init() {
+		guard let filePath = Bundle.main.path(forResource: "URLs", ofType: "plist"),
+			  let plist = NSDictionary(contentsOfFile: filePath) else {
+			fatalError("URLs.plist 불러오기 실패")
+		}
+		self.pageList = plist
+	}
+	
+	// MARK: Presentation Layer
+	lazy var mainURL = self.pageList.object(forKey: "Main") as! String
+	lazy var cafeURL = self.pageList.object(forKey: "Cafe") as! String
+	lazy var eLearningURL = self.pageList.object(forKey: "eLearning") as! String
+	lazy var tasteURL = mainURL + (self.pageList.object(forKey: "TastePage") as! String)
+	lazy var testURL = mainURL + (self.pageList.object(forKey: "TestPage") as! String)
+	lazy var receptionTel = self.pageList.object(forKey: "ReceptionPhoneNumber") as! String
+	
 }

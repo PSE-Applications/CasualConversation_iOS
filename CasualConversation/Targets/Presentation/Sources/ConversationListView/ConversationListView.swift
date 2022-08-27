@@ -35,6 +35,10 @@ struct ConversationListView_Previews: PreviewProvider {
 	static var previews: some View {
 		container.ConversationListView()
 			.environmentObject(container)
+			.preferredColorScheme(.light)
+		container.ConversationListView()
+			.environmentObject(container)
+			.preferredColorScheme(.dark)
 	}
 
 }

@@ -23,6 +23,7 @@ public final class PresentationDIContainer: Dependency, ObservableObject {
 			noteRepository: NoteDataControllerProtocol,
 			recordRepository: RecordDataControllerProtocol
 		) {
+			self.configurations = configurations
 			self.conversationRepository = conversationRepository
 			self.noteRepository = noteRepository
 			self.recordRepository = recordRepository
@@ -68,6 +69,10 @@ public final class PresentationDIContainer: Dependency, ObservableObject {
 }
 
 extension PresentationDIContainer {
+	
+	var configurations: PresentationConfiguarations {
+		self.dependency.configurations
+	}
 	
 	func MainTabView() -> MainTabView {
 		let viewModel: MainTabViewModel = .init(dependency: .init())

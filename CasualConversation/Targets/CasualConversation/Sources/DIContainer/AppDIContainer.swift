@@ -14,7 +14,7 @@ import Foundation
 
 final class AppDIContainer {
 	
-	private lazy var appConfigurations = AppConfigurations()
+	private let configurations = AppConfigurations()
 	
 	// MARK: - Repository
 	private lazy var coreDataStack: CoreDataStackProtocol = CoreDataStack()
@@ -25,7 +25,7 @@ final class AppDIContainer {
 				conversationRepository: ConversationDataController(dependency: .init(coreDataStack: self.coreDataStack)),
 				noteRepository: NoteDataController(dependency: .init(coreDataStack: self.coreDataStack)),
 				recordRepository: RecordDataController(dependency: .init(repository: self.fileManagerReposotiry))
-		)
+		  )
 		)
 	}
 	

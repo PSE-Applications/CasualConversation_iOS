@@ -10,6 +10,8 @@ import SwiftUI
 
 extension Color {
 	
+	static let ccTintColor = Color("CCTintColor")
+	
 	static let logoLightRed = Color(hex: "#E30111")
 	static let logoDarkRed = Color(hex: "#600000")
 	static let logoLightGreen = Color(hex: "#9DC30A")
