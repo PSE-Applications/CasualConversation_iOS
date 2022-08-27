@@ -67,7 +67,9 @@ struct SelectionView: View {
 				Spacer()
 				Button(
 					action: {
-						if !viewModel.addNote() {
+						if viewModel.isAbleToAdd {
+							viewModel.addNote()
+						} else {
 							addAlert.toggle()
 						}
 					}, label: {
@@ -210,7 +212,9 @@ extension SelectionView {
 					.showClearButton($viewModel.inputText)
 					.focused($focusedField, equals: .inputNote)
 					Button {
-						if !viewModel.addNote() {
+						if viewModel.isAbleToAdd {
+							viewModel.addNote()
+						} else {
 							addAlert.toggle()
 						}
 					} label: {

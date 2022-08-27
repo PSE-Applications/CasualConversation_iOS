@@ -75,6 +75,10 @@ extension SelectionViewModel {
 		"\(self.language.description) \(self.category.description) 입력하세요"
 	}
 	
+	var isAbleToAdd: Bool {
+		checkConditions()
+	}
+	
 	func editToggleLabel(by condition: Bool) -> String {
 		condition ? "완료" : "수정"
 	}
@@ -87,8 +91,7 @@ extension SelectionViewModel {
 
 extension SelectionViewModel: LanguageCheckable {
 	
-	func addNote() -> Bool {
-		guard checkConditions() else { return false }
+	func addNote() {
 		let newItem: Note = .init(
 			id: .init(),
 			original: language == .original ? self.inputText : "",
@@ -104,7 +107,6 @@ extension SelectionViewModel: LanguageCheckable {
 			}
 			self.inputText = ""
 		}
-		return true
 	}
 	
 	private func checkConditions() -> Bool {
