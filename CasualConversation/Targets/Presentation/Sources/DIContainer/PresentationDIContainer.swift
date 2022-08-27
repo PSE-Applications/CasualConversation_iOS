@@ -14,11 +14,13 @@ import Combine
 public final class PresentationDIContainer: Dependency, ObservableObject {
 	
 	public struct Dependency {
+        let configurations: PresentationConfiguarations
 		let conversationRepository: ConversationDataControllerProtocol
 		let noteRepository: NoteDataControllerProtocol
 		let recordRepository: RecordDataControllerProtocol
 		
 		public init(
+            configurations: PresentationConfiguarations,
 			conversationRepository: ConversationDataControllerProtocol,
 			noteRepository: NoteDataControllerProtocol,
 			recordRepository: RecordDataControllerProtocol
