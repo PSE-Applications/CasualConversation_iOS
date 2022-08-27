@@ -1,5 +1,5 @@
 //
-//  MockRecordRepository.swift
+//  MockRecordDataController.swift
 //  CasualConversation
 //
 //  Created by Yongwoo Marco on 2022/07/13.
@@ -11,13 +11,13 @@
 import Foundation
 import AVFAudio
 
-struct MockRecordRepository {
+struct MockRecordDataController {
 	
 	private var directory = FileManager.default.temporaryDirectory
 	
 }
 
-extension MockRecordRepository: RecordRepositoryProtocol {
+extension MockRecordDataController: RecordDataControllerProtocol {
 	
 	public func makeAudioRecorder() -> AudioRecorderProtocol? {
 		return MockAudioRecorder(delegate: nil, url: URL(string: "fake")!)

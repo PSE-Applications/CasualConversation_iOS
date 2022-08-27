@@ -1,5 +1,5 @@
 //
-//  RecordRepository.swift
+//  RecordDataController.swift
 //  Domain
 //
 //  Created by Yongwoo Marco on 2022/07/04.
@@ -14,7 +14,7 @@ import AVFAudio
 extension AVAudioRecorder: AudioRecorderProtocol { }
 extension AVAudioPlayer: AudioPlayerProtocol { }
 
-public struct RecordRepository: Dependency {
+public struct RecordDataController: Dependency {
 	
 	public var dependency: Dependency
 	
@@ -32,7 +32,7 @@ public struct RecordRepository: Dependency {
 	
 }
 
-extension RecordRepository: RecordRepositoryProtocol {
+extension RecordDataController: RecordDataControllerProtocol {
 	
 	public func makeAudioRecorder() -> AudioRecorderProtocol? {
 		let recordSettings: [String: Any] = [

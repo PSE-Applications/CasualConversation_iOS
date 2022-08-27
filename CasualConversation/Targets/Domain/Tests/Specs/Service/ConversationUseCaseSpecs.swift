@@ -15,7 +15,7 @@ import Nimble
 extension ConversationUseCase {
 	fileprivate static func sut(case type: Bool, error: CCError? = nil) -> ConversationUseCase {
 		.init(dependency: .init(
-			repository: MockConversationRepository(case: type, error: error))
+			repository: MockConversationDataController(case: type, error: error))
 		)
 	}
 }

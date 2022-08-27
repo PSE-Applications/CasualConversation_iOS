@@ -14,16 +14,14 @@ import Combine
 public final class PresentationDIContainer: Dependency, ObservableObject {
 	
 	public struct Dependency {
-		let configurations: PresentationConfiguarations
-		let conversationRepository: ConversationRepositoryProtocol
-		let noteRepository: NoteRepositoryProtocol
-		let recordRepository: RecordRepositoryProtocol
+		let conversationRepository: ConversationDataControllerProtocol
+		let noteRepository: NoteDataControllerProtocol
+		let recordRepository: RecordDataControllerProtocol
 		
 		public init(
-			configurations: PresentationConfiguarations,
-			conversationRepository: ConversationRepositoryProtocol,
-			noteRepository: NoteRepositoryProtocol,
-			recordRepository: RecordRepositoryProtocol
+			conversationRepository: ConversationDataControllerProtocol,
+			noteRepository: NoteDataControllerProtocol,
+			recordRepository: RecordDataControllerProtocol
 		) {
 			self.configurations = configurations
 			self.conversationRepository = conversationRepository
@@ -37,23 +35,23 @@ public final class PresentationDIContainer: Dependency, ObservableObject {
 	// MARK: UseCase
 	lazy var casualConversationUseCase: ConversationUseCase = .init(
 		dependency: .init(
-			repository: self.dependency.conversationRepository
+			dataController: self.dependency.conversationRepository
 		)
 	)
 	lazy var noteUseCase: NoteUseCase = .init(dependency: .init(
-		repository: self.dependency.noteRepository,
+		dataController: self.dependency.noteRepository,
 		filter: .all)
 	)
 	
 	// MARK: Service
 	lazy var audioRecordService: CCRecorder = AudioRecordService(
 		dependency: .init(
-			repository: self.dependency.recordRepository
+			dataController: self.dependency.recordRepository
 		)
 	)
 	lazy var audioPlayService: CCPlayer = AudioPlayService(
 		dependency: .init(
-			repository: self.dependency.recordRepository
+			dataController: self.dependency.recordRepository
 		)
 	)
 	
@@ -63,7 +61,7 @@ public final class PresentationDIContainer: Dependency, ObservableObject {
 	
 	private func makeNoteUseCase(filter item: Conversation) -> NoteUseCase {
 		return .init(dependency: .init(
-			repository: self.dependency.noteRepository,
+			dataController: self.dependency.noteRepository,
 			filter: .selected(item))
 		)
 	}

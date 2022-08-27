@@ -22,12 +22,13 @@ struct NoteSetView: View {
 			List {
 				ForEach(viewModel.list, id: \.id) { item in
 					container.NoteSetRow(by: item)
+						.contentShape(Rectangle())
 						.onTapGesture {
 							selectedRowItem = item
 							isPresentedNoteDetail.toggle()
 						}
 				}
-				.onDelete(perform: removeRow)
+				.onDelete(perform: viewModel.removeRows)
 			}
 			.listStyle(.plain)
 		}
@@ -36,14 +37,6 @@ struct NoteSetView: View {
 				container.NoteDetailView(selected: item)
 			}
 		}
-	}
-	
-}
-
-extension NoteSetView {
-	
-	private func removeRow(at indexSet: IndexSet) {
-		print(#function)
 	}
 	
 }

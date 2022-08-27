@@ -23,7 +23,7 @@ public struct Note: UUIDIdentifiable {
         
 	public enum Category: String {
         case vocabulary
-        case sentece
+        case sentence
     }
     
 	public let id: Identifier
@@ -47,6 +47,10 @@ public struct Note: UUIDIdentifiable {
 		self.category = category
 		self.references = references
 		self.createdDate = createdDate
+	}
+	
+	public var isDone: Bool {
+		!self.original.isEmpty && !self.translation.isEmpty
 	}
     
 }

@@ -8,7 +8,7 @@
 import Common
 
 import Foundation.NSURL
-
+import Combine
 
 public protocol ConversationManagable: ConversationRecodable, ConversationMaintainable { }
 
@@ -17,7 +17,7 @@ public protocol ConversationRecodable {
 }
 
 public protocol ConversationMaintainable {
-	var list: [Conversation] { get }
+	var dataSourcePublisher: Published<[Conversation]>.Publisher { get }
 	func edit(after editedItem: Conversation, completion: (CCError?) -> Void)
 	func delete(_ item: Conversation, completion: (CCError?) -> Void)
 }
@@ -25,36 +25,38 @@ public protocol ConversationMaintainable {
 public final class ConversationUseCase: Dependency, ConversationManagable {
 	
 	public struct Dependency {
-		let repository: ConversationRepositoryProtocol
+		let dataController: ConversationDataControllerProtocol
 		
-		public init(repository: ConversationRepositoryProtocol) {
-			self.repository = repository
+		public init(dataController: ConversationDataControllerProtocol) {
+			self.dataController = dataController
 		}
 	}
 	
 	public let dependency: Dependency
 	
-	private var dataSource: [Conversation] = []
+	@Published private var dataSource: [Conversation] = []
+	public var dataSourcePublisher: Published<[Conversation]>.Publisher { $dataSource }
 	
 	public init(dependency: Dependency) {
 		self.dependency = dependency
 		fetchDataSource()
 	}
-
+	
 	private func fetchDataSource() {
-		guard let list = dependency.repository.fetch() else {
+		guard let fetcedList = dependency.dataController.fetch() else {
+			print("Failure fetchDataSource") // TODO: Error 처리 고민필요
 			return
 		}
-		self.dataSource = list
+		self.dataSource = fetcedList
 	}
-	
+ 
 }
 
 // MARK: - ConversationRecodable
 extension ConversationUseCase {
 	
 	public func add(_ item: Conversation, completion: (CCError?) -> Void) {
-		self.dependency.repository.create(item) { error in
+		self.dependency.dataController.create(item) { error in
 			guard error == nil else {
 				completion(error)
 				return
@@ -69,12 +71,8 @@ extension ConversationUseCase {
 // MARK: - ConversationMaintainable
 extension ConversationUseCase {
 	
-	public var list: [Conversation] {
-		self.dataSource
-	}
-	
 	public func edit(after editedItem: Conversation, completion: (CCError?) -> Void) {
-		self.dependency.repository.update(after: editedItem) { error in
+		self.dependency.dataController.update(after: editedItem) { error in
 			guard error == nil else {
 				completion(error)
 				return
@@ -85,7 +83,7 @@ extension ConversationUseCase {
 	}
 	
 	public func delete(_ item: Conversation, completion: (CCError?) -> Void) {
-		self.dependency.repository.delete(item) { error in
+		self.dependency.dataController.delete(item) { error in
 			guard error == nil else {
 				completion(error)
 				return

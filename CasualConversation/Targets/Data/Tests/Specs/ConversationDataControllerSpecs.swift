@@ -1,5 +1,5 @@
 //
-//  ConversationRepositorySpecs.swift
+//  ConversationDataControllerSpecs.swift
 //  Data
 //
 //  Created by Yongwoo Marco on 2022/07/29.
@@ -13,18 +13,18 @@
 import Quick
 import Nimble
 
-extension ConversationRepository {
+extension ConversationDataController {
 	fileprivate static var sut: Self {
 		Self.init(dependency: .init(coreDataStack: TestCoreDataStack())
 		)
 	}
 }
 
-final class ConversationRepositorySpecs: QuickSpec {
+final class ConversationDataControllerSpecs: QuickSpec {
 	override func spec() {
 		describe("인스턴스 객체가") {
-			var conversationRepository: ConversationRepositoryProtocol!
-			beforeEach { conversationRepository = ConversationRepository.sut }
+			var conversationRepository: ConversationDataControllerProtocol!
+			beforeEach { conversationRepository = ConversationDataController.sut }
 			afterEach { conversationRepository = nil }
 			
 			describe("새 데이터를") {

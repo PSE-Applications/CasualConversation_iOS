@@ -1,5 +1,5 @@
 //
-//  NoteRepository.swift
+//  ConversationDataController.swift
 //  CasualConversation
 //
 //  Created by Yongwoo Marco on 2022/07/03.
@@ -11,32 +11,33 @@ import Domain
 
 import CoreData
 
-extension Note {
+extension Conversation {
 	
 	init(entity: NSManagedObject) {
 		self.init(
-			id: entity.value(forKey: "id") as! Identifier,
-			original: entity.value(forKey: "original") as! String,
-			translation: entity.value(forKey: "translation") as! String,
-			category: Category(rawValue: entity.value(forKey: "category") as! String)!,
-			references: entity.value(forKey: "references") as! [Identifier],
-			createdDate: entity.value(forKey: "createdDate") as! Date
+			id: entity.value(forKey: "id") as! UUID,
+			title: entity.value(forKey: "title") as? String,
+			topic: entity.value(forKey: "topic") as? String,
+			members: entity.value(forKey: "members") as! [String],
+			recordFilePath: entity.value(forKey: "recordFilePath") as! URL,
+			recordedDate: entity.value(forKey: "recordedDate") as! Date,
+			pins: entity.value(forKey: "pins") as! [TimeInterval]
 		)
 	}
 	
 	func setValues(_ entity: NSManagedObject) {
 		entity.setValue(id, forKey: "id")
-		entity.setValue(original, forKey: "original")
-		entity.setValue(translation, forKey: "translation")
-		entity.setValue(category.rawValue, forKey: "category")
-		entity.setValue(references, forKey: "references")
-		entity.setValue(createdDate, forKey: "createdDate")
+		entity.setValue(title, forKey: "title")
+		entity.setValue(topic, forKey: "topic")
+		entity.setValue(members, forKey: "members")
+		entity.setValue(recordFilePath, forKey: "recordFilePath")
+		entity.setValue(recordedDate, forKey: "recordedDate")
+		entity.setValue(pins, forKey: "pins")
 	}
+	
 }
 
-public struct NoteRepository: Dependency {
-	
-	static let entityName = "NoteEntity"
+public struct ConversationDataController: Dependency {
 	
 	public struct Dependency {
 		let coreDataStack: CoreDataStackProtocol
@@ -51,43 +52,39 @@ public struct NoteRepository: Dependency {
 	public init(dependency: Dependency) {
 		self.dependency = dependency
 	}
-	
+
 }
 
 // MARK: - Usa CoreDataRepository
-extension NoteRepository: NoteRepositoryProtocol {
+extension ConversationDataController: ConversationDataControllerProtocol {
 	
-	public func fetch(filter item: Conversation? = nil) -> [Note]? {
-		let fetchRequest = NoteEntity.fetchRequest()
+	public func fetch() -> [Conversation]? {
+		let fetchRequest = ConversationEntity.fetchRequest()
 		let sortDescriptor = NSSortDescriptor.init(
-			key: #keyPath(NoteEntity.createdDate),
-			ascending: true
+			key: #keyPath(ConversationEntity.recordedDate),
+			ascending: false
 		)
 		fetchRequest.sortDescriptors = [sortDescriptor]
 		do {
 			let list = try dependency.coreDataStack
 				.mainContext.fetch(fetchRequest)
-				.compactMap({ Note(entity: $0) })
-			guard let itemID = item?.id else {
-				return list
-			}
-			return list.filter({ $0.references.contains(itemID) })
+				.compactMap({ Conversation(entity: $0) })
+			return list
 		} catch let error {
 			debugPrint(CCError.persistenceFailed(reason: .coreDataUnloaded(error)))
 			return nil
 		}
 	}
 	
-	public func create(_ item: Note, completion: (CCError?) -> Void) {
-		let entity = NoteEntity(context: dependency.coreDataStack.mainContext)
+	public func create(_ item: Conversation, completion: (CCError?) -> Void) {
+		let entity = ConversationEntity(context: dependency.coreDataStack.mainContext)
 		item.setValues(entity)
 		self.dependency.coreDataStack.saveContext(completion: completion)
-		completion(nil)
 	}
 	
-	public func update(after editedItem: Note, completion: (CCError?) -> Void) {
+	public func update(after editedItem: Conversation, completion: (CCError?) -> Void) {
 		do {
-			let objects = try dependency.coreDataStack.mainContext.fetch(NoteEntity.fetchRequest())
+			let objects = try dependency.coreDataStack.mainContext.fetch(ConversationEntity.fetchRequest())
 			guard let object = objects.first(where: { $0.id == editedItem.id }) else {
 				completion(.persistenceFailed(reason: .coreDataUnloadedEntity))
 				return
@@ -100,9 +97,9 @@ extension NoteRepository: NoteRepositoryProtocol {
 		}
 	}
 	
-	public func delete(_ item: Note, completion: (CCError?) -> Void) {
+	public func delete(_ item: Conversation, completion: (CCError?) -> Void) {
 		do {
-			let objects = try dependency.coreDataStack.mainContext.fetch(NoteEntity.fetchRequest())
+			let objects = try dependency.coreDataStack.mainContext.fetch(ConversationEntity.fetchRequest())
 			guard let object = objects.first(where: { $0.id == item.id }) else {
 				completion(.persistenceFailed(reason: .coreDataUnloadedEntity))
 				return

@@ -22,7 +22,7 @@ final class NoteSetRowViewModel: Dependency, ObservableObject {
 	@Published var category: Note.Category
 	@Published var original: String
 	@Published var translation: String
-	@Published var pronunciation: String
+	@Published var isDone: Bool
 	
 	init(dependency: Dependency) {
 		self.dependency = dependency
@@ -30,7 +30,7 @@ final class NoteSetRowViewModel: Dependency, ObservableObject {
 		self.category = dependency.item.category
 		self.original = dependency.item.original
 		self.translation = dependency.item.translation
-		self.pronunciation = "" // TODO: Model 추가 필요 - dependency.item.pronunciation
+		self.isDone = dependency.item.isDone
 	}
 	
 }
@@ -38,7 +38,7 @@ final class NoteSetRowViewModel: Dependency, ObservableObject {
 extension NoteSetRowViewModel {
 	
 	var categoryImageName: String {
-		self.category == .sentece ? "text.bubble.fill" : "textformat.abc"
+		self.category == .sentence ? "text.bubble.fill" : "textformat.abc"
 	}
 	var noteContentLabel: String {
 		self.original.isEmpty ? self.translation : self.original

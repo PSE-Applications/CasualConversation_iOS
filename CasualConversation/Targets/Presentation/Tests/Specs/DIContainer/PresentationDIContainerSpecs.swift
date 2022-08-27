@@ -12,7 +12,7 @@ import Quick
 import Nimble
 
 extension PresentationDIContainer {
-	fileprivate static var sut: PresentationDIContainer {
+	static var sut: PresentationDIContainer {
 		self.init(dependency: .init(
 			conversationRepository: DebugConversationRepository(),
 			noteRepository: DebugNoteRepository(),
@@ -57,7 +57,18 @@ final class PresentationDIContainerSpecs: QuickSpec {
 				}
 			}
 			
-			context("선택된 Conversation을 전달하며 SelectionView 팩토리메서드 호출하면") {
+			context("선택된 item을 전달하며 ConversationListRow 팩토리메서드 호출하면") {
+				var listRow: ConversationListRow!
+				beforeEach {
+					listRow = container.ConversationListRow(selected: .empty)
+				}
+				
+				it("ConversationListRow 객체 생성됨") {
+					expect(listRow).notTo(beNil())
+				}
+			}
+			
+			context("선택된 item을 전달하며 SelectionView 팩토리메서드 호출하면") {
 				var selectionView: SelectionView!
 				beforeEach {
 					selectionView = container.SelectionView(selected: .empty)
@@ -88,12 +99,34 @@ final class PresentationDIContainerSpecs: QuickSpec {
 				}
 			}
 			
+			context("선택된 item을 전달하며 NoteSetRow 팩토리메서드 호출하면") {
+				var noteSetRow: NoteSetRow!
+				beforeEach {
+					noteSetRow = container.NoteSetRow(by: .empty)
+				}
+				
+				it("NoteSetRow 객체 생성됨") {
+					expect(noteSetRow).notTo(beNil())
+				}
+			}
+			
 			context("SettingView 팩토리메서드 호출하면") {
 				var settingView: SettingView!
 				beforeEach { settingView = container.SettingView() }
 				
 				it("SettingView 객체 생성됨") {
 					expect(settingView).notTo(beNil())
+				}
+			}
+			
+			context("service를 전달하며 PlayTabView 팩토리메서드 호출하면") {
+				var playTabView: PlayTabView!
+				beforeEach {
+					playTabView = container.PlayTabView()
+				}
+				
+				it("PlayTabView 객체 생성됨") {
+					expect(playTabView).notTo(beNil())
 				}
 			}
 			

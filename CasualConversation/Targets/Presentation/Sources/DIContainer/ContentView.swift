@@ -32,9 +32,10 @@ import Data
 
 import AVFAudio
 import Foundation
+import Combine
 
 // MARK: Data Layer
-struct DebugRecordRepository: RecordRepositoryProtocol {
+struct DebugRecordRepository: RecordDataControllerProtocol {
 	
 	func makeAudioRecorder() -> AudioRecorderProtocol? {
 		let recordSettings: [String: Any] = [
@@ -58,7 +59,7 @@ struct DebugRecordRepository: RecordRepositoryProtocol {
 	
 }
 
-struct DebugConversationRepository: ConversationRepositoryProtocol {
+struct DebugConversationRepository: ConversationDataControllerProtocol {
 	
 	private var dummyModel: [Conversation] = [
 		.init(
@@ -113,7 +114,7 @@ struct DebugConversationRepository: ConversationRepositoryProtocol {
 	
 }
 
-struct DebugNoteRepository: NoteRepositoryProtocol {
+struct DebugNoteRepository: NoteDataControllerProtocol {
 	
 	private var dummyModel: [Note] = [
 		.init(
@@ -134,14 +135,14 @@ struct DebugNoteRepository: NoteRepositoryProtocol {
 			id: .init(),
 			original: "This is a sentence",
 			translation: "이거슨 문장입니다.",
-			category: .sentece,
+			category: .sentence,
 			references: [],
 			createdDate: Date(timeIntervalSinceNow: 150)),
 		.init(
 			id: .init(),
 			original: "",
 			translation: "하고 싶었던 한국말 문장을 저장해 놈",
-			category: .sentece,
+			category: .sentence,
 			references: [],
 			createdDate: Date()),
 		.init(
@@ -155,7 +156,7 @@ struct DebugNoteRepository: NoteRepositoryProtocol {
 			id: .init(),
 			original: "These are sentences\nThey have sevaral lines.\nlike this",
 			translation: "",
-			category: .sentece,
+			category: .sentence,
 			references: [],
 			createdDate: Date(timeIntervalSinceNow: 50))
 	]
@@ -183,17 +184,16 @@ struct DebugNoteRepository: NoteRepositoryProtocol {
 }
 
 // MARK: Domain Layer
-struct DebugNoteUseCase: NoteManagable {
+final class DebugNoteUseCase: NoteManagable {
 	
-	func list() -> [Note] {
-		[]
-	}
+	@Published private var list: [Note] = []
+	var dataSourcePublisher: Published<[Note]>.Publisher { $list }
 	
 	func add(item: Note, completion: (CCError?) -> Void) {
 		
 	}
 	
-	func edit(newItem: Note, completion: (CCError?) -> Void) {
+	func edit(_ newItem: Note, completion: (CCError?) -> Void) {
 		
 	}
 	
@@ -233,9 +233,6 @@ extension PresentationConfiguarations {
 }
 
 #endif
-
-
-
 
 struct ContentView_Previews: PreviewProvider {
 	

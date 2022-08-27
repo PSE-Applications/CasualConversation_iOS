@@ -15,7 +15,7 @@ import Nimble
 extension NoteUseCase {
 	fileprivate static func sut(case type: Bool, error: CCError? = nil) -> NoteUseCase {
 		.init(dependency: .init(
-				repository: MockNoteRepository(case: type, error: error),
+				repository: MockNoteDataController(case: type, error: error),
 				filter: .all
 			)
 		)

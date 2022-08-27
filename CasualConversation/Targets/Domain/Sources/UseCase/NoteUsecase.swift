@@ -7,10 +7,12 @@
 
 import Common
 
+import Combine
+
 public protocol NoteManagable {
-	func list() -> [Note]
+	var dataSourcePublisher: Published<[Note]>.Publisher { get }
 	func add(item: Note, completion: (CCError?) -> Void)
-	func edit(newItem: Note, completion: (CCError?) -> Void)
+	func edit(_ newItem: Note, completion: (CCError?) -> Void)
 	func delete(item: Note, completion: (CCError?) -> Void)
 }
 
@@ -22,21 +24,22 @@ public final class NoteUseCase: Dependency {
 	}
 	
 	public struct Dependecy {
-		let repository: NoteRepositoryProtocol
+		let dataController: NoteDataControllerProtocol
 		var filter: Filter
 		
 		public init(
-			repository: NoteRepositoryProtocol,
+			dataController: NoteDataControllerProtocol,
 			filter: Filter
 		) {
-			self.repository = repository
+			self.dataController = dataController
 			self.filter = filter
 		}
 	}
 	
 	public var dependency: Dependecy
 	
-	private var dataSource: [Note] = []
+	@Published private var dataSource: [Note] = []
+	public var dataSourcePublisher: Published<[Note]>.Publisher { $dataSource }
 	
 	public init(dependency: Dependecy) {
 		self.dependency = dependency
@@ -44,30 +47,22 @@ public final class NoteUseCase: Dependency {
 	}
 	
 	private func fetchDataSource() {
+		let fetcedList: [Note]
 		switch dependency.filter {
 		case .all:
-			guard let list = dependency.repository.fetch(filter: nil) else {
-				return
-			}
-			self.dataSource = list
+			fetcedList = dependency.dataController.fetch(filter: nil) ?? []
 		case .selected(let item):
-			guard let list = dependency.repository.fetch(filter: item) else {
-				return
-			}
-			self.dataSource = list
-		} 
+			fetcedList = dependency.dataController.fetch(filter: item) ?? []
+		}
+		self.dataSource = fetcedList.filter({ !$0.isDone }) + fetcedList.filter({ $0.isDone })
 	}
 	
 }
 
 extension NoteUseCase: NoteManagable {
 	
-	public func list() -> [Note] {
-		self.dataSource
-	}
-	
 	public func add(item: Note, completion: (CCError?) -> Void) {
-		self.dependency.repository.create(item) { error in
+		self.dependency.dataController.create(item) { error in
 			guard error == nil else {
 				completion(error)
 				return
@@ -77,8 +72,8 @@ extension NoteUseCase: NoteManagable {
 		}
 	}
 	
-	public func edit(newItem: Note, completion: (CCError?) -> Void) {
-		self.dependency.repository.update(after: newItem) { error in
+	public func edit(_ newItem: Note, completion: (CCError?) -> Void) {
+		self.dependency.dataController.update(after: newItem) { error in
 			guard error == nil else {
 				completion(error)
 				return
@@ -89,7 +84,7 @@ extension NoteUseCase: NoteManagable {
 	}
 	
 	public func delete(item: Note, completion: (CCError?) -> Void) {
-		self.dependency.repository.delete(item) { error in
+		self.dependency.dataController.delete(item) { error in
 			guard error == nil else {
 				completion(error)
 				return

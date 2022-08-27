@@ -44,10 +44,10 @@ final class SelectionViewModel: Dependency, ObservableObject {
 	}
 	
 	let dependency: Dependency
-	
+		
 	@Published var title: String
 	@Published var topic: String
-	@Published var members: String // TODO: 저장 시 (콤마, 공백) 제거처리
+	@Published var members: String 
 	@Published var recordedDate: String
 	
 	@Published var language: Language = .original
@@ -60,7 +60,7 @@ final class SelectionViewModel: Dependency, ObservableObject {
 		self.title = dependency.item.title ?? ""
 		self.topic = dependency.item.topic ?? ""
 		self.members = dependency.item.members.joined(separator: ", ")
-		self.recordedDate = dependency.item.recordedDate.description
+		self.recordedDate = dependency.item.recordedDate.formattedString
 	}
 	
 	var referenceNoteUseCase: NoteManagable {
@@ -75,6 +75,10 @@ extension SelectionViewModel {
 		"\(self.language.description) \(self.category.description) 입력하세요"
 	}
 	
+	var isAbleToAdd: Bool {
+		checkConditions()
+	}
+	
 	func editToggleLabel(by condition: Bool) -> String {
 		condition ? "완료" : "수정"
 	}
@@ -83,18 +87,85 @@ extension SelectionViewModel {
 		condition ? .clear : .gray
 	}
 	
-	func setEmptyTitleToDefault(by newValue: Bool) {
-		if !newValue, self.title.isEmpty {
-			self.title = self.recordedDate
-		} 
-	}
-	
 }
 
-extension SelectionViewModel {
+extension SelectionViewModel: LanguageCheckable {
 	
-	var list: [Note] { // TODO: DataBinding 형태로 변경 필요
-		self.dependency.noteUseCase.list()
+	func addNote() {
+		let newItem: Note = .init(
+			id: .init(),
+			original: language == .original ? self.inputText : "",
+			translation: language == .translation ? self.inputText : "",
+			category: category == .vocabulary ? .vocabulary : .sentence,
+			references: [self.dependency.item.id],
+			createdDate: Date()
+		)
+		self.dependency.noteUseCase.add(item: newItem) { error in
+			guard error == nil else {
+				print("add Note 실패") // TODO: Error 처리 필요
+				return
+			}
+			self.inputText = ""
+		}
+	}
+	
+	private func checkConditions() -> Bool {
+		guard !inputText.isEmpty else { return false }
+		guard checkLanguage() else { return false }
+		guard checkCategory() else { return false }
+		return true
+	}
+	
+	private func checkLanguage() -> Bool {
+		switch self.language {
+		case .original:		return !containsKorean(by: self.inputText)
+		case .translation:	return !containsEnglish(by: self.inputText)
+		}
+	}
+	
+	private func checkCategory() -> Bool {
+		switch self.category {
+		case .sentense:		return hasTwoMoreSpace(by: self.inputText)
+		case .vocabulary:	return !hasTwoMoreSpace(by: self.inputText)
+		}
+	}
+	
+	func updateEditing(by newCondition: Bool) {
+		if !newCondition {
+			self.updateInfo()
+		}
+	}
+	
+	private func updateInfo() {
+		let conversation = self.dependency.item
+		let beforeInfo = (
+			title: conversation.title,
+			topic: conversation.topic,
+			memebers: conversation.members
+		)
+		let afterInfo = (
+			title: self.title.isEmpty ? conversation.recordedDate.formattedString : title,
+			topic: self.topic,
+			members: self.members
+							.components(separatedBy: [",", " "] )
+							.filter({ !$0.isEmpty })
+		)
+		if beforeInfo != afterInfo {
+			let newItem: Conversation = .init(
+				id: conversation.id,
+				title: afterInfo.title,
+				topic: afterInfo.topic,
+				members: afterInfo.members,
+				recordFilePath: conversation.recordFilePath,
+				recordedDate: conversation.recordedDate,
+				pins: conversation.pins)
+			self.dependency.conversationUseCase.edit(after: newItem) { error in
+				guard error == nil else {
+					print(error?.localizedDescription) // TODO: Error 처리 필요
+					return
+				}
+			}
+		}
 	}
 
 }

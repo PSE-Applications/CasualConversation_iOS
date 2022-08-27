@@ -9,7 +9,8 @@
 import Common
 import Domain
 
-import SwiftUI
+import Foundation
+import Combine
 
 final class ConversationListViewModel: Dependency, ObservableObject {
 	
@@ -19,21 +20,29 @@ final class ConversationListViewModel: Dependency, ObservableObject {
 	
 	let dependency: Dependency
 	
+	@Published var list: [Conversation] = []
+	
+	private var cancellables: Set<AnyCancellable> = []
+	
 	init(dependency: Dependency) {
 		self.dependency = dependency
+			
+		self.dependency.useCase.dataSourcePublisher
+			.assign(to: &self.$list)
 	}
 	
 }
 
 extension ConversationListViewModel {
 	
-	var list: [Conversation] { // TODO: DataBinding 형태로 변경 필요
-		self.dependency.useCase.list
-	}
-	
-	func remove(at index: Int) {
-		self.dependency.useCase.delete(list[index]) { error in
-			// TODO: 삭제 프로세스 고민 필요
+	func removeRows(at offsets: IndexSet) {
+		for offset in offsets.sorted(by: >) {
+			self.dependency.useCase.delete(list[offset]) { error in
+				guard error == nil else {
+					print(error?.localizedDescription ?? "\(#function)")
+					return
+				}
+			}
 		}
 	}
 	

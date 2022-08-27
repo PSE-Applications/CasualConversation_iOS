@@ -22,9 +22,6 @@ struct NoteDetailView: View {
 			}
 			.padding()
 			.toolbar {
-				ToolbarItem(placement: .navigationBarLeading) {
-					NavigationCancelButton()
-				}
 				ToolbarItem(placement: .principal) {
 					NavigationTitleLabel()
 				}
@@ -49,25 +46,17 @@ extension NoteDetailView {
 		}
 	}
 	
-	private func NavigationCancelButton() -> some View {
-		Button {
-			presentationMode.wrappedValue.dismiss()
-		} label: {
-			Text("취소")
-				.font(.headline)
-				.foregroundColor(.logoDarkGreen)
-		}
-	}
-	
 	private func NavigationSaveButton() -> some View {
 		Button {
-			// Update
+			viewModel.updateChanges()
 			presentationMode.wrappedValue.dismiss()
 		} label: {
-			Text("완료")
+			Text("저장")
 				.font(.headline)
 				.foregroundColor(.logoDarkGreen)
 		}
+		.disabled(!viewModel.isEdited)
+		.opacity(viewModel.isEdited ? 1 : 0.3)
 	}
 	
 	@ViewBuilder
@@ -92,11 +81,6 @@ extension NoteDetailView {
 				iconName: "k.circle.fill",
 				text: $viewModel.translation
 			)
-			InputTextField(
-				title: "발음 Pronunciation",
-				iconName: "person.wave.2.fill",
-				text: $viewModel.pronunciation
-			)
 			Spacer()
 		}
 	}
@@ -113,10 +97,12 @@ extension NoteDetailView {
 				Image(systemName: iconName)
 					.foregroundColor(.logoLightBlue)
 				TextField(title,
-						  text: $viewModel.original,
+						  text: text,
 						  prompt: Text(title.components(separatedBy: " ")[0]))
 					.textFieldStyle(.roundedBorder)
-					.shadow(color: .gray, radius: 1, x: 2, y: 2)
+					.onChange(of: text.wrappedValue) { value in
+						viewModel.isEdited = true
+					}
 			}
 		}
 	}
@@ -130,12 +116,18 @@ extension NoteDetailView {
 				Text("문장 Original")
 			}
 			TextEditor(text: $viewModel.original)
+				.onChange(of: viewModel.original) { value in
+					viewModel.isEdited = true
+				}
 			HStack {
 				Image(systemName: "k.circle.fill")
 					.foregroundColor(.logoLightBlue)
 				Text("번역 Translation")
 			}
 			TextEditor(text: $viewModel.translation)
+				.onChange(of: viewModel.translation) { value in
+					viewModel.isEdited = true
+				}
 			Spacer()
 		}
 	}
@@ -168,7 +160,7 @@ extension NoteDetailViewModel {
 						id: .init(),
 						original: "Hi, I'm Marco.\nI'm glad meet you.\nI'd like to talk to you.",
 						translation: "안녕하세요, 저는 마르코입니다.\n만나서 반갑습니다.\n이야기하기를 바랬어요.",
-						category: .sentece,
+						category: .sentence,
 						references: [],
 						createdDate: Date()
 					)

@@ -17,16 +17,16 @@ struct SelectionView: View {
 	}
 	
 	@Environment(\.colorScheme) var colorScheme
+	@Environment(\.presentationMode) var mode: Binding<PresentationMode>
 	
 	@EnvironmentObject private var container: PresentationDIContainer
 	@ObservedObject var viewModel: SelectionViewModel
 	
-	@State var isEditing: Bool = false {
-		willSet {
-			viewModel.setEmptyTitleToDefault(by: newValue)
-		}
+	@State private var isEditing: Bool = false {
+		willSet { viewModel.updateEditing(by: newValue) }
 	}
-	@FocusState var focusedField: Field?
+	@State private var addAlert: Bool = false
+	@FocusState private var focusedField: Field?
 	
 	var body: some View {
 		VStack(alignment: .leading) {
@@ -36,8 +36,24 @@ struct SelectionView: View {
 			Spacer()
 			PlayTabView()
 		}
+		.navigationBarBackButtonHidden(true)
 		.toolbar {
-			ToolbarItem(placement: .navigation) {
+			ToolbarItem(placement: .navigationBarLeading) {
+				Button(
+					action: {
+						self.mode.wrappedValue.dismiss()
+						if isEditing {
+							viewModel.updateEditing(by: false)
+						}
+					}, label: {
+						HStack {
+							Image(systemName: "chevron.backward")
+							Text("Back")
+						}
+					}
+				)
+			}
+			ToolbarItem(placement: .navigationBarTrailing) {
 				EditableNavigationTitle()
 			}
 			ToolbarItemGroup(placement: .keyboard) {
@@ -51,12 +67,25 @@ struct SelectionView: View {
 				Spacer()
 				Button(
 					action: {
-						// TODO: Note 추가 동작 구현
+						if viewModel.isAbleToAdd {
+							viewModel.addNote()
+						} else {
+							addAlert.toggle()
+						}
 					}, label: {
 						Text("추가")
 					}
 				)
 			}
+		}
+		.alert("추가 실패", isPresented: $addAlert) {
+			Button("확인", role: .cancel) { }
+		} message: {
+			Text("올바른 조건으로 입력해주세요")
+		}
+		.onAppear {
+			UITextField.appearance().backgroundColor = UIColor
+				.init(colorScheme == .dark ? Color.recordShadow : Color.white)
 		}
 	}
 	
@@ -66,25 +95,23 @@ extension SelectionView {
 	
 	@ViewBuilder
 	private func EditableNavigationTitle() -> some View {
-		HStack {
-			if isEditing {
-				HStack {
-					TextField("Title",
-							  text: $viewModel.title,
-							  prompt: Text(viewModel.recordedDate)
-					)
-					.textFieldStyle(.roundedBorder)
-					.shadow(
-						color: viewModel.isEditingShadowColor(by: isEditing),
-						radius: 1, x: 1, y: 1
-					)
-					.focused($focusedField, equals: .infoTitle)
-					Spacer()
-				}
-			} else {
-				Text(viewModel.title)
-					.font(.headline)
+		if isEditing {
+			HStack {
+				TextField("Title",
+						  text: $viewModel.title,
+						  prompt: Text(viewModel.recordedDate)
+				)
+				.multilineTextAlignment(.trailing)
+				.textFieldStyle(.roundedBorder)
+				.shadow(
+					color: viewModel.isEditingShadowColor(by: isEditing),
+					radius: 1, x: 1, y: 1
+				)
+				.focused($focusedField, equals: .infoTitle)
 			}
+		} else {
+			Text(viewModel.title)
+				.font(.headline)
 		}
 	}
 	
@@ -99,7 +126,7 @@ extension SelectionView {
 						}
 					}, label: {
 						HStack {
-							Text("Information")
+							Text("Conversation Information")
 								.font(.headline)
 							Spacer()
 							if isEditing {
@@ -128,7 +155,7 @@ extension SelectionView {
 					.fontWeight(.bold)
 				TextField("Topic",
 						  text: $viewModel.topic,
-						  prompt: Text("주제를 선택하세요")
+						  prompt: Text("주제를 입력하세요")
 				)
 				.textFieldStyle(.roundedBorder)
 				.shadow(
@@ -143,7 +170,7 @@ extension SelectionView {
 					.fontWeight(.bold)
 				TextField("Member",
 						  text: $viewModel.members,
-						  prompt: Text("참여인원을 추가하세요")
+						  prompt: Text("참여인원을 추가하세요 (공백 분리)")
 				)
 				.textFieldStyle(.roundedBorder)
 				.shadow(
@@ -185,7 +212,11 @@ extension SelectionView {
 					.showClearButton($viewModel.inputText)
 					.focused($focusedField, equals: .inputNote)
 					Button {
-						// TODO: Note 추가 동작 구현
+						if viewModel.isAbleToAdd {
+							viewModel.addNote()
+						} else {
+							addAlert.toggle()
+						}
 					} label: {
 						Image(systemName: "plus.circle.fill")
 					}
