@@ -143,6 +143,10 @@ struct PlayTabView_Previews: PreviewProvider {
 	static var previews: some View {
 		container.PlayTabView()
 			.previewLayout(.sizeThatFits)
+			.preferredColorScheme(.light)
+		container.PlayTabView()
+			.previewLayout(.sizeThatFits)
+			.preferredColorScheme(.dark)
     }
 	
 }

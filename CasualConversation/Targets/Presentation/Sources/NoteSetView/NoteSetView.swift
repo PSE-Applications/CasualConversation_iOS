@@ -32,7 +32,9 @@ struct NoteSetView: View {
 			.listStyle(.plain)
 		}
 		.sheet(item: $selectedRowItem) { item in
-			container.NoteDetailView(selected: item)
+			HalfSheet(isFlexible: item.category == .sentence) {
+				container.NoteDetailView(selected: item)
+			}
 		}
 	}
 	
@@ -54,6 +56,10 @@ struct NoteSetView_Previews: PreviewProvider {
 	static var previews: some View {
 		container.NoteSetView()
 			.environmentObject(container)
+			.preferredColorScheme(.light)
+		container.NoteSetView()
+			.environmentObject(container)
+			.preferredColorScheme(.dark)
 	}
 
 }
