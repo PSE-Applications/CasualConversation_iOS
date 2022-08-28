@@ -134,10 +134,7 @@ extension NoteDetailView {
 	
 }
 
-// MARK: - Preview
-
 #if DEBUG
-
 extension NoteDetailViewModel {
 	
 	static var previewViewModels: [NoteDetailViewModel] {
@@ -171,8 +168,7 @@ extension NoteDetailViewModel {
 	
 }
 
-#endif
-
+// MARK: - Preview
 struct NoteDetail_Previews: PreviewProvider {
 	
 	static let viewModels = NoteDetailViewModel.previewViewModels
@@ -192,3 +188,4 @@ struct NoteDetail_Previews: PreviewProvider {
 		.preferredColorScheme(.dark)
 	}
 }
+#endif

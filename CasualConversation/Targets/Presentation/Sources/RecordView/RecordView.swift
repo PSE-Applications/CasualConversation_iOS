@@ -170,7 +170,7 @@ extension RecordView {
 	
 }
 
-// MARK: - Preview
+#if DEBUG // MARK: - Preview
 struct RecordView_Previews: PreviewProvider {
 	
 	static var container: PresentationDIContainer { .preview }
@@ -180,3 +180,4 @@ struct RecordView_Previews: PreviewProvider {
 	}
 
 }
+#endif

@@ -70,7 +70,7 @@ extension ConversationListRow {
 	
 }
 
-// MARK: - Preview
+#if DEBUG // MARK: - Preview
 struct ConversationListRow_Previews: PreviewProvider {
 
 	static let viewModel = ConversationListRowViewModel.previewViewModel
@@ -85,3 +85,4 @@ struct ConversationListRow_Previews: PreviewProvider {
 	}
 	
 }
+#endif

@@ -23,8 +23,6 @@ public struct ContentView: View {
 	
 }
 
-// MARK: - Preview
-
 #if DEBUG
 import Common
 import Domain
@@ -232,8 +230,7 @@ extension PresentationConfiguarations {
 	
 }
 
-#endif
-
+// MARK: - Preview
 struct ContentView_Previews: PreviewProvider {
 	
 	static var container: PresentationDIContainer { .preview }
@@ -243,3 +240,4 @@ struct ContentView_Previews: PreviewProvider {
 			.environmentObject(container)
     }
 }
+#endif

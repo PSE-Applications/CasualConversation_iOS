@@ -135,7 +135,7 @@ extension PlayTabView {
 	
 }
 
-// MARK: - Preview
+#if DEBUG // MARK: - Preview
 struct PlayTabView_Previews: PreviewProvider {
     
 	static var container: PresentationDIContainer { .preview }
@@ -150,3 +150,4 @@ struct PlayTabView_Previews: PreviewProvider {
     }
 	
 }
+#endif

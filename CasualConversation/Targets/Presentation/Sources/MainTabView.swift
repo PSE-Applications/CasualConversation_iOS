@@ -105,7 +105,7 @@ extension MainTabView {
 	
 }
 
-// MARK: - Preview
+#if DEBUG // MARK: - Preview
 struct MainTabView_Previews: PreviewProvider {
 	
 	static var container: PresentationDIContainer { .preview }
@@ -120,3 +120,4 @@ struct MainTabView_Previews: PreviewProvider {
 	}
 	
 }
+#endif

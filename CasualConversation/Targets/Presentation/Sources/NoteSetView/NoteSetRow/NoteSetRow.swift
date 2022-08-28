@@ -54,9 +54,7 @@ extension NoteSetRow {
 	
 }
 
-// MARK: - Preview
 #if DEBUG
-
 extension NoteSetRowViewModel {
 	
 	static var previewViewModels: [NoteSetRowViewModel] {
@@ -99,8 +97,7 @@ extension NoteSetRowViewModel {
 	
 }
 
-#endif
-
+// MARK: - Preview
 struct NoteSetRow_Previews: PreviewProvider {
 	
 	static let viewModels = NoteSetRowViewModel.previewViewModels
@@ -122,3 +119,4 @@ struct NoteSetRow_Previews: PreviewProvider {
 	}
 	
 }
+#endif

@@ -236,7 +236,7 @@ extension SelectionView {
 	
 }
 
-// MARK: - Preview
+#if DEBUG // MARK: - Preview
 struct SelectionView_Previews: PreviewProvider {
 	
 	static var container: PresentationDIContainer { .preview }
@@ -251,3 +251,4 @@ struct SelectionView_Previews: PreviewProvider {
 	}
 
 }
+#endif

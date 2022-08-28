@@ -27,7 +27,7 @@ struct ConversationListView: View {
 	
 }
 
-// MARK: - Preview
+#if DEBUG // MARK: - Preview
 struct ConversationListView_Previews: PreviewProvider {
 	
 	static var container: PresentationDIContainer { .preview }
@@ -42,3 +42,4 @@ struct ConversationListView_Previews: PreviewProvider {
 	}
 
 }
+#endif

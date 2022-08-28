@@ -41,7 +41,7 @@ struct NoteSetView: View {
 	
 }
 
-// MARK: - Preview
+#if DEBUG // MARK: - Preview
 struct NoteSetView_Previews: PreviewProvider {
 	
 	static var container: PresentationDIContainer { .preview }
@@ -56,3 +56,4 @@ struct NoteSetView_Previews: PreviewProvider {
 	}
 
 }
+#endif
