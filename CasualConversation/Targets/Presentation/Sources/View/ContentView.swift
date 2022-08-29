@@ -19,6 +19,7 @@ public struct ContentView: View {
 	public var body: some View {
 		container.MainTabView()
 			.environmentObject(container.configurations)
+			.accentColor(.ccAccentColor)
     }
 	
 }

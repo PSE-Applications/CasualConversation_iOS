@@ -83,10 +83,6 @@ struct SelectionView: View {
 		} message: {
 			Text("올바른 조건으로 입력해주세요")
 		}
-		.onAppear {
-			UITextField.appearance().backgroundColor = UIColor
-				.init(colorScheme == .dark ? Color.recordShadow : Color.white)
-		}
 	}
 	
 }
@@ -103,10 +99,6 @@ extension SelectionView {
 				)
 				.multilineTextAlignment(.trailing)
 				.textFieldStyle(.roundedBorder)
-				.shadow(
-					color: viewModel.isEditingShadowColor(by: isEditing),
-					radius: 1, x: 1, y: 1
-				)
 				.focused($focusedField, equals: .infoTitle)
 			}
 		} else {
@@ -158,10 +150,6 @@ extension SelectionView {
 						  prompt: Text("주제를 입력하세요")
 				)
 				.textFieldStyle(.roundedBorder)
-				.shadow(
-					color: viewModel.isEditingShadowColor(by: isEditing),
-					radius: 1, x: 1, y: 1
-				)
 			}
 			.focused($focusedField, equals: .infoTopic)
 			HStack {
@@ -173,10 +161,6 @@ extension SelectionView {
 						  prompt: Text("참여인원을 추가하세요 (공백 분리)")
 				)
 				.textFieldStyle(.roundedBorder)
-				.shadow(
-					color: viewModel.isEditingShadowColor(by: isEditing),
-					radius: 1, x: 1, y: 1
-				)
 			}
 			.focused($focusedField, equals: .infoMember)
 		}

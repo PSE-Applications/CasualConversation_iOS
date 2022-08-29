@@ -34,7 +34,6 @@ struct MainTabView: View {
 				container.RecordView()
 			}
 		}
-		.accentColor(.logoDarkGreen)
     }
 
 }
