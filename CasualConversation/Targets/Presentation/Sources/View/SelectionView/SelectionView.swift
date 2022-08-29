@@ -37,6 +37,7 @@ struct SelectionView: View {
 			PlayTabView()
 		}
 		.navigationBarBackButtonHidden(true)
+		.navigationBarTitleDisplayMode(.inline)
 		.toolbar {
 			ToolbarItem(placement: .navigationBarLeading) {
 				Button(

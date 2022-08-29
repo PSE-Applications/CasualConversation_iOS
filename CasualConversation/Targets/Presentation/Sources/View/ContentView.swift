@@ -17,10 +17,18 @@ public struct ContentView: View {
 	}
 	
 	public var body: some View {
-		container.MainTabView()
+		MainTabView()
 			.environmentObject(container.configurations)
 			.accentColor(.ccAccentColor)
     }
+	
+}
+
+extension ContentView {
+	
+	private func MainTabView() -> some View {
+		container.MainTabView()
+	}
 	
 }
 

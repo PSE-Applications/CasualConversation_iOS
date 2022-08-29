@@ -18,13 +18,11 @@ struct MainTabView: View {
 	var body: some View {
 		NavigationView {
 			VStack {
-				Spacer()
 				MainContent()
-				Spacer()
 				MainTabView()
 			}
 			.navigationTitle(viewModel.title(by: selectedIndex))
-			.navigationBarTitleDisplayMode(.inline)
+			.navigationBarTitleDisplayMode(.large)
 			.toolbar {
 				ToolbarItem(placement: .navigationBarTrailing) {
 					SettingToolbarLink()
