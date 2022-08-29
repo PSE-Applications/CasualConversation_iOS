@@ -25,6 +25,7 @@ struct PlayTabView: View {
 			)
 			PlayControl()
 		}
+		.background(Color.ccGroupBgColor)
     }
 	
 }

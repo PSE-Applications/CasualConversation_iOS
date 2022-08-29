@@ -19,7 +19,7 @@ struct MainTabView: View {
 		NavigationView {
 			VStack {
 				MainContent()
-				MainTabView()
+				MainTab()
 			}
 			.navigationTitle(viewModel.title(by: selectedIndex))
 			.navigationBarTitleDisplayMode(.large)
@@ -54,14 +54,14 @@ extension MainTabView {
 		}
 	}
 	
-	private func MainTabView() -> some View {
+	private func MainTab() -> some View {
 		HStack(alignment: .center) {
 			CCTabItem(tab: .conversations)
 			RecordButton()
 			CCTabItem(tab: .notes)
 		}
 		.padding()
-		.background(Color(.systemGroupedBackground))
+		.background(Color.ccGroupBgColor)
 	}
 	
 	private func RecordButton() -> some View {

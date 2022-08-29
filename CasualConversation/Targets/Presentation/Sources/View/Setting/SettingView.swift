@@ -34,7 +34,6 @@ struct SettingView: View {
 		}
 		.navigationTitle("Setting")
 		.navigationBarTitleDisplayMode(.inline)
-		.background(self.colorScheme == .dark ? .recordBackground : Color.clear)
     }
 	
 }
