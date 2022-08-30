@@ -12,7 +12,7 @@ extension Color {
 	
 	static let ccTintColor = Self("CCTintColor")
 	static let ccAccentColor = Self("CCAccentColor")
-	static let ccBgColor = Self("CCBackGroundColor")
+	static let ccBgColor = Self("CCBackgroundColor")
 	static let ccGroupBgColor = Self("CCGroupBackgroundColor")
 	
 	static let logoLightRed = Color(hex: "#E30111")
