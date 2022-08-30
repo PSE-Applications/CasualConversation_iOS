@@ -17,20 +17,24 @@ struct MainTabView: View {
 
 	var body: some View {
 		NavigationView {
-			VStack {
-				MainContent()
-				MainTab()
-			}
-			.navigationTitle(viewModel.title(by: selectedIndex))
-			.navigationBarTitleDisplayMode(.large)
-			.toolbar {
-				ToolbarItem(placement: .navigationBarTrailing) {
-					SettingToolbarLink()
+			MainContent()
+				.background(Color.ccBgColor)
+				.overlay {
+					VStack {
+						Spacer()
+						MainTab()
+					}
 				}
-			}
-			.fullScreenCover(isPresented: $isPresentedRecordView) {
-				container.RecordView()
-			}
+				.navigationTitle(viewModel.title(by: selectedIndex))
+				.navigationBarTitleDisplayMode(.large)
+				.toolbar {
+					ToolbarItem(placement: .navigationBarTrailing) {
+						SettingToolbarLink()
+					}
+				}
+				.fullScreenCover(isPresented: $isPresentedRecordView) {
+					container.RecordView()
+				}
 		}
     }
 

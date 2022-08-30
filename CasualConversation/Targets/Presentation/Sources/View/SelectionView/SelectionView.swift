@@ -29,13 +29,18 @@ struct SelectionView: View {
 	@FocusState private var focusedField: Field?
 	
 	var body: some View {
-		VStack(alignment: .leading) {
+		VStack {
 			EditableInfoSection()
 			NoteInput()
 			SelectedNoteSet()
-			Spacer()
-			PlayTabView()
 		}
+		.overlay {
+			VStack {
+				Spacer()
+				PlayTabView()
+			}
+		}
+		.background(Color.ccBgColor)
 		.navigationBarBackButtonHidden(true)
 		.navigationBarTitleDisplayMode(.inline)
 		.toolbar {
