@@ -11,10 +11,8 @@ import SwiftUI
 final class AppAppearance {
 	
 	static func setup() {
-		UISegmentedControl.appearance().selectedSegmentTintColor = UIColor
-			.init(.ccTintColor)
-		UITextField.appearance().backgroundColor = UIColor
-			.init(.ccBgColor)
+		UISegmentedControl.appearance().selectedSegmentTintColor = UIColor(.ccTintColor)
+		UITextField.appearance().backgroundColor = UIColor(.ccBgColor)
 	}
 	
 }

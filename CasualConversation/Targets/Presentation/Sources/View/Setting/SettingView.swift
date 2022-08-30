@@ -1,6 +1,6 @@
 //
 //  SettingView.swift
-//  CasualConversation
+//  Presentation
 //
 //  Created by Yongwoo Marco on 2022/08/09.
 //  Copyright © 2022 pseapplications. All rights reserved.

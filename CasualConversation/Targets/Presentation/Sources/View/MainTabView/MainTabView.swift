@@ -82,7 +82,7 @@ extension MainTabView {
 						.font(.system(size: 44))
 						.foregroundColor(.white)
 				}
-				.shadow(color: .gray, radius: 1, x: 2, y: 2)
+				.shadow(color: .black, radius: 1, x: 1, y: 1)
 				Spacer()
 			}
 		)

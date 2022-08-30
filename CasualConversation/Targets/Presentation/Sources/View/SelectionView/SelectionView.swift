@@ -1,6 +1,6 @@
 //
 //  SelectionView.swift
-//  CasualConversation
+//  Presentation
 //
 //  Created by Yongwoo Marco on 2022/06/23.
 //
@@ -208,7 +208,8 @@ extension SelectionView {
 							addAlert.toggle()
 						}
 					} label: {
-						Image(systemName: "plus.circle.fill")
+						Image(systemName: "plus")
+							.font(.headline)
 					}
 				}
 			}
