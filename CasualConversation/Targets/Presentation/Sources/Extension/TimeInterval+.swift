@@ -12,13 +12,32 @@ extension TimeInterval {
 	
 	static let formmatter = DateComponentsFormatter()
 	
-	var toTimeString: String {
-		Self.formmatter.allowedUnits = [.hour, .minute, .second]
-		if self.isZero {
-			return "00:00:00"
-		} else {
-			return Self.formmatter.string(from: self) ?? "00:00:00"
-		}
+	enum TimeConstant {
+	  static let secsPerMin = 60
+	  static let secsPerHour = TimeConstant.secsPerMin * 60
+	}
+	
+	var formattedToDisplayTime: String {
+	  var seconds = Int(ceil(self))
+	  var hours = 0
+	  var mins = 0
+
+	  if seconds > TimeConstant.secsPerHour {
+		hours = seconds / TimeConstant.secsPerHour
+		seconds -= hours * TimeConstant.secsPerHour
+	  }
+
+	  if seconds > TimeConstant.secsPerMin {
+		mins = seconds / TimeConstant.secsPerMin
+		seconds -= mins * TimeConstant.secsPerMin
+	  }
+
+	  var formattedString = ""
+	  if hours > 0 {
+		formattedString = "\(String(format: "%02d", hours)):"
+	  }
+	  formattedString += "\(String(format: "%02d", mins)):\(String(format: "%02d", seconds))"
+	  return formattedString
 	}
 	
 }
