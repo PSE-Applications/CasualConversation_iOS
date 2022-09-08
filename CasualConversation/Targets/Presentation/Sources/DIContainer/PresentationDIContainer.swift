@@ -136,9 +136,10 @@ extension PresentationDIContainer {
 		return .init(viewModel: viewModel)
 	}
 	
-	func PlayTabView() -> PlayTabView {
+	func PlayTabView(with conversation: Conversation) -> PlayTabView {
 		let viewModel: PlayTabViewModel = .init(dependency: .init(
-				audioPlayService: self.audioPlayService
+				item: conversation,
+				audioService: self.audioPlayService
 			)
 		)
 		return .init(viewModel: viewModel)

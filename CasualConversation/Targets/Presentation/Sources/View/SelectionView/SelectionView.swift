@@ -34,7 +34,7 @@ struct SelectionView: View {
 			NoteInput()
 			SelectedNoteSet()
 			Spacer()
-			PlayTabView()
+			container.PlayTabView(with: viewModel.referenceItem)
 		}
 		.navigationBarBackButtonHidden(true)
 		.toolbar {
@@ -228,10 +228,6 @@ extension SelectionView {
 	
 	private func SelectedNoteSet() -> some View {
 		container.NoteSetView(by: viewModel.referenceNoteUseCase)
-	}
-	
-	private func PlayTabView() -> some View {
-		container.PlayTabView()
 	}
 	
 }
