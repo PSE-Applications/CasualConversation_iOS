@@ -11,19 +11,19 @@ import Common
 import AVFAudio
 
 public protocol CCPlayer {
-	var status: AudioStatus { get }
-	var currentPlayingTime: TimeInterval? { get }
-	func setupPlaying(from filePath: URL, completion: (CCError?) -> Void)
-	func startPlaying(completion: (CCError?) -> Void)
+	var isPlayingPublisher: Published<Bool>.Publisher { get }
+	var durationPublisher: Published<TimeInterval>.Publisher { get }
+	var currentTime: TimeInterval { get }
+	func setupPlaying(filePath: URL, completion: (CCError?) -> Void)
+	func startPlaying()
 	func pausePlaying()
-	func stopPlaying()
 	func finishPlaying()
+	func seek(to time: Double)
+	func changePlayingRate(to value: Float)
 }
 
 public final class AudioPlayService: NSObject, Dependency {
 	
-	@Published public var status: AudioStatus = .stopped
-		
 	public struct Dependency {
 		let dataController: RecordDataControllerProtocol
 		
@@ -34,13 +34,22 @@ public final class AudioPlayService: NSObject, Dependency {
 	
 	public var dependency: Dependency
 	
-	private var audioPlayer: AudioPlayerProtocol?
+	private var audioPlayer: AVAudioPlayer?
+	
+	@Published var isPlaying: Bool = false
+	@Published var duration: TimeInterval = .zero
 	
 	public init(dependency: Dependency) {
 		self.dependency = dependency
 		
 		super.init()
 		setupNotificationCenter()
+		
+		do {
+			try AVAudioSession.sharedInstance().setCategory(.playback)
+		} catch {
+			print(error)
+		}
 	}
 	
 	deinit {
@@ -48,14 +57,16 @@ public final class AudioPlayService: NSObject, Dependency {
 	}
 	
 	private func setupNotificationCenter() {
-		NotificationCenter.default.addObserver(self,
-											   selector: #selector(handleRouteChange),
-											   name: AVAudioSession.routeChangeNotification,
-											   object: nil)
-		NotificationCenter.default.addObserver(self,
-											   selector: #selector(handleInteruption),
-											   name: AVAudioSession.interruptionNotification,
-											   object: nil)
+		NotificationCenter.default
+			.addObserver(self,
+						 selector: #selector(handleRouteChange),
+						 name: AVAudioSession.routeChangeNotification,
+						 object: nil)
+		NotificationCenter.default
+			.addObserver(self,
+						 selector: #selector(handleInteruption),
+						 name: AVAudioSession.interruptionNotification,
+						 object: nil)
 	}
 	
 	@objc func handleRouteChange(notification: Notification) {
@@ -79,9 +90,8 @@ public final class AudioPlayService: NSObject, Dependency {
 		guard let previousRoute = info[AVAudioSessionRouteChangeReasonKey] as? AVAudioSessionRouteDescription,
 			  let previousOutput = previousRoute.outputs.first else { return }
 		if previousOutput.portType == .headphones {
-			if status == .playing {
+			if isPlaying {
 				pausePlaying()
-				status = .paused
 			}
 		}
 	}
@@ -92,10 +102,9 @@ public final class AudioPlayService: NSObject, Dependency {
 		guard let type = AVAudioSession.InterruptionType(rawValue: rawValue) else { return }
 		switch type {
 		case .began:
-			if status == .playing {
+			if isPlaying {
 				pausePlaying()
 			}
-			status = .paused
 		case .ended:
 			guard let rawValue = info[AVAudioSessionInterruptionOptionKey] as? UInt else { return }
 			let options = AVAudioSession.InterruptionOptions(rawValue: rawValue)
@@ -107,65 +116,90 @@ public final class AudioPlayService: NSObject, Dependency {
 		}
 	}
 	
-}
-
-extension AudioPlayService: AVAudioPlayerDelegate {
-	
-	public func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-		status = .stopped
+	private func makeAudioPlayer(by filePath: URL) -> AVAudioPlayer? {
+		guard let data = try? Data(contentsOf: filePath) else {
+			print("\(#function) \(CCError.audioServiceFailed(reason: .fileURLPathInvalidated))")
+			return nil
+		}
+		do {
+			return try AVAudioPlayer(data: data, fileTypeHint: "mp3") // Test FileType 수정필요
+		} catch {
+			print("\(#function) \(CCError.audioServiceFailed(reason: .fileBindingFailure))")
+			return nil
+		}
 	}
 	
 }
 
 extension AudioPlayService: CCPlayer {
-
-	public var currentPlayingTime: TimeInterval? {
-		self.audioPlayer?.currentTime
-	}
 	
-	public func setupPlaying(from filePath: URL, completion: (CCError?) -> Void) {
-		guard let newplayer = dependency.dataController.makeAudioPlayer(from: filePath) else {
-			completion(.audioServiceFailed(reason: .bindingFailure))
+	public var isPlayingPublisher: Published<Bool>.Publisher { $isPlaying }
+	public var durationPublisher: Published<TimeInterval>.Publisher { $duration }
+	
+	public var currentTime: TimeInterval { self.audioPlayer?.currentTime ?? .zero }
+	
+	public func setupPlaying(filePath: URL, completion: (CCError?) -> Void) {
+		guard let audioPlayer = makeAudioPlayer(by: filePath) else {
+			completion(.audioServiceFailed(reason: .fileBindingFailure))
 			return
 		}
-		self.audioPlayer = newplayer
-		self.audioPlayer?.delegate = self
-		guard let isPreparedToPlay = self.audioPlayer?.prepareToPlay() else {
-			completion(.audioServiceFailed(reason: .bindingFailure))
-			return
-		}
-		guard isPreparedToPlay else {
+		audioPlayer.enableRate = true
+		audioPlayer.numberOfLoops = 0
+		audioPlayer.volume = 1.0
+		audioPlayer.delegate = self
+		self.duration = audioPlayer.duration
+		guard audioPlayer.prepareToPlay() else {
 			completion(.audioServiceFailed(reason: .preparedFailure))
 			return
 		}
+		self.audioPlayer = audioPlayer
 		completion(nil)
 	}
 	
-	public func startPlaying(completion: (CCError?) -> Void) {
-		guard let isPlaying = self.audioPlayer?.play() else {
-			completion(.audioServiceFailed(reason: .bindingFailure))
-			return
-		}
-		status = isPlaying ? .playing : .stopped
-		guard isPlaying else {
-			completion(.audioServiceFailed(reason: .preparedFailure))
-			return
-		}
-		completion(nil)
+	public func startPlaying() {
+		audioPlayer?.play()
+		self.isPlaying = true
 	}
 	
 	public func pausePlaying() {
 		self.audioPlayer?.pause()
-		status = .paused
-	}
-	
-	public func stopPlaying() {
-		self.audioPlayer?.stop()
-		status = .stopped
+		self.isPlaying = false
 	}
 	
 	public func finishPlaying() {
+		if isPlaying {
+			self.audioPlayer?.stop()
+			self.isPlaying = false
+		}
 		self.audioPlayer = nil
+		self.duration = .zero
+	}
+	
+	public func seek(to time: Double) {
+		var seekPosition = time
+		
+		if seekPosition < 0 {
+			seekPosition = 0
+		} else if seekPosition > duration {
+			seekPosition = duration
+		}
+		
+		if isPlaying { self.audioPlayer?.stop() }
+		self.audioPlayer?.currentTime = seekPosition
+		if isPlaying { self.audioPlayer?.play() }
+	}
+	
+	public func changePlayingRate(to value: Float) {
+		self.audioPlayer?.rate = value
+	}
+	
+}
+
+extension AudioPlayService: AVAudioPlayerDelegate {
+	
+	public func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+		self.audioPlayer?.stop()
+		self.isPlaying = false
 	}
 	
 }
