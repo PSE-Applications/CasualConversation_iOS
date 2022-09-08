@@ -42,7 +42,7 @@ extension RecordDataController: RecordDataControllerProtocol {
 			AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue
 		]
 		let currentDate = Date().formatted(.dateTime)
-		let newFilePath = dependency.repository.directoryPath.appendingPathComponent(currentDate.description)
+		let newFilePath = dependency.repository.baseDirectory.appendingPathComponent(currentDate.description)
 		let recorder = try? AVAudioRecorder(url: newFilePath, settings: recordSettings)
 		return recorder
 	}

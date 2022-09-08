@@ -8,12 +8,13 @@
 import Foundation
 
 public protocol FileManagerRepositoryProtocol {
-	var directoryPath: URL { get }
+	var baseDirectory: URL { get }
+	func contents(atPath: String) -> Data?
 }
 
 public struct FileManagerRepository {
 	
-	private var baseDirectory = FileManager.default.temporaryDirectory // TODO: 저장위치 선정 필요함 (임시 선정 - temporaryDirectory)
+	private var fileManager = FileManager.default
 	
 	public init() { }
 	
@@ -21,8 +22,12 @@ public struct FileManagerRepository {
 
 extension FileManagerRepository: FileManagerRepositoryProtocol {
 	
-	public var directoryPath: URL {
-		baseDirectory
+	public var baseDirectory: URL {
+		fileManager.temporaryDirectory
+	}
+	
+	public func contents(atPath: String) -> Data? {
+		return fileManager.contents(atPath: atPath)
 	}
 	
 }
