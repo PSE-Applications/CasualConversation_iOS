@@ -10,5 +10,5 @@ import Foundation.NSURL
 
 public protocol RecordDataControllerProtocol {
 	func makeAudioRecorder() -> AudioRecorderProtocol?
-	func makeAudioPlayer(from filePath: URL) -> AudioPlayerProtocol?
+	func requestRecordData(from filePath: String) -> Data?
 }

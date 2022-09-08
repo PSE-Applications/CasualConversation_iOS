@@ -12,7 +12,6 @@ import Domain
 import AVFAudio
 
 extension AVAudioRecorder: AudioRecorderProtocol { }
-extension AVAudioPlayer: AudioPlayerProtocol { }
 
 public struct RecordDataController: Dependency {
 	
@@ -47,11 +46,12 @@ extension RecordDataController: RecordDataControllerProtocol {
 		return recorder
 	}
 	
-	public func makeAudioPlayer(from filePath: URL) -> AudioPlayerProtocol? {
-		guard let player = try? AVAudioPlayer(contentsOf: filePath) else {
+	public func requestRecordData(from filePath: String) -> Data? {
+		guard let audioData = dependency.repository.contents(atPath: filePath)  else {
+			print("\(#function) 불러오기 실패")
 			return nil
 		}
-		return player
+		return audioData
 	}
 	
 }

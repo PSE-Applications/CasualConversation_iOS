@@ -48,11 +48,8 @@ struct DebugRecordRepository: RecordDataControllerProtocol {
 		return recorder
 	}
 	
-	func makeAudioPlayer(from filePath: URL) -> AudioPlayerProtocol? {
-		guard let player = try? AVAudioPlayer(contentsOf: filePath) else {
-			return nil
-		}
-		return player
+	func requestRecordData(from filePath: String) -> Data? {
+		return nil
 	}
 	
 }
