@@ -84,7 +84,7 @@ extension PresentationDIContainer {
 	func RecordView() -> RecordView {
 		let viewModel: RecordViewModel = .init(dependency: .init(
 				useCase: self.casualConversationUseCase,
-				audioRecordService: self.audioRecordService
+				audioService: self.audioRecordService
 			)
 		)
 		return .init(viewModel: viewModel)
