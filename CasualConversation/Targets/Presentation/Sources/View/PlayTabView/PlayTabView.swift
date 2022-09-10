@@ -44,7 +44,9 @@ extension PlayTabView {
 			value: $viewModel.currentTime,
 			in: .zero...viewModel.duration,
 			onEditingChanged: { isEditing in
-				if !isEditing {
+				if isEditing {
+					viewModel.editingSliderPointer()
+				} else {
 					viewModel.editedSliderPointer()
 				}
 			}

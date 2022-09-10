@@ -76,6 +76,7 @@ final class PlayTabViewModel: Dependency, ObservableObject {
 	}
 	
 	private func changedCurrentTime() {
+		print(currentTime)
 		if !self.isPlaying,
 			self.currentTime == .zero,
 			self.progressTimer != nil
@@ -83,6 +84,16 @@ final class PlayTabViewModel: Dependency, ObservableObject {
 			self.progressTimer?.invalidate()
 		}
 		self.nextPin = dependency.item.pins.first(where: { currentTime < $0 })
+	}
+	
+	private func startTrakingForDisplay() {
+		progressTimer = Timer.scheduledTimer(
+			timeInterval: 0.1,
+			target: self,
+			selector: #selector(updateRealTimeValues),
+			userInfo: nil,
+			repeats: true
+		)
 	}
 	
 }
@@ -121,13 +132,7 @@ extension PlayTabViewModel {
 	
 	func startPlaying() {
 		self.dependency.audioService.startPlaying()
-		progressTimer = Timer.scheduledTimer(
-			timeInterval: 0.1,
-			target: self,
-			selector: #selector(updateRealTimeValues),
-			userInfo: nil,
-			repeats: true
-		)
+		self.startTrakingForDisplay()
 	}
 	
 	@objc func updateRealTimeValues() {
@@ -136,6 +141,7 @@ extension PlayTabViewModel {
 	
 	func pausePlaying() {
 		self.dependency.audioService.pausePlaying()
+		self.progressTimer?.invalidate()
 	}
 	
 	func skip(_ direction: Direction) {
@@ -147,16 +153,21 @@ extension PlayTabViewModel {
 			timeToSeek = currentTime - skipSeconds
 		case .next:
 			guard let nextTimeToSeek = nextPin else {
-				print("다음 핀 없음")
 				return
 			}
 			timeToSeek = nextTimeToSeek
 		}
+		self.currentTime = timeToSeek
 		self.dependency.audioService.seek(to: timeToSeek)
+	}
+	
+	func editingSliderPointer() {
+		self.progressTimer?.invalidate()
 	}
 	
 	func editedSliderPointer() {
 		self.dependency.audioService.seek(to: currentTime)
+		startTrakingForDisplay()
 	}
 	
 	func finishPlaying() {
