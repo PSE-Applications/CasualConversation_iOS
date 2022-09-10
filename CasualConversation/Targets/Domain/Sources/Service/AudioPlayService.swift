@@ -47,8 +47,9 @@ public final class AudioPlayService: NSObject, Dependency {
 		
 		do {
 			try AVAudioSession.sharedInstance().setCategory(.playback)
+			try AVAudioSession.sharedInstance().setActive(true)
 		} catch {
-			print(error)
+			print("\(Self.self) \(#function) - setCategory Failure")
 		}
 	}
 	
@@ -117,12 +118,12 @@ public final class AudioPlayService: NSObject, Dependency {
 	}
 	
 	private func makeAudioPlayer(by filePath: URL) -> AVAudioPlayer? {
-		guard let data = try? Data(contentsOf: filePath) else {
+		guard let data = dependency.dataController.requestRecordData(from: filePath) else {
 			print("\(#function) \(CCError.audioServiceFailed(reason: .fileURLPathInvalidated))")
 			return nil
 		}
 		do {
-			return try AVAudioPlayer(data: data, fileTypeHint: "mp3") // Test FileType 수정필요
+			return try AVAudioPlayer(data: data) // Test FileType 수정필요
 		} catch {
 			print("\(#function) \(CCError.audioServiceFailed(reason: .fileBindingFailure))")
 			return nil

@@ -34,10 +34,7 @@ public final class ConversationUseCase: Dependency, ConversationManagable {
 	
 	public let dependency: Dependency
 	
-//	@Published private var dataSource: [Conversation] = [] // 본 코드
-	@Published private var dataSource: [Conversation] = [ // 테스트 코드
-		.init(id: .init(), members: ["테스트 멤버1", "테스트 멤버2"], recordFilePath: Bundle.main.url(forResource: "Intro", withExtension: "mp3")!, recordedDate: Date(), pins: [3, 10, 17])
-	]
+	@Published private var dataSource: [Conversation] = []
 	public var dataSourcePublisher: Published<[Conversation]>.Publisher { $dataSource }
 	
 	public init(dependency: Dependency) {
@@ -50,8 +47,7 @@ public final class ConversationUseCase: Dependency, ConversationManagable {
 			print("Failure fetchDataSource") // TODO: Error 처리 고민필요
 			return
 		}
-//		self.dataSource = fetcedList // 본 코드
-		self.dataSource.append(contentsOf: fetcedList) // 테스트 코드
+		self.dataSource = fetcedList
 	}
  
 }
