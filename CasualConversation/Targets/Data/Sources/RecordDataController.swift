@@ -9,9 +9,7 @@
 import Common
 import Domain
 
-import AVFAudio
-
-extension AVAudioRecorder: AudioRecorderProtocol { }
+import Foundation
 
 public struct RecordDataController: Dependency {
 	
@@ -32,22 +30,18 @@ public struct RecordDataController: Dependency {
 }
 
 extension RecordDataController: RecordDataControllerProtocol {
-	
-	public func makeAudioRecorder() -> AudioRecorderProtocol? {
-		let recordSettings: [String: Any] = [
-			AVFormatIDKey: Int(kAudioFormatLinearPCM),
-			AVSampleRateKey: 44100.0,
-			AVNumberOfChannelsKey: 1,
-			AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue
-		]
-		let currentDate = Date().formatted(.dateTime)
-		let newFilePath = dependency.repository.baseDirectory.appendingPathComponent(currentDate.description)
-		let recorder = try? AVAudioRecorder(url: newFilePath, settings: recordSettings)
-		return recorder
+		
+	public func requestNewFilePath() -> URL {
+		let baseDirectoryURL = dependency.repository.baseDirectory
+		let newfileName = Date().formattedForFileName
+		let newFileURL = baseDirectoryURL
+			.appendingPathComponent(newfileName)
+			.appendingPathExtension("m4a") // TODO: 녹음파일형식 고민하기 "caf"
+		return newFileURL
 	}
 	
-	public func requestRecordData(from filePath: String) -> Data? {
-		guard let audioData = dependency.repository.contents(atPath: filePath)  else {
+	public func requestRecordData(from filePath: URL) -> Data? {
+		guard let audioData = dependency.repository.contents(atPath: filePath.path) else {
 			print("\(#function) 불러오기 실패")
 			return nil
 		}
