@@ -164,7 +164,7 @@ extension SelectionViewModel: LanguageCheckable {
 				pins: conversation.pins)
 			self.dependency.conversationUseCase.edit(after: newItem) { error in
 				guard error == nil else {
-					print(error?.localizedDescription) // TODO: Error 처리 필요
+					print(String(describing: error?.localizedDescription)) // TODO: Error 처리 필요
 					return
 				}
 			}

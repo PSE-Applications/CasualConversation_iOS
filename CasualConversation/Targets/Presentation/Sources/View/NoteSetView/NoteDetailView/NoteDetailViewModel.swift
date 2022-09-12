@@ -61,7 +61,7 @@ extension NoteDetailViewModel {
 		)
 		self.dependency.useCase.edit(newItem) { error in
 			guard error == nil else {
-				print(error?.localizedDescription) // TODO: Error 처리 필요
+				print(String(describing: error?.localizedDescription)) // TODO: Error 처리 필요
 				return
 			}
 		}

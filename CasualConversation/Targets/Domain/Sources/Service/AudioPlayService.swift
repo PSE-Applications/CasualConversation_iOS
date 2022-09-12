@@ -148,6 +148,7 @@ extension AudioPlayService: CCPlayer {
 			completion(.audioServiceFailed(reason: .fileBindingFailure))
 			return
 		}
+		print(filePath)
 		audioPlayer.enableRate = true
 		audioPlayer.numberOfLoops = 0
 		audioPlayer.volume = 1.0
