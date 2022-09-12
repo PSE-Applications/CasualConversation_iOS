@@ -48,4 +48,14 @@ extension RecordDataController: RecordDataControllerProtocol {
 		return audioData
 	}
 	
+	public func deleteRecordData(from filePath: URL, completion: (CCError?) -> Void) {
+		self.dependency.repository.deleteContent(atPath: filePath.path) { error in
+			guard error == nil else {
+				completion(error)
+				return
+			}
+			completion(nil)
+		}
+	}
+	
 }

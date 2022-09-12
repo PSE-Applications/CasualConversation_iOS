@@ -22,6 +22,10 @@ public protocol CCPlayer {
 	func changePlayingRate(to value: Float)
 }
 
+public protocol RecordManagable {
+	func removeRecordFile(from filePath: URL, completion: (CCError?) -> Void)
+}
+
 public final class AudioPlayService: NSObject, Dependency {
 	
 	public struct Dependency {
@@ -192,6 +196,14 @@ extension AudioPlayService: CCPlayer {
 	
 	public func changePlayingRate(to value: Float) {
 		self.audioPlayer?.rate = value
+	}
+	
+}
+
+extension AudioPlayService: RecordManagable {
+
+	public func removeRecordFile(from filePath: URL, completion: (CCError?) -> Void) {
+		self.dependency.dataController.deleteRecordData(from: filePath, completion: completion)
 	}
 	
 }

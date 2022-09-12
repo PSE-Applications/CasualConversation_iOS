@@ -46,12 +46,12 @@ public final class PresentationDIContainer: Dependency, ObservableObject {
 	)
 	
 	// MARK: Service
-	lazy var audioRecordService: CCRecorder = AudioRecordService(
+	lazy var audioRecordService: AudioRecordService = .init(
 		dependency: .init(
 			dataController: self.dependency.recordRepository
 		)
 	)
-	lazy var audioPlayService: CCPlayer = AudioPlayService(
+	lazy var audioPlayService: AudioPlayService = .init(
 		dependency: .init(
 			dataController: self.dependency.recordRepository
 		)
@@ -92,7 +92,9 @@ extension PresentationDIContainer {
 	
 	func ConversationListView() -> ConversationListView {
 		let viewModel: ConversationListViewModel = .init(dependency: .init(
-			useCase: self.casualConversationUseCase)
+				useCase: self.casualConversationUseCase,
+				audioService: self.audioPlayService
+			)
 		)
 		return .init(viewModel: viewModel)
 	}
