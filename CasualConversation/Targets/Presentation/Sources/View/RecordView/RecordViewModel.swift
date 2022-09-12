@@ -155,7 +155,7 @@ extension RecordViewModel {
 	}
 	
 	func cancelRecording() {
-		self.dependency.audioService.removeRecording(isCancel: true)
+		self.dependency.audioService.finishRecording(isCancel: true)
 	}
 	
 	func startRecording() {
@@ -186,7 +186,7 @@ extension RecordViewModel {
 			case .failure(let error):
 				print(error)
 			}
-			dependency.audioService.removeRecording(isCancel: false)
+			dependency.audioService.finishRecording(isCancel: false)
 		}
 	}
 	

@@ -17,7 +17,7 @@ public protocol CCRecorder {
 	func startRecording()
 	func pauseRecording()
 	func stopRecording(completion: (Result<URL, CCError>) -> Void)
-	func removeRecording(isCancel: Bool)
+	func finishRecording(isCancel: Bool)
 	func permission(completion: @escaping (Bool) -> Void)
 }
 
@@ -182,11 +182,9 @@ extension AudioRecordService: CCRecorder {
 		completion(.success(savedFilePath))
 	}
 	
-	public func removeRecording(isCancel: Bool) {
-		if isCancel {
-			self.audioRecorder?.stop()
-			self.audioRecorder?.deleteRecording()
-		}
+	public func finishRecording(isCancel: Bool) {
+		if isRecording { self.audioRecorder?.stop() }
+		if isCancel { self.audioRecorder?.deleteRecording() }
 		self.isRecording = false
 		self.audioRecorder = nil
 	}

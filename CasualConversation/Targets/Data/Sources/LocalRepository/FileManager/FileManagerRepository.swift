@@ -12,6 +12,7 @@ import Foundation
 public protocol FileManagerRepositoryProtocol {
 	var baseDirectory: URL { get }
 	func contents(atPath: String) -> Data?
+	func deleteContent(atPath: String, completion: (CCError?) -> Void)
 }
 
 public struct FileManagerRepository {
@@ -47,6 +48,20 @@ extension FileManagerRepository: FileManagerRepositoryProtocol {
 		let path = self.recordsDirectoryURL.appendingPathComponent(fileName)
 		return fileManager.contents(atPath: path.path)
 	}
-	
-	
+		
+	public func deleteContent(atPath: String, completion: (CCError?) -> Void) {
+		let fileName = atPath.components(separatedBy: "/").last!
+		let path = self.recordsDirectoryURL.appendingPathComponent(fileName)
+		guard fileManager.fileExists(atPath: path.path) else {
+			completion(.persistenceFailed(reason: .fileNotExists))
+			return
+		}
+		do {
+			try fileManager.removeItem(at: path)
+			completion(nil)
+		} catch {
+			completion(.catchError(error))
+		}
+	}
+
 }
