@@ -13,20 +13,6 @@ import MessageUI
 
 final class SettingViewModel: Dependency, ObservableObject {
 	
-	enum DisplayMode: Int, CaseIterable, CustomStringConvertible {
-		case system
-		case light
-		case dark
-		
-		var description: String {
-			switch self {
-			case .system:	return "기기 설정에 따름"
-			case .light:	return "라이트 모드"
-			case .dark:		return "다크 모드"
-			}
-		}
-	}
-	
 	struct Dependency {
 		
 	}
@@ -34,7 +20,9 @@ final class SettingViewModel: Dependency, ObservableObject {
 	let dependency: Dependency
 	
 	@Published var lockScreen: Bool
-	@Published var displayMode: DisplayMode
+	@Published var displayMode: DisplayMode {
+		willSet { Preference.shared.displayMode = newValue }
+	}
 	@Published var mailSendedResult: Result<MFMailComposeResult,Error>? {
 		// TODO: Mail 완료 후 처리 필요
 		willSet {
@@ -54,7 +42,7 @@ final class SettingViewModel: Dependency, ObservableObject {
 		self.dependency = dependency
 		
 		self.lockScreen = false
-		self.displayMode = .system
+		self.displayMode = Preference.shared.displayMode
 	}
 	
 }

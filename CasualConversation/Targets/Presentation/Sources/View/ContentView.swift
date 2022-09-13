@@ -12,6 +12,8 @@ public struct ContentView: View {
 	
 	@EnvironmentObject private var container: PresentationDIContainer
 	
+	@StateObject private var preference: Preference = .shared
+	
 	public init() {
 		AppAppearance.setup()
 	}
@@ -20,6 +22,7 @@ public struct ContentView: View {
 		MainTabView()
 			.environmentObject(container.configurations)
 			.accentColor(.ccAccentColor)
+			.preferredColorScheme(preference.colorScheme)
     }
 	
 }

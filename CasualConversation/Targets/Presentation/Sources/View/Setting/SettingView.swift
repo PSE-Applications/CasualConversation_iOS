@@ -10,11 +10,12 @@ import SwiftUI
 
 struct SettingView: View {
 	
-	@Environment(\.colorScheme) var colorScheme
+	@Environment(\.colorScheme) private var systemColorScheme
 	@EnvironmentObject private var configurations: PresentationConfiguarations
 	
 	@ObservedObject var viewModel: SettingViewModel
 	
+	@StateObject private var preference: Preference = .shared
 	@State private var isShowingMailView: Bool = false
 	
     var body: some View {
@@ -32,6 +33,7 @@ struct SettingView: View {
 				.foregroundColor(.gray)
 				.font(.caption)
 		}
+		.background(Color.ccGroupBgColor)
 		.navigationTitle("Setting")
 		.navigationBarTitleDisplayMode(.inline)
     }
@@ -50,7 +52,7 @@ extension SettingView {
 				}
 			}, label: {
 				HStack {
-					Image(viewModel.logoImageName(by: colorScheme))
+					Image(viewModel.logoImageName(by: preference.colorScheme ?? systemColorScheme))
 						.resizable()
 						.frame(width: 41.7, height: 48)
 					Text("What is Casual Conversation?")
@@ -63,7 +65,7 @@ extension SettingView {
 	@ViewBuilder
 	private func AcademyInfo() -> some View {
 		VStack(alignment: .center) {
-			Image(viewModel.titleImageName(by: colorScheme))
+			Image(viewModel.titleImageName(by: preference.colorScheme ?? systemColorScheme))
 				.resizable()
 				.aspectRatio(contentMode: .fit)
 				.frame(height: 100)
@@ -121,7 +123,7 @@ extension SettingView {
 	
 	private func DarkMode() -> some View {
 		Picker("디스플레이 모드 설정", selection: $viewModel.displayMode) {
-			ForEach(SettingViewModel.DisplayMode.allCases, id: \.self) { condition in
+			ForEach(DisplayMode.allCases, id: \.self) { condition in
 				Text(condition.description)
 					.tag(condition)
 			}
