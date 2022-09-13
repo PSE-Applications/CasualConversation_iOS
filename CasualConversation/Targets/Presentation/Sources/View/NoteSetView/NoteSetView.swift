@@ -22,6 +22,7 @@ struct NoteSetView: View {
 			List {
 				ForEach(viewModel.list, id: \.id) { item in
 					container.NoteSetRow(by: item)
+						.listRowBackground(Color.clear)
 						.contentShape(Rectangle())
 						.onTapGesture {
 							selectedRowItem = item
