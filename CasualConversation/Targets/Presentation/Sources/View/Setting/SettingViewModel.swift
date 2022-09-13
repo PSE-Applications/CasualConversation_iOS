@@ -18,10 +18,11 @@ final class SettingViewModel: Dependency, ObservableObject {
 	}
 	
 	let dependency: Dependency
+	private let preference: Preference = .shared
 	
 	@Published var lockScreen: Bool
 	@Published var displayMode: DisplayMode {
-		willSet { Preference.shared.displayMode = newValue }
+		willSet { preference.displayMode = newValue }
 	}
 	@Published var mailSendedResult: Result<MFMailComposeResult,Error>? {
 		// TODO: Mail 완료 후 처리 필요
@@ -42,7 +43,7 @@ final class SettingViewModel: Dependency, ObservableObject {
 		self.dependency = dependency
 		
 		self.lockScreen = false
-		self.displayMode = Preference.shared.displayMode
+		self.displayMode = preference.displayMode
 	}
 	
 }
@@ -50,11 +51,19 @@ final class SettingViewModel: Dependency, ObservableObject {
 extension SettingViewModel {
 	
 	func logoImageName(by colorScheme: ColorScheme) -> String {
-		return colorScheme == .light ? "pse_logo" : "pse_logo_border"
+		if let userSelection = preference.colorScheme {
+			return userSelection == .light ? "pse_logo" : "pse_logo_border"
+		} else {
+			return colorScheme == .light ? "pse_logo" : "pse_logo_border"
+		}
 	}
 	
 	func titleImageName(by colorScheme: ColorScheme) -> String {
-		return colorScheme == .light ? "pse_title" : "pse_title_border"
+		if let userSelection = preference.colorScheme {
+			return userSelection == .light ? "pse_title" : "pse_title_border"
+		} else {
+			return colorScheme == .light ? "pse_title" : "pse_title_border"
+		}
 	}
 	
 }

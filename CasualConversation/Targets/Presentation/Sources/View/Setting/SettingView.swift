@@ -15,7 +15,6 @@ struct SettingView: View {
 	
 	@ObservedObject var viewModel: SettingViewModel
 	
-	@StateObject private var preference: Preference = .shared
 	@State private var isShowingMailView: Bool = false
 	
     var body: some View {
@@ -52,7 +51,7 @@ extension SettingView {
 				}
 			}, label: {
 				HStack {
-					Image(viewModel.logoImageName(by: preference.colorScheme ?? systemColorScheme))
+					Image(viewModel.logoImageName(by: systemColorScheme))
 						.resizable()
 						.frame(width: 41.7, height: 48)
 					Text("What is Casual Conversation?")
@@ -65,7 +64,7 @@ extension SettingView {
 	@ViewBuilder
 	private func AcademyInfo() -> some View {
 		VStack(alignment: .center) {
-			Image(viewModel.titleImageName(by: preference.colorScheme ?? systemColorScheme))
+			Image(viewModel.titleImageName(by: systemColorScheme))
 				.resizable()
 				.aspectRatio(contentMode: .fit)
 				.frame(height: 100)
