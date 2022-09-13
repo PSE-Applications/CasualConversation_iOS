@@ -11,9 +11,7 @@ import SwiftUI
 enum DisplayMode: String, CaseIterable, CustomStringConvertible {
 	case system, light, dark
 
-	static var key: String {
-		String(describing: Self.self)
-	}
+	static var key: String { .init(describing: Self.self) }
 	
 	var description: String {
 		switch self {
@@ -29,6 +27,12 @@ final class Preference: NSObject, ObservableObject {
 	static let shared: Preference = Preference()
 	private let userDefault: UserDefaults = UserDefaults.standard
 	
+	var isLockScreen: Bool {
+		didSet {
+			UIApplication.shared.isIdleTimerDisabled = isLockScreen
+			userDefault.set(isLockScreen, forKey: "isLockScreen")
+		}
+	}
 	var displayMode: DisplayMode {
 		willSet { objectWillChange.send() }
 		didSet { userDefault.set(displayMode.rawValue, forKey: DisplayMode.key) }
@@ -37,6 +41,7 @@ final class Preference: NSObject, ObservableObject {
 	private override init() {
 		let screenModeValue = userDefault.string(forKey: DisplayMode.key) ?? "system"
 	   
+		self.isLockScreen = userDefault.bool(forKey: "isLockScreen")
 		self.displayMode = .init(rawValue: screenModeValue) ?? .system
 	}
 	

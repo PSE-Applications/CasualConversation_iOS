@@ -20,7 +20,9 @@ final class SettingViewModel: Dependency, ObservableObject {
 	let dependency: Dependency
 	private let preference: Preference = .shared
 	
-	@Published var lockScreen: Bool
+	@Published var isLockScreen: Bool {
+		willSet { preference.isLockScreen = newValue }
+	}
 	@Published var displayMode: DisplayMode {
 		willSet { preference.displayMode = newValue }
 	}
@@ -42,7 +44,7 @@ final class SettingViewModel: Dependency, ObservableObject {
 	init(dependency: Dependency) {
 		self.dependency = dependency
 		
-		self.lockScreen = false
+		self.isLockScreen = preference.isLockScreen
 		self.displayMode = preference.displayMode
 	}
 	

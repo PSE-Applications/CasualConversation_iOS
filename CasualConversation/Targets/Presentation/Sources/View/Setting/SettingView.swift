@@ -107,7 +107,7 @@ extension SettingView {
 	
 	private func LockScreen() -> some View {
 		HStack {
-			Toggle("화면잠금 방지", isOn: $viewModel.lockScreen)
+			Toggle("자동잠금 허용 설정", isOn: $viewModel.isLockScreen)
 				.tint(.ccTintColor)
 		}
 	}
