@@ -119,6 +119,10 @@ extension NoteDetailView {
 				.onChange(of: viewModel.original) { value in
 					viewModel.isEdited = true
 				}
+				.background(
+					Color.ccBgColor
+						.cornerRadius(15)
+				)
 			HStack {
 				Image(systemName: "k.circle.fill")
 					.foregroundColor(.logoLightBlue)
@@ -128,6 +132,10 @@ extension NoteDetailView {
 				.onChange(of: viewModel.translation) { value in
 					viewModel.isEdited = true
 				}
+				.background(
+					Color.ccBgColor
+						.cornerRadius(15)
+				)
 		}
 	}
 	
