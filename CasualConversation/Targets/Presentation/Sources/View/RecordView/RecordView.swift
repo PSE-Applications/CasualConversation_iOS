@@ -15,6 +15,7 @@ struct RecordView: View {
 	
 	@State private var cancelAlert: Bool = false
 	@State private var stopAlert: Bool = false
+	@State private var isEditing: Bool = false
 
 	var body: some View {
 		NavigationView {
@@ -33,6 +34,12 @@ struct RecordView: View {
 			}
 		}
 		.preferredColorScheme(.dark)
+		.onAppear {
+			viewModel.setupRecording()
+		}
+		.onDisappear {
+			viewModel.finishRecording()
+		}
 	}
 	
 }
@@ -61,10 +68,51 @@ extension RecordView {
 	private func RecordContent() -> some View {
 		VStack(alignment: .center) {
 			Spacer()
-			InputTitle()
+			RecordInfo()
 			Spacer()
+			ConversationInfo()
 		}
 		.background(Color.recordShadow)
+		.padding()
+	}
+	
+	private func RecordInfo() -> some View {
+		HStack {
+//			withAnimation {
+//				Image(systemName: <#T##String#>)
+//					.foregroundColor(<#T##color: Color?##Color?#>)
+//			}
+			Text(viewModel.currentTime.formattedToDisplayTime)
+				.foregroundColor(viewModel.currentTimeTintColor)
+				.font(.headline)
+		}
+	}
+	
+	private func ConversationInfo() -> some View {
+		GroupBox {
+			if isEditing {
+				InputTitle()
+				InputTopic()
+				InputMembers()
+			}
+			Button(
+				action: {
+					withAnimation {
+						isEditing.toggle()
+					}
+				}, label: {
+					HStack {
+						Text("Conversation Information")
+							.font(.headline)
+						Spacer()
+						Image(systemName: "chevron.right")
+							.foregroundColor(.logoDarkGreen)
+							.rotationEffect(.degrees(isEditing ? -90.0 : 0.0))
+					}
+				}
+			)
+			.tint(.ccTintColor)
+		}
 		.padding()
 	}
 	
@@ -75,6 +123,60 @@ extension RecordView {
 		)
 		.multilineTextAlignment(.center)
 	}
+	
+	private func InputTopic() -> some View {
+		TextField("InputTopic",
+				  text: $viewModel.inputTopic,
+				  prompt: Text("대화 주제를 입력하세요")
+		)
+		.multilineTextAlignment(.center)
+	}
+	
+	@ViewBuilder
+	private func InputMembers() -> some View {
+		HStack {
+			TextField("InputMembers",
+					  text: $viewModel.inputMember,
+					  prompt: Text("참여자를 추가하세요")
+			)
+			.multilineTextAlignment(.center)
+			.onSubmit {
+				viewModel.addMember()
+			}
+		}
+		if viewModel.members.count > 0 {
+			ScrollView(.horizontal, showsIndicators: true) {
+				let rows = [ GridItem(.fixed(30)) ]
+				LazyHGrid(rows: rows) {
+					ForEach(viewModel.members, id: \.name) { member in
+						ZStack {
+							Rectangle()
+								.cornerRadius(15)
+								.foregroundColor(.recordShadow)
+							HStack {
+								Text(member.emoji)
+								Text(member.name)
+									.font(.headline)
+								Button(
+									action: {
+										viewModel.remove(member: member)
+									}, label: {
+										Image(systemName: "delete.backward")
+											.foregroundColor(.logoLightRed)
+									}
+								)
+							}
+							.padding()
+						}
+					}
+				}
+				.frame(height: 32, alignment: .center)
+				.padding()
+			}
+		}
+	}
+	
+	
 	
 	private func RecordControl() -> some View {
 		HStack(alignment: .center) {
@@ -94,13 +196,14 @@ extension RecordView {
 				Spacer()
 				ZStack {
 					Image(systemName: "stop.fill")
-						.foregroundColor(viewModel.buttonColorByisEditing)
+						.foregroundColor(viewModel.stopButtonTintColor)
 						.font(.system(size: 34))
 						.shadow(color: .logoDarkBlue, radius: 1, x: 2, y: 2)
 				}
 				Spacer()
 			}
 		)
+		.disabled(!viewModel.canSaveRecording)
 		.alert("녹음 완료", isPresented: $stopAlert) {
 			Button("취소", role: .cancel) { }
 			Button("저장") {
@@ -110,25 +213,27 @@ extension RecordView {
 		} message: {
 			Text("녹음을 중지하고 녹음물을 저장하시겠습니까?")
 		}
-		.disabled(!viewModel.isStartedRecording)
 	}
 	
 	private func RecordButton() -> some View {
 		Button(
 			action: {
-				if viewModel.isStartedRecording {
-					viewModel.pauseRecording()
+				if viewModel.isPermitted {
+					if viewModel.isRecording {
+						viewModel.pauseRecording()
+					} else {
+						viewModel.startRecording()
+					}
 				} else {
-					viewModel.startRecording()
+					viewModel.recordPermission()
 				}
-				viewModel.isStartedRecording.toggle()
 			}, label: {
 				ZStack {
 					Circle()
 						.stroke(lineWidth: 2)
 						.frame(width: 66, height: 66, alignment: .center)
 						.foregroundColor(.white)
-					if viewModel.isStartedRecording {
+					if viewModel.isRecording {
 						ZStack {
 							Image(systemName: "circle.fill")
 								.foregroundColor(.logoDarkRed)
@@ -148,6 +253,7 @@ extension RecordView {
 				}
 			}
 		)
+		.disabled(!viewModel.isPrepared)
 	}
 	
 	private func PinButton() -> some View {
@@ -158,14 +264,14 @@ extension RecordView {
 				Spacer()
 				ZStack {
 					Image(systemName: "pin")
-						.foregroundColor(viewModel.buttonColorByisEditing)
+						.foregroundColor(viewModel.pinButtonTintColor)
 						.font(.system(size: 26))
 						.shadow(color: .logoDarkBlue, radius: 1, x: 2, y: 2)
 				}
 				Spacer()
 			}
 		)
-		.disabled(!viewModel.isStartedRecording)
+		.disabled(!viewModel.isRecording)
 	}
 	
 }

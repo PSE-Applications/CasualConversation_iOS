@@ -11,19 +11,27 @@ import SwiftUI
 struct PlayTabView: View {
 	
 	@ObservedObject var viewModel: PlayTabViewModel
-	
-	@State private var isPlaying: Bool = false
-	@State private var isEditing: Bool = false
-	@State private var currentPoint: TimeInterval = 0
-	
+		
     var body: some View {
 		VStack(alignment: .center) {
 			TimeSlider()
 			TimeLabels(
-				current: viewModel.currentTime.toTimeString,
-				duration: viewModel.duration.toTimeString
+				current: viewModel.currentTime.formattedToDisplayTime,
+				duration: viewModel.duration.formattedToDisplayTime
 			)
+			.overlay {
+				if viewModel.disabledPlaying {
+					Text("녹음 파일 없음")
+						.font(.headline)
+				}
+			}
 			PlayControl()
+		}
+		.onAppear {
+			viewModel.setupPlaying()
+		}
+		.onDisappear {
+			viewModel.finishPlaying()
 		}
     }
 	
@@ -33,10 +41,14 @@ extension PlayTabView {
 	
 	private func TimeSlider() -> some View {
 		Slider(
-			value: $currentPoint,
-			in: viewModel.currentTime...viewModel.duration,
-			onEditingChanged: { editing in
-				self.isEditing = editing
+			value: $viewModel.currentTime,
+			in: .zero...viewModel.duration,
+			onEditingChanged: { isEditing in
+				if isEditing {
+					viewModel.editingSliderPointer()
+				} else {
+					viewModel.editedSliderPointer()
+				}
 			}
 		)
 		.padding([.leading, .trailing])
@@ -70,14 +82,14 @@ extension PlayTabView {
 				Button(action: {
 					viewModel.speed = item
 				}, label: {
-					Text("\(item.rawValue)x")
+					Text(item.description)
 						.foregroundColor(.logoDarkBlue)
 						.font(.caption)
 				})
 			}
 		} label: {
 			Spacer()
-			Text("\(viewModel.speed.rawValue)x")
+			Text(viewModel.speed.description)
 				.foregroundColor(.logoDarkBlue)
 				.font(.headline)
 			Spacer()
@@ -86,41 +98,50 @@ extension PlayTabView {
 	
 	private func PlayButton() -> some View {
 		Button {
-			isPlaying.toggle()
+			if viewModel.isPlaying {
+				viewModel.pausePlaying()
+			} else {
+				viewModel.startPlaying()
+			}
 		} label: {
 			Spacer()
-			Image(systemName: viewModel.isPlayingImageName(by: isPlaying))
+			Image(systemName: viewModel.isPlayingImageName)
 				.font(.system(size: 44))
 			Spacer()
 		}
+		.disabled(viewModel.disabledPlaying)
 	}
 	
 	private func BackwardButton() -> some View {
 		Button {
-			
+			viewModel.skip(.back)
 		} label: {
 			Spacer()
 			Image(systemName: "gobackward.5")
 				.font(.system(size: 22))
 			Spacer()
 		}
+		.disabled(viewModel.disabledPlaying)
+		.opacity(viewModel.disabledPlayingOpacity)
 	}
 	
 	private func GowardButton() -> some View {
 		Button {
-			
+			viewModel.skip(.forward)
 		} label: {
 			Spacer()
 			Image(systemName: "goforward.5")
 				.font(.system(size: 22))
 			Spacer()
 		}
+		.disabled(viewModel.disabledPlaying)
+		.opacity(viewModel.disabledPlayingOpacity)
 	}
 	
 	private func NextPinButton() -> some View {
 		Button(
 			action: {
-				
+				viewModel.skip(.next)
 			}, label: {
 				Spacer()
 				Image(systemName: "forward.end.alt.fill")
@@ -129,8 +150,8 @@ extension PlayTabView {
 			}
 		)
 		.foregroundColor(.logoDarkBlue)
-		.disabled(!isPlaying)
-		.opacity(viewModel.nextPinButtonOpacity(by: isPlaying))
+		.disabled(viewModel.nextPin == nil)
+		.opacity(viewModel.nextPinButtonOpacity)
 	}
 	
 }
@@ -141,10 +162,10 @@ struct PlayTabView_Previews: PreviewProvider {
 	static var container: PresentationDIContainer { .preview }
 	
 	static var previews: some View {
-		container.PlayTabView()
+		container.PlayTabView(with: .empty)
 			.previewLayout(.sizeThatFits)
 			.preferredColorScheme(.light)
-		container.PlayTabView()
+		container.PlayTabView(with: .empty)
 			.previewLayout(.sizeThatFits)
 			.preferredColorScheme(.dark)
     }

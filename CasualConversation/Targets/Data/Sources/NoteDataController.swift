@@ -72,7 +72,7 @@ extension NoteDataController: NoteDataControllerProtocol {
 				return list
 			}
 			return list.filter({ $0.references.contains(itemID) })
-		} catch let error {
+		} catch {
 			debugPrint(CCError.persistenceFailed(reason: .coreDataUnloaded(error)))
 			return nil
 		}

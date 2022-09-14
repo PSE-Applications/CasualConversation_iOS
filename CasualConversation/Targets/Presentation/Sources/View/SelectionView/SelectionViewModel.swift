@@ -66,6 +66,9 @@ final class SelectionViewModel: Dependency, ObservableObject {
 	var referenceNoteUseCase: NoteManagable {
 		self.dependency.noteUseCase
 	}
+	var referenceItem: Conversation {
+		self.dependency.item
+	}
 	
 }
 
@@ -161,7 +164,7 @@ extension SelectionViewModel: LanguageCheckable {
 				pins: conversation.pins)
 			self.dependency.conversationUseCase.edit(after: newItem) { error in
 				guard error == nil else {
-					print(error?.localizedDescription) // TODO: Error 처리 필요
+					print(String(describing: error?.localizedDescription)) // TODO: Error 처리 필요
 					return
 				}
 			}

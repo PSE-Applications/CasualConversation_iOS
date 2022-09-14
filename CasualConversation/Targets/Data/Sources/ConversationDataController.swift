@@ -70,7 +70,7 @@ extension ConversationDataController: ConversationDataControllerProtocol {
 				.mainContext.fetch(fetchRequest)
 				.compactMap({ Conversation(entity: $0) })
 			return list
-		} catch let error {
+		} catch {
 			debugPrint(CCError.persistenceFailed(reason: .coreDataUnloaded(error)))
 			return nil
 		}

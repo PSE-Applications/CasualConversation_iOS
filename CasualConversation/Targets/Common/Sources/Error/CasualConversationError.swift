@@ -17,6 +17,7 @@ public enum CCError: Error {
     }
 	
 	case systemErrorOccured(reason: SystemErrorReason)
+	case catchError(Error)
     
     // MARK: - Domain
     public enum ConversationManageFailureReason {
@@ -32,7 +33,7 @@ public enum CCError: Error {
 		case fileURLPathInvalidated
 		case fileURLPathSavedFailure
 		case preparedFailure
-		case startedFailure
+		case fileBindingFailure
 	}
     
     case conversationManageFailed(reason: ConversationManageFailureReason)
@@ -44,6 +45,7 @@ public enum CCError: Error {
         case coreDataViewContextUnsaved(Error)
         case coreDataUnloaded(Error)
         case coreDataUnloadedEntity
+		case fileNotExists
     }
     
     case persistenceFailed(reason: RepositoryFailureReason)

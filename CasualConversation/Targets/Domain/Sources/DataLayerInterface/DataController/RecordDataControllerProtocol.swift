@@ -6,9 +6,11 @@
 //  Copyright © 2022 pseapplications. All rights reserved.
 //
 
+import Common
 import Foundation.NSURL
 
 public protocol RecordDataControllerProtocol {
-	func makeAudioRecorder() -> AudioRecorderProtocol?
-	func makeAudioPlayer(from filePath: URL) -> AudioPlayerProtocol?
+	func requestNewFilePath() -> URL
+	func requestRecordData(from filePath: URL) -> Data?
+	func deleteRecordData(from filePath: URL, completion: (CCError?) -> Void)
 }

@@ -11,17 +11,17 @@ import Common
 import AVFAudio
 
 public protocol CCRecorder {
-	var status: AudioStatus { get }
-	var currentRecordingTime: TimeInterval? { get }
+	var isRecordingPublisher: Published<Bool>.Publisher { get }
+	var currentTime: TimeInterval { get }
 	func setupRecorder(completion: (CCError?) -> Void)
-	func startRecording(completion: (CCError?) -> Void)
+	func startRecording()
 	func pauseRecording()
 	func stopRecording(completion: (Result<URL, CCError>) -> Void)
+	func finishRecording(isCancel: Bool)
+	func permission(completion: @escaping (Bool) -> Void)
 }
 
 public final class AudioRecordService: NSObject, Dependency {
-	
-	@Published public var status: AudioStatus = .stopped
 	
 	public struct Dependency {
 		let dataController: RecordDataControllerProtocol
@@ -33,13 +33,22 @@ public final class AudioRecordService: NSObject, Dependency {
 	
 	public var dependency: Dependency
 	
-	private var audioRecorder: AudioRecorderProtocol?
+	private var audioRecorder: AVAudioRecorder?
+	
+	@Published var isRecording: Bool = false
 		
 	public init(dependency: Dependency) {
 		self.dependency = dependency
 		
 		super.init()
 		setupNotificationCenter()
+		
+		do {
+			try AVAudioSession.sharedInstance().setCategory(.record)
+			try AVAudioSession.sharedInstance().setActive(true)
+		} catch {
+			print("\(Self.self) \(#function) - setCategory Failure")
+		}
 	}
 	
 	deinit {
@@ -91,10 +100,9 @@ public final class AudioRecordService: NSObject, Dependency {
 		guard let type = AVAudioSession.InterruptionType(rawValue: rawValue) else { return }
 		switch type {
 		case .began:
-			if status == .recording {
+			if isRecording {
 				pauseRecording()
 			}
-			status = .paused
 		case .ended:
 			guard let rawValue = info[AVAudioSessionInterruptionOptionKey] as? UInt else { return }
 			let options = AVAudioSession.InterruptionOptions(rawValue: rawValue)
@@ -106,62 +114,67 @@ public final class AudioRecordService: NSObject, Dependency {
 		}
 	}
 	
+	private func makeAudioRecorder() -> AVAudioRecorder? {
+		let newFilePath = dependency.dataController.requestNewFilePath()
+//		let recordSettings: [String: Any] = [
+//			AVFormatIDKey: Int(kAudioFormatLinearPCM),
+//			AVSampleRateKey: 44100.0,
+//			AVNumberOfChannelsKey: 1,
+//			AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue
+//		]
+		let recordSettings: [String: Any] = [
+			AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
+			AVSampleRateKey: 44100.0,
+			AVNumberOfChannelsKey: 1,
+			AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue
+		]
+		do {
+			let recorder = try AVAudioRecorder(url: newFilePath, settings: recordSettings)
+			return recorder
+		} catch {
+			print("\(Self.self) \(#function) - \(error.localizedDescription)")
+			return nil
+		}
+	}
+	
 }
 
-extension AudioRecordService: AVAudioRecorderDelegate {
-	
-	public func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {
-		status = .stopped
-	}
-	
-}
-  
 extension AudioRecordService: CCRecorder {
 	
-	public var currentRecordingTime: TimeInterval? {
-		self.audioRecorder?.currentTime
-	}
+	public var isRecordingPublisher: Published<Bool>.Publisher { $isRecording }
+	public var currentTime: TimeInterval { self.audioRecorder?.currentTime ?? 0 }
 	
 	public func setupRecorder(completion: (CCError?) -> Void) {
-		guard let newRecorder = dependency.dataController.makeAudioRecorder() else {
+		guard let audioRecorder = makeAudioRecorder() else {
 			completion(.audioServiceFailed(reason: .bindingFailure))
 			return
 		}
-		self.audioRecorder = newRecorder
-		self.audioRecorder?.delegate = self
-		guard let isPreparedToRecord = self.audioRecorder?.prepareToRecord() else {
-			completion(.audioServiceFailed(reason: .bindingFailure))
-			return
-		}
-		guard isPreparedToRecord else {
+		audioRecorder.delegate = self
+		guard audioRecorder.prepareToRecord() else {
 			completion(.audioServiceFailed(reason: .preparedFailure))
 			return
 		}
+		self.audioRecorder = audioRecorder
 		completion(nil)
 	}
 	
-	public func startRecording(completion: (CCError?) -> Void) {
-		guard let isRecording = self.audioRecorder?.record() else {
-			completion(.audioServiceFailed(reason: .bindingFailure))
-			return
+	public func startRecording() {
+		while let recorder = self.audioRecorder {
+			if recorder.record() {
+				self.isRecording = true
+				break
+			}
 		}
-		status = isRecording ? .recording : .stopped
-		guard isRecording else {
-			completion(.audioServiceFailed(reason: .startedFailure))
-			return
-		}
-		completion(nil)
 	}
 	
 	public func pauseRecording() {
 		self.audioRecorder?.pause()
-		status = .paused
+		self.isRecording = false
 	}
 	
 	public func stopRecording(completion: (Result<URL, CCError>) -> Void) {
-		defer { self.audioRecorder = nil }
 		self.audioRecorder?.stop()
-		status = .stopped
+		self.isRecording = false
 		guard let savedFilePath = audioRecorder?.url else {
 			completion(.failure(.audioServiceFailed(reason: .fileURLPathSavedFailure)))
 			return
@@ -169,7 +182,31 @@ extension AudioRecordService: CCRecorder {
 		completion(.success(savedFilePath))
 	}
 	
+	public func finishRecording(isCancel: Bool) {
+		if isRecording { self.audioRecorder?.stop() }
+		if isCancel { self.audioRecorder?.deleteRecording() }
+		self.isRecording = false
+		self.audioRecorder = nil
+	}
+	
+	public func permission(completion: @escaping (Bool) -> Void) {
+		let session = AVAudioSession.sharedInstance()
+		switch session.recordPermission {
+		case .undetermined, .denied:
+			session.requestRecordPermission(completion)
+		case .granted:
+			completion(true)
+		@unknown default:
+			fatalError("Check AVAudioSession update")
+		}
+	}
+	
 }
  
-
-
+extension AudioRecordService: AVAudioRecorderDelegate {
+	
+	public func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {
+		self.isRecording = false // TODO: 해당 상황 고민하기 (메모리 크기 등)
+	}
+	
+}
