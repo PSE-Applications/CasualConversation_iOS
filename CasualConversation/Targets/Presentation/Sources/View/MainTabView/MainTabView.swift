@@ -17,24 +17,25 @@ struct MainTabView: View {
 
 	var body: some View {
 		NavigationView {
-			VStack {
-				Spacer()
-				MainContent()
-				Spacer()
-				MainTabView()
-			}
-			.navigationTitle(viewModel.title(by: selectedIndex))
-			.navigationBarTitleDisplayMode(.inline)
-			.toolbar {
-				ToolbarItem(placement: .navigationBarTrailing) {
-					SettingToolbarLink()
+			MainContent()
+				.background(Color.ccBgColor)
+				.overlay {
+					VStack {
+						Spacer()
+						MainTab()
+					}
 				}
-			}
-			.fullScreenCover(isPresented: $isPresentedRecordView) {
-				container.RecordView()
-			}
+				.navigationTitle(viewModel.title(by: selectedIndex))
+				.navigationBarTitleDisplayMode(.large)
+				.toolbar {
+					ToolbarItem(placement: .navigationBarTrailing) {
+						SettingToolbarLink()
+					}
+				}
+				.fullScreenCover(isPresented: $isPresentedRecordView) {
+					container.RecordView()
+				}
 		}
-		.accentColor(.logoDarkGreen)
     }
 
 }
@@ -57,14 +58,14 @@ extension MainTabView {
 		}
 	}
 	
-	private func MainTabView() -> some View {
+	private func MainTab() -> some View {
 		HStack(alignment: .center) {
 			CCTabItem(tab: .conversations)
 			RecordButton()
 			CCTabItem(tab: .notes)
 		}
 		.padding()
-		.background(Color(.systemGroupedBackground))
+		.background(Color.ccGroupBgColor)
 	}
 	
 	private func RecordButton() -> some View {
@@ -81,7 +82,7 @@ extension MainTabView {
 						.font(.system(size: 44))
 						.foregroundColor(.white)
 				}
-				.shadow(color: .gray, radius: 1, x: 2, y: 2)
+				.shadow(color: .black, radius: 1, x: 1, y: 1)
 				Spacer()
 			}
 		)

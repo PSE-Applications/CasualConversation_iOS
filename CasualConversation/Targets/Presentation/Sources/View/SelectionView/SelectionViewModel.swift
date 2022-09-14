@@ -86,10 +86,6 @@ extension SelectionViewModel {
 		condition ? "완료" : "수정"
 	}
 	
-	func isEditingShadowColor(by condition: Bool) -> Color {
-		condition ? .clear : .gray
-	}
-	
 }
 
 extension SelectionViewModel: LanguageCheckable {

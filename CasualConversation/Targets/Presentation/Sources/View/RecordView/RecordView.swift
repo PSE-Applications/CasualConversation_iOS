@@ -24,7 +24,7 @@ struct RecordView: View {
 				RecordControl()
 			}
 			.padding()
-			.background(Color.recordBackground)
+			.background(Color.darkRecordColor)
 			.navigationTitle("Casual Conversation")
 			.navigationBarTitleDisplayMode(.inline)
 			.toolbar {
@@ -72,7 +72,7 @@ extension RecordView {
 			Spacer()
 			ConversationInfo()
 		}
-		.background(Color.recordShadow)
+		.background(Color.lightRecordColor)
 		.padding()
 	}
 	

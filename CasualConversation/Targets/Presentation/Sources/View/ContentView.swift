@@ -12,14 +12,26 @@ public struct ContentView: View {
 	
 	@EnvironmentObject private var container: PresentationDIContainer
 	
+	@StateObject private var preference: Preference = .shared
+	
 	public init() {
 		AppAppearance.setup()
 	}
 	
 	public var body: some View {
-		container.MainTabView()
+		MainTabView()
 			.environmentObject(container.configurations)
+			.accentColor(.ccAccentColor)
+			.preferredColorScheme(preference.colorScheme)
     }
+	
+}
+
+extension ContentView {
+	
+	private func MainTabView() -> some View {
+		container.MainTabView()
+	}
 	
 }
 

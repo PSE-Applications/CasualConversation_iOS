@@ -27,7 +27,6 @@ final class NoteSetViewModel: Dependency, ObservableObject {
 			.assign(to: &self.$list)
 	}
 	
-	
 }
 
 extension NoteSetViewModel {

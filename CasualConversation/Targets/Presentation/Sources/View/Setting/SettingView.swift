@@ -1,6 +1,6 @@
 //
 //  SettingView.swift
-//  CasualConversation
+//  Presentation
 //
 //  Created by Yongwoo Marco on 2022/08/09.
 //  Copyright © 2022 pseapplications. All rights reserved.
@@ -10,7 +10,7 @@ import SwiftUI
 
 struct SettingView: View {
 	
-	@Environment(\.colorScheme) var colorScheme
+	@Environment(\.colorScheme) private var systemColorScheme
 	@EnvironmentObject private var configurations: PresentationConfiguarations
 	
 	@ObservedObject var viewModel: SettingViewModel
@@ -32,9 +32,9 @@ struct SettingView: View {
 				.foregroundColor(.gray)
 				.font(.caption)
 		}
+		.background(Color.ccGroupBgColor)
 		.navigationTitle("Setting")
 		.navigationBarTitleDisplayMode(.inline)
-		.background(self.colorScheme == .dark ? .recordBackground : Color.clear)
     }
 	
 }
@@ -51,7 +51,7 @@ extension SettingView {
 				}
 			}, label: {
 				HStack {
-					Image(viewModel.logoImageName(by: colorScheme))
+					Image(viewModel.logoImageName(by: systemColorScheme))
 						.resizable()
 						.frame(width: 41.7, height: 48)
 					Text("What is Casual Conversation?")
@@ -64,7 +64,7 @@ extension SettingView {
 	@ViewBuilder
 	private func AcademyInfo() -> some View {
 		VStack(alignment: .center) {
-			Image(viewModel.titleImageName(by: colorScheme))
+			Image(viewModel.titleImageName(by: systemColorScheme))
 				.resizable()
 				.aspectRatio(contentMode: .fit)
 				.frame(height: 100)
@@ -107,7 +107,7 @@ extension SettingView {
 	
 	private func LockScreen() -> some View {
 		HStack {
-			Toggle("화면잠금 방지", isOn: $viewModel.lockScreen)
+			Toggle("자동잠금 허용 설정", isOn: $viewModel.isLockScreen)
 				.tint(.ccTintColor)
 		}
 	}
@@ -122,7 +122,7 @@ extension SettingView {
 	
 	private func DarkMode() -> some View {
 		Picker("디스플레이 모드 설정", selection: $viewModel.displayMode) {
-			ForEach(SettingViewModel.DisplayMode.allCases, id: \.self) { condition in
+			ForEach(DisplayMode.allCases, id: \.self) { condition in
 				Text(condition.description)
 					.tag(condition)
 			}
@@ -170,7 +170,7 @@ extension SettingView {
 			}
 			
 			NavigationLink(destination: {
-				Text("개발자 정보")
+				TeamMateInfoView()
 			}, label: {
 				Text("개발자 정보")
 			})

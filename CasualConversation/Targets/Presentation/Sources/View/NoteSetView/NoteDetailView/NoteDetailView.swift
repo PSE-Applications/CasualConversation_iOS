@@ -20,6 +20,7 @@ struct NoteDetailView: View {
 			VStack(alignment: .leading) {
 				NoteContent(by: viewModel.isVocabulary)
 			}
+			.navigationBarTitleDisplayMode(.inline)
 			.padding()
 			.toolbar {
 				ToolbarItem(placement: .principal) {
@@ -109,7 +110,6 @@ extension NoteDetailView {
 	
 	private func Sentense() -> some View {
 		VStack(alignment: .leading) {
-			Spacer()
 			HStack {
 				Image(systemName: "e.circle.fill")
 					.foregroundColor(.logoLightBlue)
@@ -119,6 +119,10 @@ extension NoteDetailView {
 				.onChange(of: viewModel.original) { value in
 					viewModel.isEdited = true
 				}
+				.background(
+					Color.ccBgColor
+						.cornerRadius(15)
+				)
 			HStack {
 				Image(systemName: "k.circle.fill")
 					.foregroundColor(.logoLightBlue)
@@ -128,7 +132,10 @@ extension NoteDetailView {
 				.onChange(of: viewModel.translation) { value in
 					viewModel.isEdited = true
 				}
-			Spacer()
+				.background(
+					Color.ccBgColor
+						.cornerRadius(15)
+				)
 		}
 	}
 	

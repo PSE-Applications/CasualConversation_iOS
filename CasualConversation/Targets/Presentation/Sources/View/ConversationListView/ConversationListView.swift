@@ -19,6 +19,7 @@ struct ConversationListView: View {
 				NavigationLink(destination: container.SelectionView(selected: item)) {
 					container.ConversationListRow(selected: item)
 				}
+				.listRowBackground(Color.clear)
 			}
 			.onDelete(perform: viewModel.removeRows)
 		}

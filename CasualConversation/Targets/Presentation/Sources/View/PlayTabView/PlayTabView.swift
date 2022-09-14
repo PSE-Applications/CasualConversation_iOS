@@ -33,7 +33,6 @@ struct PlayTabView: View {
 		.onDisappear {
 			viewModel.finishPlaying()
 		}
-    }
 	
 }
 

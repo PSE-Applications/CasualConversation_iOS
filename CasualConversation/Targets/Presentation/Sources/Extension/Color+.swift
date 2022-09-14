@@ -10,7 +10,10 @@ import SwiftUI
 
 extension Color {
 	
-	static let ccTintColor = Color("CCTintColor")
+	static let ccTintColor = Self("CCTintColor")
+	static let ccAccentColor = Self("CCAccentColor")
+	static let ccBgColor = Self("CCBackgroundColor")
+	static let ccGroupBgColor = Self("CCGroupBackgroundColor")
 	
 	static let logoLightRed = Color(hex: "#E30111")
 	static let logoDarkRed = Color(hex: "#600000")
@@ -18,8 +21,8 @@ extension Color {
 	static let logoDarkGreen = Color(hex: "#02681B")
 	static let logoLightBlue = Color(hex: "#0DB0EA")
 	static let logoDarkBlue = Color(hex: "#07387B")
-	static let recordBackground = Color(hex: "#1C1E23")
-	static let recordShadow = Color(hex: "#282A30")
+	static let darkRecordColor = Color(hex: "#1C1E23")
+	static let lightRecordColor = Color(hex: "#282A30")
 	
 	init(hex: String) {
 		let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
