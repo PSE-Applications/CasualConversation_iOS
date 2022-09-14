@@ -170,7 +170,7 @@ extension SettingView {
 			}
 			
 			NavigationLink(destination: {
-				Text("개발자 정보")
+				TeamMateInfoView()
 			}, label: {
 				Text("개발자 정보")
 			})
