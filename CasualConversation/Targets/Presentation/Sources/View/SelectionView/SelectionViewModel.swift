@@ -128,8 +128,8 @@ extension SelectionViewModel: LanguageCheckable {
 	
 	private func checkCategory() -> Bool {
 		switch self.category {
-		case .sentense:		return hasTwoMoreSpace(by: self.inputText)
-		case .vocabulary:	return !hasTwoMoreSpace(by: self.inputText)
+		case .sentense:		return hasSpace(by: self.inputText, more: 2)
+		case .vocabulary:	return !hasSpace(by: self.inputText, more: 2)
 		}
 	}
 	
