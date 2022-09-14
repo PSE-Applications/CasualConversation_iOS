@@ -84,7 +84,9 @@ let infoPlist: [String: InfoPlist.Value] = [
 	"CFBundleVersion": "1",
 	"UIMainStoryboardFile": "",
 	"UISupportedInterfaceOrientations" : ["UIInterfaceOrientationPortrait"],
-	"UILaunchStoryboardName": "LaunchScreen"
+	"UILaunchStoryboardName": "LaunchScreen",
+	"NSMicrophoneUsageDescription": "녹음기능을 위해 앱이 마이크에 접근",
+	"Supports opening documents in place": "YES"
 ]
 
 let mainAppTarget = [

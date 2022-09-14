@@ -20,9 +20,9 @@ extension LanguageCheckable {
 		return text.range(of: "[A-Za-z]", options: .regularExpression) != nil
 	}
 	
-	public func hasTwoMoreSpace(by text: String) -> Bool {
+	public func hasSpace(by text: String, more count: Int) -> Bool {
 		let trimmedText = text.trimmingCharacters(in: [" "])
-		return trimmedText.components(separatedBy:  " ").count > 2
+		return trimmedText.components(separatedBy:  " ").count > count
 	}
 	
 }

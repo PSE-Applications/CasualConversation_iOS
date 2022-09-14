@@ -16,6 +16,7 @@ final class ConversationListViewModel: Dependency, ObservableObject {
 	
 	struct Dependency {
 		let useCase: ConversationManagable
+		let audioService: RecordManagable
 	}
 	
 	let dependency: Dependency
@@ -37,7 +38,13 @@ extension ConversationListViewModel {
 	
 	func removeRows(at offsets: IndexSet) {
 		for offset in offsets.sorted(by: >) {
-			self.dependency.useCase.delete(list[offset]) { error in
+			let item = list[offset]
+			self.dependency.audioService.removeRecordFile(from: item.recordFilePath) { error in
+				if error != nil {
+					print(error?.localizedDescription ?? "\(#function)")
+				}
+			}
+			self.dependency.useCase.delete(item) { error in
 				guard error == nil else {
 					print(error?.localizedDescription ?? "\(#function)")
 					return

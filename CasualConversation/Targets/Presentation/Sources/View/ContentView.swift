@@ -45,26 +45,18 @@ import Foundation
 import Combine
 
 // MARK: Data Layer
-struct DebugRecordRepository: RecordDataControllerProtocol {
+struct DebugRecordDataController: RecordDataControllerProtocol {
 	
-	func makeAudioRecorder() -> AudioRecorderProtocol? {
-		let recordSettings: [String: Any] = [
-			AVFormatIDKey: Int(kAudioFormatLinearPCM),
-			AVSampleRateKey: 44100.0,
-			AVNumberOfChannelsKey: 1,
-			AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue
-		]
-		let currentDate = Date().formatted(.dateTime)
-		let newFilePath = FileManager.default.temporaryDirectory.appendingPathComponent(currentDate.description)
-		let recorder = try? AVAudioRecorder(url: newFilePath, settings: recordSettings)
-		return recorder
+	func requestNewFilePath() -> URL {
+		return URL(fileURLWithPath: "DEBUG")
 	}
 	
-	func makeAudioPlayer(from filePath: URL) -> AudioPlayerProtocol? {
-		guard let player = try? AVAudioPlayer(contentsOf: filePath) else {
-			return nil
-		}
-		return player
+	func requestRecordData(from filePath: URL) -> Data? {
+		return nil
+	}
+	
+	func deleteRecordData(from filePath: URL, completion: (CCError?) -> Void) {
+		
 	}
 	
 }
@@ -221,7 +213,7 @@ extension PresentationDIContainer {
 			configurations: PresentationConfiguarations.preview,
 			conversationRepository: DebugConversationRepository(),
 			noteRepository: DebugNoteRepository(),
-			recordRepository: DebugRecordRepository())
+			recordRepository: DebugRecordDataController())
 		)
 	}
 	

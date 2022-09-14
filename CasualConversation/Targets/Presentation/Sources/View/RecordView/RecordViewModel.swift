@@ -15,61 +15,70 @@ final class RecordViewModel: Dependency, ObservableObject {
 	
 	struct Dependency {
 		let useCase: ConversationRecodable
-		let audioRecordService: CCRecorder
+		let audioService: CCRecorder
 		
 		public init(
 			useCase: ConversationRecodable,
-			audioRecordService: CCRecorder
+			audioService: CCRecorder
 		) {
 			self.useCase = useCase
-			self.audioRecordService = audioRecordService
+			self.audioService = audioService
 		}
 	}
 	
-	let dependency: Dependency
-	var pins: [TimeInterval]?
+	struct Member: Hashable {
+		let name: String
+		let emoji: String
+	}
 	
-	@Published var isStartedRecording: Bool
-	@Published var inputTitle: String = ""
+	let dependency: Dependency
+	var pins: Set<TimeInterval> = []
+	
+	@Published var isPermitted: Bool = false {
+		willSet {
+			if newValue {
+				startRecording()
+			} else if !isPermitted {
+				// TODO: Alert 구현필요
+			}
+		}
+	}
+	@Published var isRecording: Bool = false
+	@Published var isPrepared: Bool = false
+	@Published var inputTitle: String = Date().formattedString
+	@Published var inputTopic: String = ""
+	@Published var inputMember: String = ""
+	@Published var members: [Member] = []
+	
+	@Published var currentTime: TimeInterval = .zero {
+		didSet { print(currentTime) }
+	}
+	@Published var recordingTime: TimeInterval = .zero
+	
+	private var progressTimer: Timer?
 	
 	init(dependency: Dependency) {
 		self.dependency = dependency
 		
-		self.isStartedRecording = dependency.audioRecordService
-			.status != .stopped // TODO: published 관련 고민하기
-		
-		setupRecording()
-		print("\(Self.self) init") // TODO: Testable Code, Have to remove
+		dependency.audioService.isRecordingPublisher
+			.assign(to: &self.$isRecording)
 	}
 	
 	deinit {
-		removeRecording()
-		print("\(Self.self) deinit") // TODO: Testable Code, Have to remove
-	}
-	
-	private func setupRecording() {
-		// TODO: CancelRecording - AudioRecordService
-		print("\(Self.self) \(#function)") // TODO: Testable Code, Have to remove
-	}
-	
-	private func removeRecording() {
-		// TODO: CancelRecording - AudioRecordService
-		print("\(Self.self) \(#function)") // TODO: Testable Code, Have to remove
-		self.pins = nil
+
 	}
 	
 	private func createItem(filePath: URL) {
-		print("\(Self.self) \(#function)") // TODO: Testable Code, Have to remove
 		let recordedDate: Date = .init()
 		let title: String = inputTitle.isEmpty ? recordedDate.formattedString : inputTitle
 		
 		let newItem: Conversation = .init(
 			id: .init(),
 			title: title,
-			members: [],
+			members: self.members.map({ $0.name }),
 			recordFilePath: filePath,
 			recordedDate: recordedDate,
-			pins: self.pins ?? []
+			pins: self.pins.sorted(by: <)
 		)
 		
 		self.dependency.useCase.add(newItem) { error in
@@ -77,54 +86,122 @@ final class RecordViewModel: Dependency, ObservableObject {
 				print(error?.localizedDescription ?? "\(#function)")
 				return
 			}
-			
-			print("-----> createItem filePath\(filePath)") // TODO: Testable Code, Have to remove
+			// TODO: Testable Code, Have to remove
+			print("-----> createItem filePath")
+			print("\(filePath)")
 		}
 	}
 	
-}
-
-extension RecordViewModel {
-	
-	var buttonColorByisEditing: Color {
-		isStartedRecording ? .logoLightBlue : .logoDarkBlue
+	private func randomEmoji() -> String {
+		let emoji = "😀😃😄😁😆🥹😂🤣😊☺️🙂😉😌😍😘🥰🥳😙😚😋😛😝🤓😎🥸🤩🤭🤗🤠"
+			.map({ String($0) }).randomElement()!
+		return emoji
 	}
 	
 }
 
 extension RecordViewModel {
 	
+	var stopButtonTintColor: Color {
+		canSaveRecording ? .logoLightBlue : .logoDarkBlue
+	}
+	var pinButtonTintColor: Color {
+		isRecording ? .logoLightBlue : .logoDarkBlue
+	}
+	var canSaveRecording: Bool {
+		currentTime > 0 ? true : false
+	}
+	var currentTimeTintColor: Color {
+		isRecording ? .white : .gray
+	}
+	
+}
+
+extension RecordViewModel {
+	
+	func recordPermission() {
+		self.dependency.audioService.permission { [weak self] response in
+			self?.isPermitted = response
+		}
+	}
+	
+	func addMember() {
+		let trimmedString = inputMember.trimmingCharacters(in: [" "])
+		guard trimmedString.count > 0 else {
+			return
+		}
+		let randomEmoji = randomEmoji()
+		self.members.insert(.init(name: trimmedString, emoji: randomEmoji), at: 0)
+		self.inputMember = ""
+	}
+	
+	func remove(member: Member) {
+		guard let index = members.firstIndex(of: member) else {
+			return
+		}
+		self.members.remove(at: index)
+	}
+	
+	func setupRecording() {
+		self.dependency.audioService.setupRecorder { error in
+			guard error == nil else {
+				print(String(describing: error?.localizedDescription))
+				return
+			}
+			isPrepared = true
+			pins = []
+			members = []
+		}
+	}
+	
 	func cancelRecording() {
-		// TODO: CancelRecording - AudioRecordService
-		print("\(Self.self) \(#function)") // TODO: Testable Code, Have to remove
+		self.dependency.audioService.finishRecording(isCancel: true)
 	}
 	
 	func startRecording() {
-		// TODO: StartRecording - AudioRecordService
-		print("\(Self.self) \(#function)") // TODO: Testable Code, Have to remove
-		self.pins = []
+		self.dependency.audioService.startRecording()
+		progressTimer = Timer.scheduledTimer(
+			timeInterval: 0.1,
+			target: self,
+			selector: #selector(updateRealTimeValues),
+			userInfo: nil,
+			repeats: true
+		)
+	}
+	
+	@objc func updateRealTimeValues() {
+		self.currentTime = dependency.audioService.currentTime
 	}
 	
 	func pauseRecording() {
-		// TODO: PauseRecording - AudioRecordService
-		print("\(Self.self) \(#function)") // TODO: Testable Code, Have to remove
+		self.dependency.audioService.pauseRecording()
+		self.progressTimer?.invalidate()
 	}
 	
 	func stopRecording() {
-		// TODO: StopRecording - AudioRecordService
-		print("\(Self.self) \(#function)") // TODO: Testable Code, Have to remove
-		let receivedFilePath: URL = .init(fileURLWithPath: "") // Test
-		createItem(filePath: receivedFilePath)
+		self.dependency.audioService.stopRecording { result in
+			switch result {
+			case .success(let filePath):
+				createItem(filePath: filePath)
+			case .failure(let error):
+				print(error)
+			}
+			dependency.audioService.finishRecording(isCancel: false)
+		}
+	}
+	
+	func finishRecording() {
+		self.progressTimer?.invalidate()
+		self.isPrepared = false
+		self.members = []
+		self.pins = []
 	}
 	
 	func putOnPin() {
-		// TODO: PauseRecording - AudioRecordService
-		print("\(Self.self) \(#function)") // TODO: Testable Code, Have to remove
-		guard let currentTime = self.dependency.audioRecordService.currentRecordingTime else {
-			print("CurrentTime 불러오기 실패") // TODO: Error Handling
+		guard currentTime > 0 else {
 			return
 		}
-		self.pins?.append(currentTime)
+		self.pins.update(with: currentTime)
 	}
 	
 }

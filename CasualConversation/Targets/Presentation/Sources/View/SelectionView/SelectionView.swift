@@ -221,10 +221,6 @@ extension SelectionView {
 		container.NoteSetView(by: viewModel.referenceNoteUseCase)
 	}
 	
-	private func PlayTabView() -> some View {
-		container.PlayTabView()
-	}
-	
 }
 
 #if DEBUG // MARK: - Preview
