@@ -31,6 +31,17 @@ struct RecordView: View {
 				ToolbarItem(placement: .navigationBarLeading) {
 					CancelToolBarButton()
 				}
+				ToolbarItem(placement: .keyboard) {
+					Button(
+						action: {
+							dismissKeyboard()
+						}, label: {
+							Image(systemName: "keyboard.chevron.compact.down")
+						}
+					)
+					.foregroundColor(.ccTintColor)
+					Spacer()
+				}
 			}
 		}
 		.preferredColorScheme(.dark)
