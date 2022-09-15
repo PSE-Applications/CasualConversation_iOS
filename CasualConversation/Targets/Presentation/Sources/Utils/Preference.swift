@@ -8,10 +8,16 @@
 
 import SwiftUI
 
-enum DisplayMode: String, CaseIterable, CustomStringConvertible {
-	case system, light, dark
+protocol UserDefaultsKey {
+	static var key: String { get }
+}
 
+extension UserDefaultsKey {
 	static var key: String { .init(describing: Self.self) }
+}
+
+enum DisplayMode: String, CaseIterable, CustomStringConvertible, UserDefaultsKey {
+	case system, light, dark
 	
 	var description: String {
 		switch self {
@@ -20,6 +26,13 @@ enum DisplayMode: String, CaseIterable, CustomStringConvertible {
 		case .dark:		return "다크 모드"
 		}
 	}
+}
+
+enum SkipTime: Int, CaseIterable, UserDefaultsKey {
+	case five = 5
+	case ten = 10
+	case fifteen = 15
+	case thirty = 30
 }
 
 final class Preference: NSObject, ObservableObject {
@@ -33,15 +46,20 @@ final class Preference: NSObject, ObservableObject {
 			userDefault.set(isLockScreen, forKey: "isLockScreen")
 		}
 	}
+	var skipTime: SkipTime {
+		didSet { userDefault.set(skipTime.rawValue, forKey: SkipTime.key) }
+	}
 	var displayMode: DisplayMode {
 		willSet { objectWillChange.send() }
 		didSet { userDefault.set(displayMode.rawValue, forKey: DisplayMode.key) }
 	}
 	
 	private override init() {
+		let skipTimeValue = userDefault.integer(forKey: SkipTime.key)
 		let screenModeValue = userDefault.string(forKey: DisplayMode.key) ?? "system"
 	   
 		self.isLockScreen = userDefault.bool(forKey: "isLockScreen")
+		self.skipTime = .init(rawValue: skipTimeValue) ?? .five
 		self.displayMode = .init(rawValue: screenModeValue) ?? .system
 	}
 	

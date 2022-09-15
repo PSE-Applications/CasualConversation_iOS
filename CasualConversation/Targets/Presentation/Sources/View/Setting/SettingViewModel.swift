@@ -23,6 +23,9 @@ final class SettingViewModel: Dependency, ObservableObject {
 	@Published var isLockScreen: Bool {
 		willSet { preference.isLockScreen = newValue }
 	}
+	@Published var skipTime: SkipTime {
+		willSet { preference.skipTime = newValue }
+	}
 	@Published var displayMode: DisplayMode {
 		willSet { preference.displayMode = newValue }
 	}
@@ -45,6 +48,7 @@ final class SettingViewModel: Dependency, ObservableObject {
 		self.dependency = dependency
 		
 		self.isLockScreen = preference.isLockScreen
+		self.skipTime = preference.skipTime
 		self.displayMode = preference.displayMode
 	}
 	

@@ -100,6 +100,7 @@ extension SettingView {
 	private func GeneralSection() -> some View {
 		Section {
 			LockScreen()
+			SkipTimeSelection()
 		} header: {
 			Text("일반")
 		}
@@ -109,6 +110,15 @@ extension SettingView {
 		HStack {
 			Toggle("자동잠금 허용 설정", isOn: $viewModel.isLockScreen)
 				.tint(.ccTintColor)
+		}
+	}
+	
+	private func SkipTimeSelection() -> some View {
+		Picker("건너뛰기 시간 설정", selection: $viewModel.skipTime) {
+			ForEach(SkipTime.allCases, id: \.self) { time in
+				Text("\(time.rawValue) 초")
+					.tag(time)
+			}
 		}
 	}
 	
