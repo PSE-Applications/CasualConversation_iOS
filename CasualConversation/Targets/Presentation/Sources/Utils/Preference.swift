@@ -28,11 +28,11 @@ enum DisplayMode: String, CaseIterable, CustomStringConvertible, UserDefaultsKey
 	}
 }
 
-enum SkipTime: Int, CaseIterable, UserDefaultsKey {
-	case five = 5
-	case ten = 10
-	case fifteen = 15
-	case thirty = 30
+enum SkipTime: Double, CaseIterable, UserDefaultsKey {
+	case five = 5.0
+	case ten = 10.0
+	case fifteen = 15.0
+	case thirty = 30.0
 }
 
 final class Preference: NSObject, ObservableObject {
@@ -55,7 +55,7 @@ final class Preference: NSObject, ObservableObject {
 	}
 	
 	private override init() {
-		let skipTimeValue = userDefault.integer(forKey: SkipTime.key)
+		let skipTimeValue = userDefault.double(forKey: SkipTime.key)
 		let screenModeValue = userDefault.string(forKey: DisplayMode.key) ?? "system"
 	   
 		self.isLockScreen = userDefault.bool(forKey: "isLockScreen")
