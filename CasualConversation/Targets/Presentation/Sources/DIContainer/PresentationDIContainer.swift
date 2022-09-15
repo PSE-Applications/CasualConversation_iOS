@@ -77,7 +77,7 @@ extension PresentationDIContainer {
 	}
 	
 	func MainTabView() -> MainTabView {
-		let viewModel: MainTabViewModel = .init(dependency: .init())
+		let viewModel: MainTabViewModel = .init()
 		return .init(viewModel: viewModel)
 	}
 	
@@ -134,7 +134,7 @@ extension PresentationDIContainer {
 	}
 	
 	func SettingView() -> SettingView {
-		let viewModel: SettingViewModel = .init(dependency: .init())
+		let viewModel: SettingViewModel = .init()
 		return .init(viewModel: viewModel)
 	}
 	

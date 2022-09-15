@@ -195,9 +195,9 @@ extension SettingView {
 struct SettingView_Previews: PreviewProvider {
 	
     static var previews: some View {
-		SettingView(viewModel: .init(dependency: .init()))
+		SettingView(viewModel: .init())
 			.preferredColorScheme(.light)
-		SettingView(viewModel: .init(dependency: .init()))
+		SettingView(viewModel: .init())
 			.preferredColorScheme(.dark)
     }
 	

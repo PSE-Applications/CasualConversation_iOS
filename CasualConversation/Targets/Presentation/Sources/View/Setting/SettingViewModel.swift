@@ -11,13 +11,8 @@ import Common
 import SwiftUI
 import MessageUI
 
-final class SettingViewModel: Dependency, ObservableObject {
+final class SettingViewModel: ObservableObject {
 	
-	struct Dependency {
-		
-	}
-	
-	let dependency: Dependency
 	private let preference: Preference = .shared
 	
 	@Published var isLockScreen: Bool {
@@ -44,12 +39,10 @@ final class SettingViewModel: Dependency, ObservableObject {
 		}
 	}
 	
-	init(dependency: Dependency) {
-		self.dependency = dependency
-		
-		self.isLockScreen = preference.isLockScreen
-		self.skipTime = preference.skipTime
-		self.displayMode = preference.displayMode
+	init() {		
+		self.isLockScreen = Preference.shared.isLockScreen
+		self.skipTime = Preference.shared.skipTime
+		self.displayMode = Preference.shared.displayMode
 	}
 	
 }

@@ -10,20 +10,10 @@ import Common
 
 import SwiftUI
 
-final class MainTabViewModel: Dependency, ObservableObject {
+final class MainTabViewModel: ObservableObject {
 	
 	enum Tab {
 		case conversations, notes
-	}
-	
-	struct Dependency {
-		
-	}
-	
-	let dependency: Dependency
-	
-	init(dependency: Dependency) {
-		self.dependency = dependency
 	}
 	
 }
