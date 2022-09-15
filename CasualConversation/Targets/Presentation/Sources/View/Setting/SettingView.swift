@@ -32,7 +32,6 @@ struct SettingView: View {
 				.foregroundColor(.gray)
 				.font(.caption)
 		}
-		.background(Color.ccGroupBgColor)
 		.navigationTitle("Setting")
 		.navigationBarTitleDisplayMode(.inline)
     }
@@ -116,7 +115,7 @@ extension SettingView {
 	private func SkipTimeSelection() -> some View {
 		Picker("건너뛰기 시간 설정", selection: $viewModel.skipTime) {
 			ForEach(SkipTime.allCases, id: \.self) { time in
-				Text("\(time.rawValue) 초")
+				Text("\(time.description) 초")
 					.tag(time)
 			}
 		}
@@ -165,11 +164,11 @@ extension SettingView {
 	
 	private func UnclassifiedSection() -> some View {
 		Section {
-			NavigationLink(destination: {
-				Text("오픈소스 라이선스")
-			}, label: {
-				Text("오픈소스 라이선스")
-			})
+//			NavigationLink(destination: {
+//				Text("오픈소스 라이선스")
+//			}, label: {
+//				Text("오픈소스 라이선스")
+//			})
 			
 			HStack {
 				Text("버전")

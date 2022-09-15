@@ -28,11 +28,13 @@ enum DisplayMode: String, CaseIterable, CustomStringConvertible, UserDefaultsKey
 	}
 }
 
-enum SkipTime: Double, CaseIterable, UserDefaultsKey {
+enum SkipTime: Double, CaseIterable, CustomStringConvertible, UserDefaultsKey {
 	case five = 5.0
 	case ten = 10.0
 	case fifteen = 15.0
 	case thirty = 30.0
+	
+	var description: String { "\(Int(self.rawValue))" }
 }
 
 final class Preference: NSObject, ObservableObject {
