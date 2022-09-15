@@ -133,6 +133,7 @@ extension RecordView {
 				  prompt: Text("녹음 제목을 입력하세요")
 		)
 		.multilineTextAlignment(.center)
+		.showClearButton($viewModel.inputTitle)
 		.cornerRadius(10)
 	}
 	
@@ -142,6 +143,7 @@ extension RecordView {
 				  prompt: Text("대화 주제를 입력하세요")
 		)
 		.multilineTextAlignment(.center)
+		.showClearButton($viewModel.inputTopic)
 		.cornerRadius(10)
 	}
 	
@@ -153,6 +155,7 @@ extension RecordView {
 					  prompt: Text("참여자를 추가하세요")
 			)
 			.multilineTextAlignment(.center)
+			.showClearButton($viewModel.inputMember)
 			.cornerRadius(10)
 			.onSubmit {
 				viewModel.addMember()
