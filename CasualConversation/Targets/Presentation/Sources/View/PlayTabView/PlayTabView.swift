@@ -116,7 +116,7 @@ extension PlayTabView {
 			viewModel.skip(.back)
 		} label: {
 			Spacer()
-			Image(systemName: "gobackward.5")
+			Image(systemName: "gobackward." + viewModel.skipTime)
 				.font(.system(size: 22))
 			Spacer()
 		}
@@ -129,7 +129,7 @@ extension PlayTabView {
 			viewModel.skip(.forward)
 		} label: {
 			Spacer()
-			Image(systemName: "goforward.5")
+			Image(systemName: "goforward." + viewModel.skipTime)
 				.font(.system(size: 22))
 			Spacer()
 		}
