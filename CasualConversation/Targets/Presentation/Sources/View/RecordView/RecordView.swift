@@ -88,14 +88,39 @@ extension RecordView {
 	}
 	
 	private func RecordInfo() -> some View {
-		HStack {
-//			withAnimation {
-//				Image(systemName: <#T##String#>)
-//					.foregroundColor(<#T##color: Color?##Color?#>)
-//			}
-			Text(viewModel.currentTime.formattedToDisplayTime)
-				.foregroundColor(viewModel.currentTimeTintColor)
-				.font(.headline)
+		VStack {
+			Spacer(minLength: 30)
+			HStack {
+				Spacer()
+				Image(systemName: "circle.fill")
+					.foregroundColor(viewModel.onRecordingTintColor)
+					.opacity(viewModel.onRecordingOpacity)
+				Text(viewModel.currentTime.formattedToDisplayTime)
+					.foregroundColor(viewModel.currentTimeTintColor)
+					.font(.largeTitle)
+				Spacer()
+			}
+			Spacer()
+			List {
+				ForEach(viewModel.pins, id: \.self) { time in
+					HStack {
+						Text("📌 \(time.formattedToDisplayTime)")
+						Spacer()
+						Button(
+							action: {
+								viewModel.remove(pin: time)
+							}, label: {
+								Image(systemName: "delete.backward")
+									.foregroundColor(.logoLightRed)
+							}
+						)
+					}
+					.listRowBackground(Color.clear)
+				}
+			}
+			.padding()
+			.listStyle(.plain)
+			.background(Color.clear)
 		}
 	}
 	

@@ -32,7 +32,6 @@ final class RecordViewModel: Dependency, ObservableObject {
 	}
 	
 	let dependency: Dependency
-	var pins: Set<TimeInterval> = []
 	
 	@Published var isPermitted: Bool = false {
 		willSet {
@@ -49,6 +48,7 @@ final class RecordViewModel: Dependency, ObservableObject {
 	@Published var inputTopic: String = ""
 	@Published var inputMember: String = ""
 	@Published var members: [Member] = []
+	@Published var pins: [TimeInterval] = []
 	
 	@Published var currentTime: TimeInterval = .zero {
 		didSet { print(currentTime) }
@@ -75,10 +75,11 @@ final class RecordViewModel: Dependency, ObservableObject {
 		let newItem: Conversation = .init(
 			id: .init(),
 			title: title,
-			members: self.members.map({ $0.name }),
+			topic: inputTopic,
+			members: members.map({ $0.name }),
 			recordFilePath: filePath,
 			recordedDate: recordedDate,
-			pins: self.pins.sorted(by: <)
+			pins: pins
 		)
 		
 		self.dependency.useCase.add(newItem) { error in
@@ -100,6 +101,7 @@ final class RecordViewModel: Dependency, ObservableObject {
 	
 }
 
+// MARK: - UI Configure
 extension RecordViewModel {
 	
 	var stopButtonTintColor: Color {
@@ -114,11 +116,23 @@ extension RecordViewModel {
 	var currentTimeTintColor: Color {
 		isRecording ? .white : .gray
 	}
+	var onRecordingTintColor: Color {
+		isRecording ? .logoLightRed : .logoDarkRed
+	}
+	var onRecordingOpacity: Double {
+		if isRecording {
+			return Int(currentTime) % 2 == 0 ? 1.0 : 0.0
+		} else {
+			return 1.0
+		}
+	}
 	
 }
 
+// MARK: - Methods
 extension RecordViewModel {
 	
+	// MARK: Member
 	func recordPermission() {
 		self.dependency.audioService.permission { [weak self] response in
 			self?.isPermitted = response
@@ -142,6 +156,26 @@ extension RecordViewModel {
 		self.members.remove(at: index)
 	}
 	
+	// MARK: Pin
+	func putOnPin() {
+		guard currentTime > 0,
+			  pins.filter(
+				{ Int($0) % 60 == Int(currentTime) % 60 }
+			  ).count == 0
+		else {
+			return
+		}
+		self.pins.append(currentTime)
+	}
+	
+	func remove(pin time: TimeInterval) {
+		guard let index = pins.firstIndex(of: time) else {
+			return
+		}
+		self.pins.remove(at: index)
+	}
+	
+	// MARK: Recording
 	func setupRecording() {
 		self.dependency.audioService.setupRecorder { error in
 			guard error == nil else {
@@ -195,13 +229,6 @@ extension RecordViewModel {
 		self.isPrepared = false
 		self.members = []
 		self.pins = []
-	}
-	
-	func putOnPin() {
-		guard currentTime > 0 else {
-			return
-		}
-		self.pins.update(with: currentTime)
 	}
 	
 }
