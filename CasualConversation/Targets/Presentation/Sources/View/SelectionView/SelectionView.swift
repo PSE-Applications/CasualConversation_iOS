@@ -35,10 +35,7 @@ struct SelectionView: View {
 			SelectedNoteSet()
 		}
 		.overlay {
-			VStack {
-				Spacer()
-				PlayTabView()
-			}
+			PlayTabView()
 		}
 		.background(Color.ccBgColor)
 		.navigationBarBackButtonHidden(true)
@@ -219,6 +216,14 @@ extension SelectionView {
 	
 	private func SelectedNoteSet() -> some View {
 		container.NoteSetView(by: viewModel.referenceNoteUseCase)
+	}
+	
+	private func PlayTabView() -> some View {
+		VStack {
+			Spacer()
+			container.PlayTabView(with: viewModel.referenceItem)
+		}
+		.ignoresSafeArea(.keyboard, edges: .bottom)
 	}
 	
 }

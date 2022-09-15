@@ -27,12 +27,14 @@ struct PlayTabView: View {
 			}
 			PlayControl()
 		}
+		.background(Color.ccGroupBgColor)
 		.onAppear {
 			viewModel.setupPlaying()
 		}
 		.onDisappear {
 			viewModel.finishPlaying()
 		}
+	}
 	
 }
 

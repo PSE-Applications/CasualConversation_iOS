@@ -76,7 +76,7 @@ extension MainTabView {
 				Spacer()
 				ZStack(alignment: .center) {
 					Circle()
-						.fill(Color.logoLightGreen)
+						.fill(Color.ccTintColor)
 						.frame(height: 74)
 					Image(systemName: "mic.fill.badge.plus")
 						.font(.system(size: 44))

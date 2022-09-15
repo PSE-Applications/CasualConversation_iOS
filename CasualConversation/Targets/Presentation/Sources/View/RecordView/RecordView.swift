@@ -52,7 +52,7 @@ extension RecordView {
 		} label: {
 			Text("취소")
 				.font(.headline)
-				.foregroundColor(.logoLightGreen)
+				.foregroundColor(.ccTintColor)
 		}
 		.alert("녹음 취소", isPresented: $cancelAlert) {
 			Button("삭제", role: .destructive) {
@@ -72,7 +72,10 @@ extension RecordView {
 			Spacer()
 			ConversationInfo()
 		}
-		.background(Color.lightRecordColor)
+		.background(Color
+			.lightRecordColor
+			.cornerRadius(25)
+		)
 		.padding()
 	}
 	
@@ -152,7 +155,7 @@ extension RecordView {
 						ZStack {
 							Rectangle()
 								.cornerRadius(15)
-								.foregroundColor(.recordShadow)
+								.foregroundColor(.darkRecordColor)
 							HStack {
 								Text(member.emoji)
 								Text(member.name)
