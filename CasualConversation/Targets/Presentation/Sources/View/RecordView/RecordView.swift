@@ -133,6 +133,7 @@ extension RecordView {
 				  prompt: Text("녹음 제목을 입력하세요")
 		)
 		.multilineTextAlignment(.center)
+		.cornerRadius(10)
 	}
 	
 	private func InputTopic() -> some View {
@@ -141,6 +142,7 @@ extension RecordView {
 				  prompt: Text("대화 주제를 입력하세요")
 		)
 		.multilineTextAlignment(.center)
+		.cornerRadius(10)
 	}
 	
 	@ViewBuilder
@@ -151,6 +153,7 @@ extension RecordView {
 					  prompt: Text("참여자를 추가하세요")
 			)
 			.multilineTextAlignment(.center)
+			.cornerRadius(10)
 			.onSubmit {
 				viewModel.addMember()
 			}
