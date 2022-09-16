@@ -141,23 +141,40 @@ extension SettingView {
 	
 	private func FeedbackSection() -> some View {
 		Section {
-			Button("문의하기") {
-				self.isShowingMailView.toggle()
-			}
+			Link(
+				destination: .init(
+					string: "https://www.instagram.com/casualconversation_ccrecorder/")!,
+				label: {
+					Label("인스타그램 소통하기", systemImage: "hand.thumbsup")
+				}
+			)
+			Button(
+				action: {
+					self.isShowingMailView.toggle()
+				}, label: {
+					Label("문의하기", systemImage: "envelope.open")
+				}
+			)
 			.sheet(isPresented: $isShowingMailView) {
 				MailView(
 					isShowing: $isShowingMailView,
 					result: $viewModel.mailSendedResult
 				)
 			}
-			Button("별점주기") {
-				print("별점주기")
-				viewModel.requestReview()
-			}
-			Button("공유하기") {
-				print("공유하기 \(isShowingActivityView)")
-				self.isShowingActivityView.toggle()
-			}
+			Button(
+				action: {
+					viewModel.requestReview()
+				}, label: {
+					Label("별점주기", systemImage: "star.leadinghalf.filled")
+				}
+			)
+			Button(
+				action: {
+					self.isShowingActivityView.toggle()
+				}, label: {
+					Label("공유하기", systemImage: "square.and.arrow.up")
+				}
+			)
 			.background {
 				ActivityView(isPresented: $isShowingActivityView)
 			}
