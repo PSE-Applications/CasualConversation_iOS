@@ -107,7 +107,7 @@ extension PlayTabViewModel {
 		disabledPlaying ? 0.3 : 1.0
 	}
 	var skipTime: String {
-		"\(skipSecond)"
+		"\(Int(skipSecond))"
 	}
 	var isPlayingImageName: String {
 		if disabledPlaying {
