@@ -16,6 +16,7 @@ struct SettingView: View {
 	@ObservedObject var viewModel: SettingViewModel
 	
 	@State private var isShowingMailView: Bool = false
+	@State private var isShowingActivityView: Bool = false
 	
     var body: some View {
 		VStack {
@@ -154,7 +155,11 @@ extension SettingView {
 				viewModel.requestReview()
 			}
 			Button("공유하기") {
-				
+				print("공유하기 \(isShowingActivityView)")
+				self.isShowingActivityView.toggle()
+			}
+			.background {
+				ActivityView(isPresented: $isShowingActivityView)
 			}
 		} header: {
 			Text("소통")
