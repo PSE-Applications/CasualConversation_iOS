@@ -10,21 +10,18 @@ import Common
 
 import SwiftUI
 import MessageUI
+import StoreKit
 
-final class SettingViewModel: Dependency, ObservableObject {
-	
-	struct Dependency {
-		
-	}
-	
-	let dependency: Dependency
-	private let preference: Preference = .shared
+final class SettingViewModel: ObservableObject {
 	
 	@Published var isLockScreen: Bool {
-		willSet { preference.isLockScreen = newValue }
+		willSet { Preference.shared.isLockScreen = newValue }
+	}
+	@Published var skipTime: SkipTime {
+		willSet { Preference.shared.skipTime = newValue }
 	}
 	@Published var displayMode: DisplayMode {
-		willSet { preference.displayMode = newValue }
+		willSet { Preference.shared.displayMode = newValue }
 	}
 	@Published var mailSendedResult: Result<MFMailComposeResult,Error>? {
 		// TODO: Mail 완료 후 처리 필요
@@ -40,12 +37,13 @@ final class SettingViewModel: Dependency, ObservableObject {
 			}
 		}
 	}
+	@Published var version: String
 	
-	init(dependency: Dependency) {
-		self.dependency = dependency
-		
-		self.isLockScreen = preference.isLockScreen
-		self.displayMode = preference.displayMode
+	init() {		
+		self.isLockScreen = Preference.shared.isLockScreen
+		self.skipTime = Preference.shared.skipTime
+		self.displayMode = Preference.shared.displayMode
+		self.version = Preference.shared.appVersion
 	}
 	
 }
@@ -53,7 +51,7 @@ final class SettingViewModel: Dependency, ObservableObject {
 extension SettingViewModel {
 	
 	func logoImageName(by colorScheme: ColorScheme) -> String {
-		if let userSelection = preference.colorScheme {
+		if let userSelection = Preference.shared.colorScheme {
 			return userSelection == .light ? "pse_logo" : "pse_logo_border"
 		} else {
 			return colorScheme == .light ? "pse_logo" : "pse_logo_border"
@@ -61,11 +59,23 @@ extension SettingViewModel {
 	}
 	
 	func titleImageName(by colorScheme: ColorScheme) -> String {
-		if let userSelection = preference.colorScheme {
+		if let userSelection = Preference.shared.colorScheme {
 			return userSelection == .light ? "pse_title" : "pse_title_border"
 		} else {
 			return colorScheme == .light ? "pse_title" : "pse_title_border"
 		}
+	}
+	
+}
+
+extension SettingViewModel {
+	
+	func requestReview() {
+		guard let currentScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else {
+			  print("UNABLE TO GET CURRENT SCENE")
+			  return
+		}
+		SKStoreReviewController.requestReview(in: currentScene)
 	}
 	
 }

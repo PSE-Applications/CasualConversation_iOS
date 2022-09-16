@@ -54,8 +54,8 @@ final class PlayTabViewModel: Dependency, ObservableObject {
 		didSet { changedCurrentTime() }
 	}
 	@Published var duration: TimeInterval = .zero
+	@Published var skipSecond: Double = Preference.shared.skipTime.rawValue
 	
-	private let skipSeconds: Double = 5
 	private var progressTimer: Timer?
 	
 	init(dependency: Dependency) {
@@ -106,6 +106,9 @@ extension PlayTabViewModel {
 	var disabledPlayingOpacity: Double {
 		disabledPlaying ? 0.3 : 1.0
 	}
+	var skipTime: String {
+		"\(Int(skipSecond))"
+	}
 	var isPlayingImageName: String {
 		if disabledPlaying {
 			return "speaker.slash.circle.fill"
@@ -148,9 +151,9 @@ extension PlayTabViewModel {
 		let timeToSeek: Double
 		switch direction {
 		case .forward:
-			timeToSeek = currentTime + skipSeconds
+			timeToSeek = currentTime + skipSecond
 		case .back:
-			timeToSeek = currentTime - skipSeconds
+			timeToSeek = currentTime - skipSecond
 		case .next:
 			guard let nextTimeToSeek = nextPin else {
 				return

@@ -49,6 +49,11 @@ struct MailView: UIViewControllerRepresentable {
 		// TODO: Mail 내용 구상 필요
 		vc.setToRecipients(["pse.applications@gmail.com"])
 		vc.setSubject("[CC_iOS] 문의하기 \(Date().formattedString)")
+		let deviceModel = "Model : \(Preference.shared.deviceName)"
+		let osVersion = "OS : \(UIDevice.current.systemVersion)"
+		let appVersion = "App Version : \(Preference.shared.appVersion)"
+		let body = ["[User Info]", deviceModel, osVersion, appVersion].joined(separator: "\n")
+		vc.setMessageBody(body, isHTML: false)
 		return vc
 	}
 

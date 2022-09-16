@@ -16,6 +16,7 @@ struct SettingView: View {
 	@ObservedObject var viewModel: SettingViewModel
 	
 	@State private var isShowingMailView: Bool = false
+	@State private var isShowingActivityView: Bool = false
 	
     var body: some View {
 		VStack {
@@ -32,7 +33,6 @@ struct SettingView: View {
 				.foregroundColor(.gray)
 				.font(.caption)
 		}
-		.background(Color.ccGroupBgColor)
 		.navigationTitle("Setting")
 		.navigationBarTitleDisplayMode(.inline)
     }
@@ -100,6 +100,7 @@ extension SettingView {
 	private func GeneralSection() -> some View {
 		Section {
 			LockScreen()
+			SkipTimeSelection()
 		} header: {
 			Text("일반")
 		}
@@ -109,6 +110,15 @@ extension SettingView {
 		HStack {
 			Toggle("자동잠금 허용 설정", isOn: $viewModel.isLockScreen)
 				.tint(.ccTintColor)
+		}
+	}
+	
+	private func SkipTimeSelection() -> some View {
+		Picker("건너뛰기 시간 설정", selection: $viewModel.skipTime) {
+			ForEach(SkipTime.allCases, id: \.self) { time in
+				Text("\(time.description) 초")
+					.tag(time)
+			}
 		}
 	}
 	
@@ -131,21 +141,42 @@ extension SettingView {
 	
 	private func FeedbackSection() -> some View {
 		Section {
-			Button("문의하기") {
-				self.isShowingMailView.toggle()
-			}
+			Link(
+				destination: .init(
+					string: "https://www.instagram.com/casualconversation_ccrecorder/")!,
+				label: {
+					Label("인스타그램 소통하기", systemImage: "hand.thumbsup")
+				}
+			)
+			Button(
+				action: {
+					self.isShowingMailView.toggle()
+				}, label: {
+					Label("문의하기", systemImage: "envelope.open")
+				}
+			)
 			.sheet(isPresented: $isShowingMailView) {
 				MailView(
 					isShowing: $isShowingMailView,
 					result: $viewModel.mailSendedResult
 				)
 			}
-			Text("리뷰하기")
-				.onTapGesture {
-					print(#function)
+			Button(
+				action: {
+					viewModel.requestReview()
+				}, label: {
+					Label("별점주기", systemImage: "star.leadinghalf.filled")
 				}
-			Button("공유하기") {
-				
+			)
+			Button(
+				action: {
+					self.isShowingActivityView.toggle()
+				}, label: {
+					Label("공유하기", systemImage: "square.and.arrow.up")
+				}
+			)
+			.background {
+				ActivityView(isPresented: $isShowingActivityView)
 			}
 		} header: {
 			Text("소통")
@@ -155,16 +186,16 @@ extension SettingView {
 	
 	private func UnclassifiedSection() -> some View {
 		Section {
-			NavigationLink(destination: {
-				Text("오픈소스 라이선스")
-			}, label: {
-				Text("오픈소스 라이선스")
-			})
+//			NavigationLink(destination: {
+//				Text("오픈소스 라이선스")
+//			}, label: {
+//				Text("오픈소스 라이선스")
+//			})
 			
 			HStack {
 				Text("버전")
 				Spacer()
-				Text("1.0.0")
+				Text(viewModel.version)
 					.font(.subheadline)
 					.foregroundColor(.gray)
 			}
@@ -185,9 +216,9 @@ extension SettingView {
 struct SettingView_Previews: PreviewProvider {
 	
     static var previews: some View {
-		SettingView(viewModel: .init(dependency: .init()))
+		SettingView(viewModel: .init())
 			.preferredColorScheme(.light)
-		SettingView(viewModel: .init(dependency: .init()))
+		SettingView(viewModel: .init())
 			.preferredColorScheme(.dark)
     }
 	

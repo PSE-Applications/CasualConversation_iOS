@@ -22,10 +22,11 @@ struct TeamMateInfoView: View {
 			MemberInfo(by: .init(
 					imageName: "profile_marco",
 					name: "Marco",
-					role: "iOS Development",
+					role: "Team Leader\niOS Development",
 					links: [
 						("github", "https://github.com/keeplo"),
-						("blog", "https://keeplo.tistory.com")
+						("blog", "https://keeplo.tistory.com"),
+						("AppStore", "https://apps.apple.com/kr/developer/id1642134370")
 					]
 				)
 			)
@@ -36,7 +37,7 @@ struct TeamMateInfoView: View {
 					links: [
 						("github", "https://github.com/dacodaco"),
 						("blog", "https://codable.space"),
-						("AppStore", "https://apps.apple.com/us/developer/chanwoo-kim/id1604589992")
+						("AppStore", "https://apps.apple.com/kr/developer/id1604589992")
 					]
 				)
 			)
