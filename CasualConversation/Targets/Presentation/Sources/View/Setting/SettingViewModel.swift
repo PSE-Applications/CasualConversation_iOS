@@ -10,6 +10,7 @@ import Common
 
 import SwiftUI
 import MessageUI
+import StoreKit
 
 final class SettingViewModel: ObservableObject {
 	
@@ -63,6 +64,18 @@ extension SettingViewModel {
 		} else {
 			return colorScheme == .light ? "pse_title" : "pse_title_border"
 		}
+	}
+	
+}
+
+extension SettingViewModel {
+	
+	func requestReview() {
+		guard let currentScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else {
+			  print("UNABLE TO GET CURRENT SCENE")
+			  return
+		}
+		SKStoreReviewController.requestReview(in: currentScene)
 	}
 	
 }

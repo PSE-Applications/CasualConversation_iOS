@@ -149,10 +149,10 @@ extension SettingView {
 					result: $viewModel.mailSendedResult
 				)
 			}
-			Text("리뷰하기")
-				.onTapGesture {
-					print(#function)
-				}
+			Button("별점주기") {
+				print("별점주기")
+				viewModel.requestReview()
+			}
 			Button("공유하기") {
 				
 			}
