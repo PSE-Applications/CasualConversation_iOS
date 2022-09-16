@@ -31,6 +31,17 @@ struct RecordView: View {
 				ToolbarItem(placement: .navigationBarLeading) {
 					CancelToolBarButton()
 				}
+				ToolbarItem(placement: .keyboard) {
+					Button(
+						action: {
+							dismissKeyboard()
+						}, label: {
+							Image(systemName: "keyboard.chevron.compact.down")
+						}
+					)
+					.foregroundColor(.ccTintColor)
+					Spacer()
+				}
 			}
 		}
 		.preferredColorScheme(.dark)
@@ -80,14 +91,39 @@ extension RecordView {
 	}
 	
 	private func RecordInfo() -> some View {
-		HStack {
-//			withAnimation {
-//				Image(systemName: <#T##String#>)
-//					.foregroundColor(<#T##color: Color?##Color?#>)
-//			}
-			Text(viewModel.currentTime.formattedToDisplayTime)
-				.foregroundColor(viewModel.currentTimeTintColor)
-				.font(.headline)
+		VStack {
+			Spacer(minLength: 30)
+			HStack {
+				Spacer()
+				Image(systemName: "circle.fill")
+					.foregroundColor(viewModel.onRecordingTintColor)
+					.opacity(viewModel.onRecordingOpacity)
+				Text(viewModel.currentTime.formattedToDisplayTime)
+					.foregroundColor(viewModel.currentTimeTintColor)
+					.font(.largeTitle)
+				Spacer()
+			}
+			Spacer()
+			List {
+				ForEach(viewModel.pins, id: \.self) { time in
+					HStack {
+						Text("📌 \(time.formattedToDisplayTime)")
+						Spacer()
+						Button(
+							action: {
+								viewModel.remove(pin: time)
+							}, label: {
+								Image(systemName: "delete.backward")
+									.foregroundColor(.logoLightRed)
+							}
+						)
+					}
+					.listRowBackground(Color.clear)
+				}
+			}
+			.padding()
+			.listStyle(.plain)
+			.background(Color.clear)
 		}
 	}
 	
@@ -125,6 +161,8 @@ extension RecordView {
 				  prompt: Text("녹음 제목을 입력하세요")
 		)
 		.multilineTextAlignment(.center)
+		.showClearButton($viewModel.inputTitle)
+		.cornerRadius(10)
 	}
 	
 	private func InputTopic() -> some View {
@@ -133,6 +171,8 @@ extension RecordView {
 				  prompt: Text("대화 주제를 입력하세요")
 		)
 		.multilineTextAlignment(.center)
+		.showClearButton($viewModel.inputTopic)
+		.cornerRadius(10)
 	}
 	
 	@ViewBuilder
@@ -143,6 +183,8 @@ extension RecordView {
 					  prompt: Text("참여자를 추가하세요")
 			)
 			.multilineTextAlignment(.center)
+			.showClearButton($viewModel.inputMember)
+			.cornerRadius(10)
 			.onSubmit {
 				viewModel.addMember()
 			}
