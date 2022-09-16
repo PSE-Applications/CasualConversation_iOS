@@ -41,6 +41,7 @@ final class Preference: NSObject, ObservableObject {
 	
 	static let shared: Preference = Preference()
 	private let userDefault: UserDefaults = UserDefaults.standard
+	private let bundle: Bundle = Bundle.main
 	
 	var isLockScreen: Bool {
 		didSet {
@@ -55,6 +56,7 @@ final class Preference: NSObject, ObservableObject {
 		willSet { objectWillChange.send() }
 		didSet { userDefault.set(displayMode.rawValue, forKey: DisplayMode.key) }
 	}
+	let appVersion: String
 	
 	private override init() {
 		let skipTimeValue = userDefault.double(forKey: SkipTime.key)
@@ -63,6 +65,7 @@ final class Preference: NSObject, ObservableObject {
 		self.isLockScreen = userDefault.bool(forKey: "isLockScreen")
 		self.skipTime = .init(rawValue: skipTimeValue) ?? .five
 		self.displayMode = .init(rawValue: screenModeValue) ?? .system
+		self.appVersion = bundle.infoDictionary?["CFBundleShortVersionString"] as? String ?? "불러오기 실패"
 	}
 	
 }

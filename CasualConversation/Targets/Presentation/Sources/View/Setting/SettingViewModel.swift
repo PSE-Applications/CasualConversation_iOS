@@ -36,11 +36,13 @@ final class SettingViewModel: ObservableObject {
 			}
 		}
 	}
+	@Published var version: String
 	
 	init() {		
 		self.isLockScreen = Preference.shared.isLockScreen
 		self.skipTime = Preference.shared.skipTime
 		self.displayMode = Preference.shared.displayMode
+		self.version = Preference.shared.appVersion
 	}
 	
 }

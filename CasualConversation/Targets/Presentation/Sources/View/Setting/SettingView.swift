@@ -173,7 +173,7 @@ extension SettingView {
 			HStack {
 				Text("버전")
 				Spacer()
-				Text("1.0.0")
+				Text(viewModel.version)
 					.font(.subheadline)
 					.foregroundColor(.gray)
 			}
