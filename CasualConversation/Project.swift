@@ -80,7 +80,7 @@ let domainModule = makeModule(layer: .domain, dependencies: [.common])
 
 // MARK: - Project
 let infoPlist: [String: InfoPlist.Value] = [
-	"CFBundleShortVersionString": "1.0",
+	"CFBundleShortVersionString": "1.0.0",
 	"CFBundleVersion": "1",
 	"UIMainStoryboardFile": "",
 	"UISupportedInterfaceOrientations" : ["UIInterfaceOrientationPortrait"],
