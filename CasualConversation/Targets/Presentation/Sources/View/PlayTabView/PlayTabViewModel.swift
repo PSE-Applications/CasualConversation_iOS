@@ -10,6 +10,7 @@ import Common
 import Domain
 
 import SwiftUI
+import Combine
 
 final class PlayTabViewModel: Dependency, ObservableObject {
 		
@@ -50,13 +51,11 @@ final class PlayTabViewModel: Dependency, ObservableObject {
 	}
 	@Published var nextPin: TimeInterval?
 	@Published var isPlaying: Bool = false
-	@Published var currentTime: TimeInterval = .zero {
-		didSet { changedCurrentTime() }
-	}
+	@Published var currentTime: TimeInterval = .zero
 	@Published var duration: TimeInterval = .zero
 	@Published var skipSecond: Double = Preference.shared.skipTime.rawValue
 	
-	private var progressTimer: Timer?
+	private var cancellableSet = Set<AnyCancellable>()
 	
 	init(dependency: Dependency) {
 		self.dependency = dependency
@@ -65,6 +64,11 @@ final class PlayTabViewModel: Dependency, ObservableObject {
 			.assign(to: &self.$isPlaying)
 		dependency.audioService.currentTimePublisher
 			.assign(to: &self.$currentTime)
+		dependency.audioService.currentTimePublisher
+			.sink(receiveValue: { [weak self] _ in
+				self?.changedCurrentTime()
+			})
+			.store(in: &cancellableSet)
 		dependency.audioService.durationPublisher
 			.assign(to: &self.$duration)
 	}
@@ -124,7 +128,6 @@ extension PlayTabViewModel {
 	
 	func pausePlaying() {
 		self.dependency.audioService.pausePlaying()
-		self.progressTimer?.invalidate()
 	}
 	
 	func skip(_ direction: Direction) {
