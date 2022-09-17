@@ -40,24 +40,14 @@ import Common
 import Domain
 import Data
 
-import AVFAudio
-import Foundation
-import Combine
-
 // MARK: Data Layer
 struct DebugRecordDataController: RecordDataControllerProtocol {
 	
 	func requestNewFilePath() -> URL {
 		return URL(fileURLWithPath: "DEBUG")
 	}
-	
-	func requestRecordData(from filePath: URL) -> Data? {
-		return nil
-	}
-	
-	func deleteRecordData(from filePath: URL, completion: (CCError?) -> Void) {
-		
-	}
+	func requestRecordData(from filePath: URL) -> Data? { return nil }
+	func deleteRecordData(from filePath: URL, completion: (CCError?) -> Void) {	}
 	
 }
 
@@ -98,21 +88,10 @@ struct DebugConversationRepository: ConversationDataControllerProtocol {
 		)
 	]
 	
-	func fetch() -> [Conversation]? {
-		dummyModel
-	}
-	
-	func create(_ item: Conversation, completion: (CCError?) -> Void) {
-		print(#function)
-	}
-	
-	func update(after updatedItem: Conversation, completion: (CCError?) -> Void) {
-		print(#function)
-	}
-	
-	func delete(_ item: Conversation, completion: (CCError?) -> Void) {
-		print(#function)
-	}
+	func fetch() -> [Conversation]? { dummyModel }
+	func create(_ item: Conversation, completion: (CCError?) -> Void) { }
+	func update(after updatedItem: Conversation, completion: (CCError?) -> Void) { }
+	func delete(_ item: Conversation, completion: (CCError?) -> Void) { }
 	
 }
 
@@ -165,23 +144,15 @@ struct DebugNoteRepository: NoteDataControllerProtocol {
 	
 	func fetch(filter item: Conversation?) -> [Note]? {
 		if let _ = item {
-			return dummyModel.enumerated().filter { $0.offset % 2 == Int.random(in: 0...1) }.map { $0.element }
+			return dummyModel.enumerated()
+				.filter { $0.offset % 2 == Int.random(in: 0...1) }.map { $0.element }
 		} else {
 			return dummyModel
 		}
 	}
-	
-	func create(_ item: Note, completion: (CCError?) -> Void) {
-		print(#function)
-	}
-	
-	func update(after updatedItem: Note, completion: (CCError?) -> Void) {
-		print(#function)
-	}
-	
-	func delete(_ item: Note, completion: (CCError?) -> Void) {
-		print(#function)
-	}
+	func create(_ item: Note, completion: (CCError?) -> Void) { }
+	func update(after updatedItem: Note, completion: (CCError?) -> Void) { }
+	func delete(_ item: Note, completion: (CCError?) -> Void) { }
 	
 }
 
@@ -190,18 +161,9 @@ final class DebugNoteUseCase: NoteManagable {
 	
 	@Published private var list: [Note] = []
 	var dataSourcePublisher: Published<[Note]>.Publisher { $list }
-	
-	func add(item: Note, completion: (CCError?) -> Void) {
-		
-	}
-	
-	func edit(_ newItem: Note, completion: (CCError?) -> Void) {
-		
-	}
-	
-	func delete(item: Note, completion: (CCError?) -> Void) {
-		
-	}
+	func add(item: Note, completion: (CCError?) -> Void) { }
+	func edit(_ newItem: Note, completion: (CCError?) -> Void) { }
+	func delete(item: Note, completion: (CCError?) -> Void) { }
 
 }
 
