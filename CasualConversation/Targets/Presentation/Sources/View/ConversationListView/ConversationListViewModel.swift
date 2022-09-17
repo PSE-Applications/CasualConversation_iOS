@@ -41,12 +41,12 @@ extension ConversationListViewModel {
 			let item = list[offset]
 			self.dependency.audioService.removeRecordFile(from: item.recordFilePath) { error in
 				if error != nil {
-					print(error?.localizedDescription ?? "\(#function)")
+					CCError.log.append(error!)
 				}
 			}
 			self.dependency.useCase.delete(item) { error in
 				guard error == nil else {
-					print(error?.localizedDescription ?? "\(#function)")
+					CCError.log.append(error!)
 					return
 				}
 			}

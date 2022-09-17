@@ -33,7 +33,7 @@ final class SettingViewModel: ObservableObject {
 			case .success(let mailComposeResult):
 				print("\(mailComposeResult)")
 			case .failure(let error):
-				print("\(error)")
+				CCError.log.append(.catchError(error))
 			}
 		}
 	}
@@ -72,7 +72,7 @@ extension SettingViewModel {
 	
 	func requestReview() {
 		guard let currentScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else {
-			  print("UNABLE TO GET CURRENT SCENE")
+			CCError.log.append(.log("UNABLE TO GET CURRENT SCENE"))
 			  return
 		}
 		SKStoreReviewController.requestReview(in: currentScene)

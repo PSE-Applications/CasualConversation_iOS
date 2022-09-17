@@ -82,12 +82,11 @@ final class RecordViewModel: Dependency, ObservableObject {
 		
 		self.dependency.useCase.add(newItem) { error in
 			guard error == nil else {
-				print(error?.localizedDescription ?? "\(#function)")
+				CCError.log.append(error!)
 				return
 			}
 			// TODO: Testable Code, Have to remove
-			print("-----> createItem filePath")
-			print("\(filePath)")
+			print("-----> createItem filePath \n\(filePath)")
 		}
 	}
 	
@@ -177,7 +176,7 @@ extension RecordViewModel {
 	func setupRecording() {
 		self.dependency.audioService.setupRecorder { error in
 			guard error == nil else {
-				print(String(describing: error?.localizedDescription))
+				CCError.log.append(error!)
 				return
 			}
 			isPrepared = true
@@ -204,7 +203,7 @@ extension RecordViewModel {
 			case .success(let filePath):
 				createItem(filePath: filePath)
 			case .failure(let error):
-				print(error)
+				CCError.log.append(error)
 			}
 			dependency.audioService.finishRecording(isCancel: false)
 		}

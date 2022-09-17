@@ -55,7 +55,7 @@ public final class AudioRecordService: NSObject, Dependency {
 			try AVAudioSession.sharedInstance().setCategory(.record)
 			try AVAudioSession.sharedInstance().setActive(true)
 		} catch {
-			print("\(Self.self) \(#function) - setCategory Failure")
+			CCError.log.append(.log("\(Self.self) \(#function) - setCategory Failure"))
 		}
 	}
 	
@@ -140,7 +140,7 @@ public final class AudioRecordService: NSObject, Dependency {
 			let recorder = try AVAudioRecorder(url: newFilePath, settings: recordSettings)
 			return recorder
 		} catch {
-			print("\(Self.self) \(#function) - \(error.localizedDescription)")
+			CCError.log.append(.catchError(error))
 			return nil
 		}
 	}

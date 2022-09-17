@@ -10,6 +10,8 @@ import Foundation
 
 public enum CCError: Error {
 	
+	public static var log: [Self] = []
+	
     public enum SystemErrorReason {
         case escapingClosureIsLost
         case typeCastingNotWork
@@ -18,6 +20,7 @@ public enum CCError: Error {
 	
 	case systemErrorOccured(reason: SystemErrorReason)
 	case catchError(Error)
+	case log(String)
     
     // MARK: - Domain
     public enum ConversationManageFailureReason {
