@@ -63,6 +63,8 @@ final class PlayTabViewModel: Dependency, ObservableObject {
 		
 		dependency.audioService.isPlayingPublisher
 			.assign(to: &self.$isPlaying)
+		dependency.audioService.currentTimePublisher
+			.assign(to: &self.$currentTime)
 		dependency.audioService.durationPublisher
 			.assign(to: &self.$duration)
 	}
@@ -76,24 +78,7 @@ final class PlayTabViewModel: Dependency, ObservableObject {
 	}
 	
 	private func changedCurrentTime() {
-		print(currentTime)
-		if !self.isPlaying,
-			self.currentTime == .zero,
-			self.progressTimer != nil
-		{
-			self.progressTimer?.invalidate()
-		}
 		self.nextPin = dependency.item.pins.first(where: { currentTime < $0 })
-	}
-	
-	private func startTrakingForDisplay() {
-		progressTimer = Timer.scheduledTimer(
-			timeInterval: 0.1,
-			target: self,
-			selector: #selector(updateRealTimeValues),
-			userInfo: nil,
-			repeats: true
-		)
 	}
 	
 }
@@ -135,11 +120,6 @@ extension PlayTabViewModel {
 	
 	func startPlaying() {
 		self.dependency.audioService.startPlaying()
-		self.startTrakingForDisplay()
-	}
-	
-	@objc func updateRealTimeValues() {
-		self.currentTime = dependency.audioService.currentTime
 	}
 	
 	func pausePlaying() {
@@ -165,12 +145,11 @@ extension PlayTabViewModel {
 	}
 	
 	func editingSliderPointer() {
-		self.progressTimer?.invalidate()
+		self.dependency.audioService.stopTrackingCurrentTime()
 	}
 	
 	func editedSliderPointer() {
 		self.dependency.audioService.seek(to: currentTime)
-		startTrakingForDisplay()
 	}
 	
 	func finishPlaying() {
