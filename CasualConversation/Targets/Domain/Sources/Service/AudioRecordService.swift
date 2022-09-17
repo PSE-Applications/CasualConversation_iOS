@@ -12,7 +12,7 @@ import AVFAudio
 
 public protocol CCRecorder {
 	var isRecordingPublisher: Published<Bool>.Publisher { get }
-	var currentTime: TimeInterval { get }
+	var currentTimePublisher: Published<TimeInterval>.Publisher { get }
 	func setupRecorder(completion: (CCError?) -> Void)
 	func startRecording()
 	func pauseRecording()
@@ -33,9 +33,17 @@ public final class AudioRecordService: NSObject, Dependency {
 	
 	public var dependency: Dependency
 	
-	private var audioRecorder: AVAudioRecorder?
+	private var audioRecorder: AVAudioRecorder? {
+		willSet {
+			if newValue == nil {
+				self.stopTrackingCurrentTime()
+			}
+		}
+	}
+	private var progressTimer: Timer?
 	
 	@Published var isRecording: Bool = false
+	@Published public var currentTime: TimeInterval = .zero
 		
 	public init(dependency: Dependency) {
 		self.dependency = dependency
@@ -137,12 +145,30 @@ public final class AudioRecordService: NSObject, Dependency {
 		}
 	}
 	
+	private func startTrakingCurrentTime() {
+		progressTimer = Timer.scheduledTimer(
+			timeInterval: 0.1,
+			target: self,
+			selector: #selector(updateRealTimeValues),
+			userInfo: nil,
+			repeats: true
+		)
+	}
+	
+	@objc private func updateRealTimeValues() {
+		self.currentTime = audioRecorder?.currentTime ?? 0
+	}
+	
+	private func stopTrackingCurrentTime() {
+		self.progressTimer?.invalidate()
+	}
+	
 }
 
 extension AudioRecordService: CCRecorder {
-	
+
 	public var isRecordingPublisher: Published<Bool>.Publisher { $isRecording }
-	public var currentTime: TimeInterval { self.audioRecorder?.currentTime ?? 0 }
+	public var currentTimePublisher: Published<TimeInterval>.Publisher { $currentTime }
 	
 	public func setupRecorder(completion: (CCError?) -> Void) {
 		guard let audioRecorder = makeAudioRecorder() else {
@@ -162,6 +188,7 @@ extension AudioRecordService: CCRecorder {
 		while let recorder = self.audioRecorder {
 			if recorder.record() {
 				self.isRecording = true
+				self.startTrakingCurrentTime()
 				break
 			}
 		}
@@ -170,6 +197,7 @@ extension AudioRecordService: CCRecorder {
 	public func pauseRecording() {
 		self.audioRecorder?.pause()
 		self.isRecording = false
+		self.stopTrackingCurrentTime()
 	}
 	
 	public func stopRecording(completion: (Result<URL, CCError>) -> Void) {

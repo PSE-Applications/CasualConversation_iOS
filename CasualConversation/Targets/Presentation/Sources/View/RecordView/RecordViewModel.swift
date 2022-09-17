@@ -50,18 +50,16 @@ final class RecordViewModel: Dependency, ObservableObject {
 	@Published var members: [Member] = []
 	@Published var pins: [TimeInterval] = []
 	
-	@Published var currentTime: TimeInterval = .zero {
-		didSet { print(currentTime) }
-	}
+	@Published var currentTime: TimeInterval = .zero
 	@Published var recordingTime: TimeInterval = .zero
-	
-	private var progressTimer: Timer?
 	
 	init(dependency: Dependency) {
 		self.dependency = dependency
 		
 		dependency.audioService.isRecordingPublisher
 			.assign(to: &self.$isRecording)
+		dependency.audioService.currentTimePublisher
+			.assign(to: &self.$currentTime)
 	}
 	
 	deinit {
@@ -194,22 +192,10 @@ extension RecordViewModel {
 	
 	func startRecording() {
 		self.dependency.audioService.startRecording()
-		progressTimer = Timer.scheduledTimer(
-			timeInterval: 0.1,
-			target: self,
-			selector: #selector(updateRealTimeValues),
-			userInfo: nil,
-			repeats: true
-		)
-	}
-	
-	@objc func updateRealTimeValues() {
-		self.currentTime = dependency.audioService.currentTime
 	}
 	
 	func pauseRecording() {
 		self.dependency.audioService.pauseRecording()
-		self.progressTimer?.invalidate()
 	}
 	
 	func stopRecording() {
@@ -225,7 +211,6 @@ extension RecordViewModel {
 	}
 	
 	func finishRecording() {
-		self.progressTimer?.invalidate()
 		self.isPrepared = false
 		self.members = []
 		self.pins = []
