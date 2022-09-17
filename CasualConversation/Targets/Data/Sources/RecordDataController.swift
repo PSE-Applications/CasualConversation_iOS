@@ -42,7 +42,7 @@ extension RecordDataController: RecordDataControllerProtocol {
 	
 	public func requestRecordData(from filePath: URL) -> Data? {
 		guard let audioData = dependency.repository.contents(atPath: filePath.path) else {
-			print("\(#function) 불러오기 실패")
+			CCError.log.append(.log("\(#function) 불러오기 실패"))
 			return nil
 		}
 		return audioData

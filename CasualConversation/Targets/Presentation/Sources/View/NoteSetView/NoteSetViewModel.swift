@@ -35,7 +35,7 @@ extension NoteSetViewModel {
 		for offset in offsets.sorted(by: >) {
 			self.dependency.useCase.delete(item: list[offset]) { error in
 				guard error == nil else {
-					print(error?.localizedDescription ?? "\(#function)") // TODO: Error 처리 필요
+					CCError.log.append(error!)
 					return
 				}
 			}

@@ -73,7 +73,7 @@ extension NoteDataController: NoteDataControllerProtocol {
 			}
 			return list.filter({ $0.references.contains(itemID) })
 		} catch {
-			debugPrint(CCError.persistenceFailed(reason: .coreDataUnloaded(error)))
+			CCError.log.append(.persistenceFailed(reason: .coreDataUnloaded(error)))
 			return nil
 		}
 	}

@@ -33,12 +33,13 @@ final class RecordViewModel: Dependency, ObservableObject {
 	
 	let dependency: Dependency
 	
+	@Published var isPresentedDeniedAlert: Bool = false
 	@Published var isPermitted: Bool = false {
 		willSet {
 			if newValue {
-				startRecording()
+				self.startRecording()
 			} else if !isPermitted {
-				// TODO: Alert 구현필요
+				self.isPresentedDeniedAlert = true
 			}
 		}
 	}
@@ -50,18 +51,16 @@ final class RecordViewModel: Dependency, ObservableObject {
 	@Published var members: [Member] = []
 	@Published var pins: [TimeInterval] = []
 	
-	@Published var currentTime: TimeInterval = .zero {
-		didSet { print(currentTime) }
-	}
+	@Published var currentTime: TimeInterval = .zero
 	@Published var recordingTime: TimeInterval = .zero
-	
-	private var progressTimer: Timer?
 	
 	init(dependency: Dependency) {
 		self.dependency = dependency
 		
 		dependency.audioService.isRecordingPublisher
 			.assign(to: &self.$isRecording)
+		dependency.audioService.currentTimePublisher
+			.assign(to: &self.$currentTime)
 	}
 	
 	deinit {
@@ -84,12 +83,11 @@ final class RecordViewModel: Dependency, ObservableObject {
 		
 		self.dependency.useCase.add(newItem) { error in
 			guard error == nil else {
-				print(error?.localizedDescription ?? "\(#function)")
+				CCError.log.append(error!)
 				return
 			}
 			// TODO: Testable Code, Have to remove
-			print("-----> createItem filePath")
-			print("\(filePath)")
+			print("-----> createItem filePath \n\(filePath)")
 		}
 	}
 	
@@ -179,7 +177,7 @@ extension RecordViewModel {
 	func setupRecording() {
 		self.dependency.audioService.setupRecorder { error in
 			guard error == nil else {
-				print(String(describing: error?.localizedDescription))
+				CCError.log.append(error!)
 				return
 			}
 			isPrepared = true
@@ -194,22 +192,10 @@ extension RecordViewModel {
 	
 	func startRecording() {
 		self.dependency.audioService.startRecording()
-		progressTimer = Timer.scheduledTimer(
-			timeInterval: 0.1,
-			target: self,
-			selector: #selector(updateRealTimeValues),
-			userInfo: nil,
-			repeats: true
-		)
-	}
-	
-	@objc func updateRealTimeValues() {
-		self.currentTime = dependency.audioService.currentTime
 	}
 	
 	func pauseRecording() {
 		self.dependency.audioService.pauseRecording()
-		self.progressTimer?.invalidate()
 	}
 	
 	func stopRecording() {
@@ -218,14 +204,13 @@ extension RecordViewModel {
 			case .success(let filePath):
 				createItem(filePath: filePath)
 			case .failure(let error):
-				print(error)
+				CCError.log.append(error)
 			}
 			dependency.audioService.finishRecording(isCancel: false)
 		}
 	}
 	
 	func finishRecording() {
-		self.progressTimer?.invalidate()
 		self.isPrepared = false
 		self.members = []
 		self.pins = []

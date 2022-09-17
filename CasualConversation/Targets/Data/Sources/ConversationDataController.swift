@@ -71,7 +71,7 @@ extension ConversationDataController: ConversationDataControllerProtocol {
 				.compactMap({ Conversation(entity: $0) })
 			return list
 		} catch {
-			debugPrint(CCError.persistenceFailed(reason: .coreDataUnloaded(error)))
+			CCError.log.append(.persistenceFailed(reason: .coreDataUnloaded(error)))
 			return nil
 		}
 	}

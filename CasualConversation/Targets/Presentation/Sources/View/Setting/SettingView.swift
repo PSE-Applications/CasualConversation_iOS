@@ -72,9 +72,9 @@ extension SettingView {
 				.font(.headline)
 		}
 		VStack(alignment: .leading) {
-			Text("언제 어디서나 영어회화로 가벼운 인사부터 다양한 주제의 대화를 나누는 영어회화 학습방법입니다.")
+			Text("언제 어디서나 가벼운 인사부터 다양한 주제의 대화를 나누는 영어회화 학습방법입니다")
 				.font(.subheadline)
-			Text("주제 및 발음기호 등 학습 정보는 PSE에서 제공합니다.")
+			Text("주제 및 발음기호 등 학습 정보는 PSE에서 제공합니다")
 				.font(.caption)
 				.foregroundColor(.gray)
 		}
@@ -108,7 +108,7 @@ extension SettingView {
 	
 	private func LockScreen() -> some View {
 		HStack {
-			Toggle("자동잠금 허용 설정", isOn: $viewModel.isLockScreen)
+			Toggle("화면잠금 해제", isOn: $viewModel.isLockScreen)
 				.tint(.ccTintColor)
 		}
 	}

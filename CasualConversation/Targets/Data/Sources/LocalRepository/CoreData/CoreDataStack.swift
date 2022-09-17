@@ -55,7 +55,6 @@ extension CoreDataStack: CoreDataStackProtocol {
 		do {
 			try mainContext.save()
 		} catch let error as NSError {
-			print("Unresolved error \(error), \(error.userInfo)")
 			completion(.persistenceFailed(reason: .coreDataViewContextUnsaved(error)))
 		}
 		completion(nil)

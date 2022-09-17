@@ -31,7 +31,7 @@ public struct FileManagerRepository {
 				withIntermediateDirectories: true,
 				attributes: nil)
 		} catch {
-			print("\(Self.self) \(#function) - 디렉토리 생성 실패")
+			CCError.log.append(.log("\(Self.self) \(#function) - 디렉토리 생성 실패"))
 		}
 	}
 	

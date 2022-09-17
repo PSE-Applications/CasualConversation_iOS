@@ -12,8 +12,9 @@ import AVFAudio
 
 public protocol CCPlayer {
 	var isPlayingPublisher: Published<Bool>.Publisher { get }
+	var currentTimePublisher: Published<TimeInterval>.Publisher { get }
 	var durationPublisher: Published<TimeInterval>.Publisher { get }
-	var currentTime: TimeInterval { get }
+	func stopTrackingCurrentTime()
 	func setupPlaying(filePath: URL, completion: (CCError?) -> Void)
 	func startPlaying()
 	func pausePlaying()
@@ -38,10 +39,18 @@ public final class AudioPlayService: NSObject, Dependency {
 	
 	public var dependency: Dependency
 	
-	private var audioPlayer: AVAudioPlayer?
+	private var audioPlayer: AVAudioPlayer? {
+		willSet {
+			if newValue == nil {
+				self.stopTrackingCurrentTime()
+			}
+		}
+	}
+	private var progressTimer: Timer?
 	
 	@Published var isPlaying: Bool = false
 	@Published var duration: TimeInterval = .zero
+	@Published var currentTime: TimeInterval = .zero
 	
 	public init(dependency: Dependency) {
 		self.dependency = dependency
@@ -53,7 +62,7 @@ public final class AudioPlayService: NSObject, Dependency {
 			try AVAudioSession.sharedInstance().setCategory(.playback)
 			try AVAudioSession.sharedInstance().setActive(true)
 		} catch {
-			print("\(Self.self) \(#function) - setCategory Failure")
+			CCError.log.append(.log("\(Self.self) \(#function) - setCategory Failure"))
 		}
 	}
 	
@@ -123,15 +132,29 @@ public final class AudioPlayService: NSObject, Dependency {
 	
 	private func makeAudioPlayer(by filePath: URL) -> AVAudioPlayer? {
 		guard let data = dependency.dataController.requestRecordData(from: filePath) else {
-			print("\(#function) \(CCError.audioServiceFailed(reason: .fileURLPathInvalidated))")
+			CCError.log.append(.audioServiceFailed(reason: .fileURLPathInvalidated))
 			return nil
 		}
 		do {
 			return try AVAudioPlayer(data: data) // Test FileType 수정필요
 		} catch {
-			print("\(#function) \(CCError.audioServiceFailed(reason: .fileBindingFailure))")
+			CCError.log.append(.audioServiceFailed(reason: .fileBindingFailure))
 			return nil
 		}
+	}
+	
+	private func startTrakingCurrentTime() {
+		progressTimer = Timer.scheduledTimer(
+			timeInterval: 0.1,
+			target: self,
+			selector: #selector(updateRealTimeValues),
+			userInfo: nil,
+			repeats: true
+		)
+	}
+	
+	@objc private func updateRealTimeValues() {
+		self.currentTime = audioPlayer?.currentTime ?? 0
 	}
 	
 }
@@ -140,8 +163,11 @@ extension AudioPlayService: CCPlayer {
 	
 	public var isPlayingPublisher: Published<Bool>.Publisher { $isPlaying }
 	public var durationPublisher: Published<TimeInterval>.Publisher { $duration }
+	public var currentTimePublisher: Published<TimeInterval>.Publisher { $currentTime }
 	
-	public var currentTime: TimeInterval { self.audioPlayer?.currentTime ?? .zero }
+	public func stopTrackingCurrentTime() {
+		self.progressTimer?.invalidate()
+	}
 	
 	public func setupPlaying(filePath: URL, completion: (CCError?) -> Void) {
 		guard let audioPlayer = makeAudioPlayer(by: filePath) else {
@@ -165,11 +191,13 @@ extension AudioPlayService: CCPlayer {
 	public func startPlaying() {
 		audioPlayer?.play()
 		self.isPlaying = true
+		self.startTrakingCurrentTime()
 	}
 	
 	public func pausePlaying() {
 		self.audioPlayer?.pause()
 		self.isPlaying = false
+		self.stopTrackingCurrentTime()
 	}
 	
 	public func finishPlaying() {
@@ -192,7 +220,10 @@ extension AudioPlayService: CCPlayer {
 		
 		if isPlaying { self.audioPlayer?.stop() }
 		self.audioPlayer?.currentTime = seekPosition
-		if isPlaying { self.audioPlayer?.play() }
+		if isPlaying {
+			self.audioPlayer?.play()
+			self.startTrakingCurrentTime()
+		}
 	}
 	
 	public func changePlayingRate(to value: Float) {

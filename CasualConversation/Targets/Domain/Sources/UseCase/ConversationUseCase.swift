@@ -44,7 +44,7 @@ public final class ConversationUseCase: Dependency, ConversationManagable {
 	
 	private func fetchDataSource() {
 		guard let fetcedList = dependency.dataController.fetch() else {
-			print("Failure fetchDataSource") // TODO: Error 처리 고민필요
+			CCError.log.append(.log("Failure fetchDataSource"))
 			return
 		}
 		self.dataSource = fetcedList

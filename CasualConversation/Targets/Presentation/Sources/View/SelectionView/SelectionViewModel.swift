@@ -101,7 +101,7 @@ extension SelectionViewModel: LanguageCheckable {
 		)
 		self.dependency.noteUseCase.add(item: newItem) { error in
 			guard error == nil else {
-				print("add Note 실패") // TODO: Error 처리 필요
+				CCError.log.append(.log("add Note 실패"))
 				return
 			}
 			self.inputText = ""
@@ -160,7 +160,7 @@ extension SelectionViewModel: LanguageCheckable {
 				pins: conversation.pins)
 			self.dependency.conversationUseCase.edit(after: newItem) { error in
 				guard error == nil else {
-					print(String(describing: error?.localizedDescription)) // TODO: Error 처리 필요
+					CCError.log.append(error!)
 					return
 				}
 			}

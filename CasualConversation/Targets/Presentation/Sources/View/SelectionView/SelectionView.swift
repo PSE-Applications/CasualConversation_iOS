@@ -223,7 +223,6 @@ extension SelectionView {
 			Spacer()
 			container.PlayTabView(with: viewModel.referenceItem)
 		}
-		.ignoresSafeArea(.keyboard, edges: .bottom)
 	}
 	
 }
