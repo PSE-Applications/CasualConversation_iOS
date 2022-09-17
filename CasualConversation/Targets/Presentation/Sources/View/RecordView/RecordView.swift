@@ -298,7 +298,14 @@ extension RecordView {
 				}
 			}
 		)
-		.disabled(!viewModel.isPrepared)
+		.alert("마이크 접근 허용 필요",
+			   isPresented: $viewModel.isPresentedDeniedAlert,
+			   actions: {
+			Button("확인", role: .cancel) { }
+			}, message: {
+				Text("설정 > CasualConversation > 접근허용 마이크 허용\n 스위치를 허용해주세요")
+			}
+		)
 	}
 	
 	private func PinButton() -> some View {

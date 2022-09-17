@@ -220,7 +220,9 @@ extension AudioRecordService: CCRecorder {
 	public func permission(completion: @escaping (Bool) -> Void) {
 		let session = AVAudioSession.sharedInstance()
 		switch session.recordPermission {
-		case .undetermined, .denied:
+		case .denied:
+			completion(false)
+		case .undetermined:
 			session.requestRecordPermission(completion)
 		case .granted:
 			completion(true)

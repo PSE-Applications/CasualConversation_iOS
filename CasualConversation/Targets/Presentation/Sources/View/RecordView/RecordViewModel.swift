@@ -33,12 +33,13 @@ final class RecordViewModel: Dependency, ObservableObject {
 	
 	let dependency: Dependency
 	
+	@Published var isPresentedDeniedAlert: Bool = false
 	@Published var isPermitted: Bool = false {
 		willSet {
 			if newValue {
-				startRecording()
+				self.startRecording()
 			} else if !isPermitted {
-				// TODO: Alert 구현필요
+				self.isPresentedDeniedAlert = true
 			}
 		}
 	}
