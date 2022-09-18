@@ -63,9 +63,8 @@ final class PlayTabViewModel: Dependency, ObservableObject {
 		dependency.audioService.isPlayingPublisher
 			.assign(to: &self.$isPlaying)
 		dependency.audioService.currentTimePublisher
-			.assign(to: &self.$currentTime)
-		dependency.audioService.currentTimePublisher
-			.sink(receiveValue: { [weak self] _ in
+			.sink(receiveValue: { [weak self] currentTime in
+				self?.currentTime = currentTime
 				self?.changedCurrentTime()
 			})
 			.store(in: &cancellableSet)

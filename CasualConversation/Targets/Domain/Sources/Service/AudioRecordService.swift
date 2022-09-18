@@ -215,6 +215,7 @@ extension AudioRecordService: CCRecorder {
 		if isCancel { self.audioRecorder?.deleteRecording() }
 		self.isRecording = false
 		self.audioRecorder = nil
+		self.currentTime = 0.0
 	}
 	
 	public func permission(completion: @escaping (Bool) -> Void) {

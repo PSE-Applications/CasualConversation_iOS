@@ -124,7 +124,9 @@ extension RecordViewModel {
 	// MARK: Member
 	func recordPermission() {
 		self.dependency.audioService.permission { [weak self] response in
-			self?.isPermitted = response
+			DispatchQueue.main.async {
+				self?.isPermitted = response
+			}
 		}
 	}
 	
