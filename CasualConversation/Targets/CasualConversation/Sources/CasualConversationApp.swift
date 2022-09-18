@@ -16,6 +16,9 @@ struct CasualConversationApp: App {
         WindowGroup {
 			appDIContainer.ContentView()
 				.environmentObject(appDIContainer.makePresentationDIContainer())
+				.onAppear {
+					Thread.sleep(forTimeInterval: 2.0)
+				}
         }
     }
     
