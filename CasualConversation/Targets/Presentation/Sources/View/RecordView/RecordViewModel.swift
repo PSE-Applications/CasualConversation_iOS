@@ -33,16 +33,7 @@ final class RecordViewModel: Dependency, ObservableObject {
 	
 	let dependency: Dependency
 	
-	@Published var isPresentedDeniedAlert: Bool = false
-	@Published var isPermitted: Bool = false {
-		willSet {
-			if newValue {
-				self.startRecording()
-			} else if !isPermitted {
-				self.isPresentedDeniedAlert = true
-			}
-		}
-	}
+	@Published var isPermitted: Bool = false
 	@Published var isRecording: Bool = false
 	@Published var isPrepared: Bool = false
 	@Published var inputTitle: String = Date().formattedString

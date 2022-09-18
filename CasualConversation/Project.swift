@@ -85,7 +85,7 @@ let infoPlist: [String: InfoPlist.Value] = [
 	"UIMainStoryboardFile": "",
 	"UISupportedInterfaceOrientations" : ["UIInterfaceOrientationPortrait"],
 	"UILaunchStoryboardName": "LaunchScreen",
-	"NSMicrophoneUsageDescription": "녹음기능을 위해 앱이 마이크에 접근",
+	"NSMicrophoneUsageDescription": "사용자의 대화를 녹음 하기위해 앱에서 마이크 접근 허용을 요청합니다 (필수)",
 	"Supports opening documents in place": "YES"
 ]
 

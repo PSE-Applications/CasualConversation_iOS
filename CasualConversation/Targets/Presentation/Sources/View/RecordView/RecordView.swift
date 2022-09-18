@@ -16,6 +16,7 @@ struct RecordView: View {
 	@State private var cancelAlert: Bool = false
 	@State private var stopAlert: Bool = false
 	@State private var isEditing: Bool = false
+	@State private var isPresentedDeniedAlert: Bool = false
 
 	var body: some View {
 		NavigationView {
@@ -47,6 +48,7 @@ struct RecordView: View {
 		.preferredColorScheme(.dark)
 		.onAppear {
 			viewModel.setupRecording()
+			viewModel.recordPermission()
 		}
 		.onDisappear {
 			viewModel.finishRecording()
@@ -270,7 +272,7 @@ extension RecordView {
 						viewModel.startRecording()
 					}
 				} else {
-					viewModel.recordPermission()
+					self.isPresentedDeniedAlert.toggle()
 				}
 			}, label: {
 				ZStack {
@@ -298,12 +300,13 @@ extension RecordView {
 				}
 			}
 		)
-		.alert("마이크 접근 허용 필요",
-			   isPresented: $viewModel.isPresentedDeniedAlert,
-			   actions: {
-			Button("확인", role: .cancel) { }
+		.alert(
+			"마이크 접근 허용 필요",
+			isPresented: $isPresentedDeniedAlert,
+			actions: {
+				Button("확인", role: .cancel) { }
 			}, message: {
-				Text("설정 > CasualConversation > 접근허용 마이크 허용\n 스위치를 허용해주세요")
+				Text("설정 > CasualConversation > CASUALCONVERSATION 접근허용 > 마이크 허용\n 스위치를 허용해주세요")
 			}
 		)
 	}
