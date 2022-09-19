@@ -11,8 +11,8 @@ import SwiftUI
 public struct ContentView: View {
 	
 	@EnvironmentObject private var container: PresentationDIContainer
-	
 	@StateObject private var preference: Preference = .shared
+	@State private var isPresentedTutorial: Bool = !Preference.shared.isDoneTutorial
 	
 	public init() {
 		AppAppearance.setup()
@@ -23,6 +23,9 @@ public struct ContentView: View {
 			.environmentObject(container.configurations)
 			.accentColor(.ccAccentColor)
 			.preferredColorScheme(preference.colorScheme)
+			.fullScreenCover(isPresented: $isPresentedTutorial) {
+				TutorialView()
+			}
     }
 	
 }

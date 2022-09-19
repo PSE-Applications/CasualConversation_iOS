@@ -23,6 +23,7 @@ extension Color {
 	static let logoDarkBlue = Color(hex: "#07387B")
 	static let darkRecordColor = Color(hex: "#1C1E23")
 	static let lightRecordColor = Color(hex: "#282A30")
+	static let iconMainColor = Color(hex: "#FEB400")
 	
 	init(hex: String) {
 		let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
