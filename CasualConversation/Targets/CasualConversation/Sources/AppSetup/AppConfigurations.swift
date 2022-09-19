@@ -6,7 +6,10 @@
 //  Copyright © 2022 pseapplications. All rights reserved.
 //
 
+import Common
+
 import Foundation
+import AVFAudio
 
 final class AppConfigurations {
 	
@@ -18,6 +21,15 @@ final class AppConfigurations {
 			fatalError("URLs.plist 불러오기 실패")
 		}
 		self.pageList = plist
+		
+		// MARK: - AVAudioSession setCategory
+		let session = AVAudioSession.sharedInstance()
+		do {
+			try session.setCategory(.playAndRecord, mode: .default, options: .defaultToSpeaker)
+			try session.setActive(true)
+		} catch {
+			CCError.log.append(.log("\(Self.self) \(#function) - setCategory Failure"))
+		}
 	}
 	
 	// MARK: Presentation Layer

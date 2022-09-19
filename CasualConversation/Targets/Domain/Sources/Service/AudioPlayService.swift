@@ -165,12 +165,6 @@ extension AudioPlayService: CCPlayer {
 	}
 	
 	public func setupPlaying(filePath: URL, completion: (CCError?) -> Void) {
-		do {
-			try AVAudioSession.sharedInstance().setCategory(.playback)
-			try AVAudioSession.sharedInstance().setActive(true)
-		} catch {
-			CCError.log.append(.log("\(Self.self) \(#function) - setCategory Failure"))
-		}
 		guard let audioPlayer = makeAudioPlayer(by: filePath) else {
 			completion(.audioServiceFailed(reason: .fileBindingFailure))
 			return
