@@ -164,12 +164,6 @@ extension AudioRecordService: CCRecorder {
 	public var currentTimePublisher: Published<TimeInterval>.Publisher { $currentTime }
 	
 	public func setupRecorder(completion: (CCError?) -> Void) {
-		do {
-			try AVAudioSession.sharedInstance().setCategory(.record)
-			try AVAudioSession.sharedInstance().setActive(true)
-		} catch {
-			CCError.log.append(.log("\(Self.self) \(#function) - setCategory Failure"))
-		}
 		guard let audioRecorder = makeAudioRecorder() else {
 			completion(.audioServiceFailed(reason: .bindingFailure))
 			return
