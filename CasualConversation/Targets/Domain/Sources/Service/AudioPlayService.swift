@@ -41,14 +41,16 @@ public final class AudioPlayService: NSObject, Dependency {
 	
 	private var audioPlayer: AVAudioPlayer? {
 		willSet {
-			if newValue == nil {
-				self.stopTrackingCurrentTime()
-			}
+			if newValue == nil { self.progressTimer?.invalidate() }
 		}
 	}
 	private var progressTimer: Timer?
 	
-	@Published var isPlaying: Bool = false
+	@Published var isPlaying: Bool = false {
+		didSet {
+			if !isPlaying { self.progressTimer?.invalidate() }
+		}
+	}
 	@Published var duration: TimeInterval = .zero
 	@Published var currentTime: TimeInterval = .zero
 	
@@ -57,13 +59,6 @@ public final class AudioPlayService: NSObject, Dependency {
 		
 		super.init()
 		setupNotificationCenter()
-		
-		do {
-			try AVAudioSession.sharedInstance().setCategory(.playback)
-			try AVAudioSession.sharedInstance().setActive(true)
-		} catch {
-			CCError.log.append(.log("\(Self.self) \(#function) - setCategory Failure"))
-		}
 	}
 	
 	deinit {
@@ -170,6 +165,12 @@ extension AudioPlayService: CCPlayer {
 	}
 	
 	public func setupPlaying(filePath: URL, completion: (CCError?) -> Void) {
+		do {
+			try AVAudioSession.sharedInstance().setCategory(.playback)
+			try AVAudioSession.sharedInstance().setActive(true)
+		} catch {
+			CCError.log.append(.log("\(Self.self) \(#function) - setCategory Failure"))
+		}
 		guard let audioPlayer = makeAudioPlayer(by: filePath) else {
 			completion(.audioServiceFailed(reason: .fileBindingFailure))
 			return
@@ -197,7 +198,6 @@ extension AudioPlayService: CCPlayer {
 	public func pausePlaying() {
 		self.audioPlayer?.pause()
 		self.isPlaying = false
-		self.stopTrackingCurrentTime()
 	}
 	
 	public func finishPlaying() {
@@ -207,6 +207,7 @@ extension AudioPlayService: CCPlayer {
 		}
 		self.audioPlayer = nil
 		self.duration = .zero
+		self.currentTime = .zero
 	}
 	
 	public func seek(to time: Double) {
@@ -243,8 +244,9 @@ extension AudioPlayService: RecordManagable {
 extension AudioPlayService: AVAudioPlayerDelegate {
 	
 	public func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-		self.audioPlayer?.stop()
 		self.isPlaying = false
+		self.audioPlayer?.stop()
+		self.currentTime = .zero
 	}
 	
 }
