@@ -50,13 +50,6 @@ public final class AudioRecordService: NSObject, Dependency {
 		
 		super.init()
 		setupNotificationCenter()
-		
-		do {
-			try AVAudioSession.sharedInstance().setCategory(.record)
-			try AVAudioSession.sharedInstance().setActive(true)
-		} catch {
-			CCError.log.append(.log("\(Self.self) \(#function) - setCategory Failure"))
-		}
 	}
 	
 	deinit {

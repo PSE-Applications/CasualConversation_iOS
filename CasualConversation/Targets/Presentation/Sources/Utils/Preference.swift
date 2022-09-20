@@ -43,6 +43,9 @@ final class Preference: NSObject, ObservableObject {
 	private let userDefault: UserDefaults = UserDefaults.standard
 	private let bundle: Bundle = Bundle.main
 	
+	var isDoneTutorial: Bool {
+		didSet { userDefault.set(isDoneTutorial, forKey: "isDoneTutorial") }
+	}
 	var isLockScreen: Bool {
 		didSet {
 			UIApplication.shared.isIdleTimerDisabled = isLockScreen
@@ -62,6 +65,7 @@ final class Preference: NSObject, ObservableObject {
 		let skipTimeValue = userDefault.double(forKey: SkipTime.key)
 		let screenModeValue = userDefault.string(forKey: DisplayMode.key) ?? "system"
 	   
+		self.isDoneTutorial = userDefault.bool(forKey: "isDoneTutorial")
 		self.isLockScreen = userDefault.bool(forKey: "isLockScreen")
 		self.skipTime = .init(rawValue: skipTimeValue) ?? .five
 		self.displayMode = .init(rawValue: screenModeValue) ?? .system

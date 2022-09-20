@@ -15,6 +15,7 @@ struct SettingView: View {
 	
 	@ObservedObject var viewModel: SettingViewModel
 	
+	@State private var isPresentedTutorial: Bool = false
 	@State private var isShowingMailView: Bool = false
 	@State private var isShowingActivityView: Bool = false
 	
@@ -99,10 +100,25 @@ extension SettingView {
 	
 	private func GeneralSection() -> some View {
 		Section {
+			Tutorial()
 			LockScreen()
 			SkipTimeSelection()
 		} header: {
 			Text("일반")
+		}
+	}
+	
+	private func Tutorial() -> some View {
+		Button(
+			action: {
+				self.isPresentedTutorial.toggle()
+			}, label: {
+				Text("앱 사용방법 보기")
+			}
+		)
+		.tint(.primary)
+		.fullScreenCover(isPresented: $isPresentedTutorial) {
+			TutorialView()
 		}
 	}
 	
