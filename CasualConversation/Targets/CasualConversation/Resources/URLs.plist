@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Main</key>
+	<string>https://pseenglish.modoo.at</string>
+	<key>Cafe</key>
+	<string>https://m.cafe.naver.com/ca-fe/psecafe</string>
+	<key>eLearning</key>
+	<string>http://pse-learning.site/de/board.php?board=home</string>
+	<key>TastePage</key>
+	<string>/?link=e8gh4487</string>
+	<key>TestPage</key>
+	<string>/?link=dc89m2n4</string>
+	<key>ReceptionPhoneNumber</key>
+	<string>tel://02-539-8963</string>
+</dict>
+</plist>
