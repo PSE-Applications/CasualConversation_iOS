@@ -13,7 +13,7 @@
 [인스타그램 홍보/문의 페이지](https://www.instagram.com/casualconversation_ccrecorder/)  [앱스토어](https://apps.apple.com/kr/app/id1642134370/)  
 
 ## 🗂 프로젝트 소개
-팀원 : 2명 (iOS 개발 1명, ProjectManger 1명)  
+팀원 : 2명 (iOS 개발 1명, ProductManger 1명)  
 기간 : 22.06.17 ~ 22.09.17 `v1.0.0 출시` / 09.19 `v1.1.0 업데이트` ~    
 
 ![](https://img.shields.io/badge/Target_iOS-15.0~-green) ![](https://img.shields.io/badge/Swift-5.6-orange) ![](https://img.shields.io/badge/Xcode-13.4-blue) ![](https://img.shields.io/badge/SwiftUI-3.0-puple) 
@@ -22,7 +22,7 @@
 ### Team MarCoda
 |<img src="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F1cba71b5-edd1-4247-9048-4230712e2d3d%2FProfile_1.jpeg?table=block&id=e17e3b5c-cbdd-4196-8832-38e6e1083432&spaceId=e6b8a7b9-cbae-4355-941e-ce441f218386&width=2000&userId=aaeaa0fd-5da4-499b-9277-7adf273dceea&cache=v2" width=200 height=200>|<img src="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F8e197c5f-03be-4e4a-a777-a0e5468a1c5f%2FCoda__Design.jpg?table=block&id=458a1cfe-8d8b-4fb4-9bf9-80e5ab47ef20&spaceId=e6b8a7b9-cbae-4355-941e-ce441f218386&width=2000&userId=aaeaa0fd-5da4-499b-9277-7adf273dceea&cache=v2" width=200 height=200>|
 |:---:|:---:|
-|iOS Development/Team Leader|ProjectManager/Design|
+|iOS Development/Team Leader|ProductManger/Design|
 |김용우 [@keeplo](https://github.com/keeplo) |김찬우 [@dacodaco](https://github.com/dacodaco) |
 
 ## 🛠 기술 스택
