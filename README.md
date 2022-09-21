@@ -14,9 +14,9 @@
 
 ## 🗂 프로젝트 소개
 팀원 : 2명 (iOS 개발 1명, ProjectManger 1명)  
-기간 : 22.06.17 ~ 22.09.17 `v1.0.0 출시` / 09.19 `v1.1.0 업데이트` ~   
-타겟 : ![](https://img.shields.io/badge/iOS-15.0~-green)  
-환경 : ![](https://img.shields.io/badge/Swift-5.6-orange) ![](https://img.shields.io/badge/Xcode-13.4-blue) ![](https://img.shields.io/badge/SwiftUI-3.0-gray) 
+기간 : 22.06.17 ~ 22.09.17 `v1.0.0 출시` / 09.19 `v1.1.0 업데이트` ~    
+
+![](https://img.shields.io/badge/Target_iOS-15.0~-green) ![](https://img.shields.io/badge/Swift-5.6-orange) ![](https://img.shields.io/badge/Xcode-13.4-blue) ![](https://img.shields.io/badge/SwiftUI-3.0-puple) 
 
 ## 🥇 프로젝트팀 소개
 ### Team MarCoda
