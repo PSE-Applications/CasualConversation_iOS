@@ -8,10 +8,10 @@
 
 @testable import Data
 
+import Foundation
+
 import Quick
 import Nimble
-
-import AVFAudio
 
 extension RecordDataController {
 	fileprivate static var sut: Self {
@@ -26,48 +26,47 @@ final class RecordDataControllerSpecs: QuickSpec {
 			beforeEach { recordRepository = .sut }
 			afterEach { recordRepository = nil }
 			
-			describe("새로운 녹음물 저장할 filePath 가진 객체 생성을 위해서") {
-				context("makeAudioRecorder 팩토리메서드 호출하면") {
-					var recorder: AVAudioRecorder?
-					beforeEach { recorder = recordRepository.makeAudioRecorder() as? AVAudioRecorder }
+			describe("새로운 녹음물 저장 위해서") {
+				context("requestNewFilePath 메서드 호출하면") {
+					var result: URL!
+					beforeEach { result = recordRepository.requestNewFilePath() }
+					afterEach { result = nil }
 					
-					it("추상화된 AVAudioRecorder 객체 생성됨") {
-						expect(recorder).notTo(beNil())
-						expect(recorder).to(beAnInstanceOf(AVAudioRecorder.self))
+					it("URL 생성됨") {
+						expect(result).notTo(beNil())
+						expect(result).to(beAnInstanceOf(URL.self))
 					}
 				}
 			}
 			
-			describe("filePath의 녹음물 가진 객체 생성을 위해서") {
-				describe("잘못된 filePath를 전달하는") {
-					var wrongFilePath: URL!
-					beforeEach { wrongFilePath = URL(fileURLWithPath: "failurePath") }
+			describe("잘못된 filePath를 이용해서") {
+				var invalidatedFilePath: URL!
+				beforeEach { invalidatedFilePath = URL(fileURLWithPath: "Error") }
+				afterEach { invalidatedFilePath = nil }
+				
+				context("녹음 파일 불러오기 요청하면") {
+					var result: Data!
+					beforeEach { result = recordRepository.requestRecordData(from: invalidatedFilePath) }
+					afterEach { result = nil }
 					
-					context("makeAudioPlayer 팩토리메서드 호출하면") {
-						var player: AVAudioPlayer?
-						beforeEach { player = recordRepository.makeAudioPlayer(from: wrongFilePath) as? AVAudioPlayer }
-						
-						it("추상화된 AVAudioPlayer 객체 생성되지 않음") {
-							expect(player).to(beNil())
-						}
+					it("불러오기 실패해서 반환값 없음") {
+						expect(result).to(beNil())
 					}
 				}
-			
-				// TODO: - Dummy 테스트 녹음 파일 필요함 (테스트 용 Bundle?) - 성공케이스
-//				describe("올바른 filePath를 전달하는") {
-//					var correctFilePath: URL!
-//					beforeEach { correctFilePath = URL(fileURLWithPath: "") }
-//
-//					context("팩토리메서드 호출하면") {
-//						var player: AVAudioPlayer?
-//						beforeEach { player = recordRepository.makeAudioPlayer(from: correctFilePath) as? AVAudioPlayer }
-//
-//						it("추상화된 AVAudioPlayer 객체 생성됨") {
-//							expect(player).notTo(beNil())
-//							expect(player).to(beAnInstanceOf(AVAudioPlayer.self))
-//						}
-//					}
-//				}
+				
+				context("녹음 파일 삭제 요청하면") {
+					var result: Any!
+					beforeEach {
+						recordRepository.deleteRecordData(from: invalidatedFilePath) { error in
+								result = error
+							}
+					}
+					afterEach { result = nil }
+					
+					it("에러 값을 매개변수로 completion 동작") {
+						expect(result).notTo(beNil())
+					}
+				}
 			}
 		}
 	}
