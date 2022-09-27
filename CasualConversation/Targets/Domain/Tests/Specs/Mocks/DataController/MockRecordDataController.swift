@@ -9,7 +9,7 @@
 @testable import Domain
 
 import Foundation
-import AVFAudio
+import Common
 
 struct MockRecordDataController {
 	
@@ -19,12 +19,16 @@ struct MockRecordDataController {
 
 extension MockRecordDataController: RecordDataControllerProtocol {
 	
-	public func makeAudioRecorder() -> AudioRecorderProtocol? {
-		return MockAudioRecorder(delegate: nil, url: URL(string: "fake")!)
+	func requestNewFilePath() -> URL {
+		return URL(fileURLWithPath: "test")
 	}
 	
-	public func makeAudioPlayer(from filePath: URL) -> AudioPlayerProtocol? {
-		return MockAudioPlayer(delegate: nil, url: filePath)
+	func requestRecordData(from filePath: URL) -> Data? {
+		return try? Data(contentsOf: filePath)
+	}
+	
+	func deleteRecordData(from filePath: URL, completion: (CCError?) -> Void) {
+		completion(nil)
 	}
 	
 }
