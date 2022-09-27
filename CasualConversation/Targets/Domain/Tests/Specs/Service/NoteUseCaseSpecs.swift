@@ -15,7 +15,7 @@ import Nimble
 extension NoteUseCase {
 	fileprivate static func sut(case type: Bool, error: CCError? = nil) -> NoteUseCase {
 		.init(dependency: .init(
-				repository: MockNoteDataController(case: type, error: error),
+			dataController: MockNoteDataController(case: type, error: error),
 				filter: .all
 			)
 		)
@@ -58,7 +58,7 @@ final class NoteUseCaseSpecs: QuickSpec {
 						context("변경하면") {
 							var parameter: CCError!
 							beforeEach {
-								managable.edit(newItem: .init(
+								managable.edit(.init(
 									id: newItem.id,
 									original: "Edited Original",
 									translation: "변경된 번역",
