@@ -14,9 +14,10 @@ import Nimble
 extension PresentationDIContainer {
 	static var sut: PresentationDIContainer {
 		self.init(dependency: .init(
-			conversationRepository: DebugConversationRepository(),
-			noteRepository: DebugNoteRepository(),
-			recordRepository: DebugRecordRepository())
+			configurations: .init(),
+			conversationDataController: DebugConversationDataController(),
+			noteDataController: DebugNoteDataController(),
+			recordDataController: DebugRecordDataController())
 		)
 	}
 }
@@ -122,7 +123,7 @@ final class PresentationDIContainerSpecs: QuickSpec {
 			context("service를 전달하며 PlayTabView 팩토리메서드 호출하면") {
 				var playTabView: PlayTabView!
 				beforeEach {
-					playTabView = container.PlayTabView()
+					playTabView = container.PlayTabView(with: .empty)
 				}
 				
 				it("PlayTabView 객체 생성됨") {

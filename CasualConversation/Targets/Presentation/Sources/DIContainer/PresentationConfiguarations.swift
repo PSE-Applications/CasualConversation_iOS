@@ -11,6 +11,22 @@ import Foundation
 
 public class PresentationConfiguarations: ObservableObject, Dependency {
 	
+	#if DEBUG
+	convenience init() {
+		let dummyURL = URL(fileURLWithPath: "")
+		self.init(dependency:
+				.init(
+					mainURL: dummyURL,
+					cafeURL: dummyURL,
+					eLearningURL: dummyURL,
+					tasteURL: dummyURL,
+					testURL: dummyURL,
+					receptionTel: dummyURL
+				)
+		)
+	}
+	#endif
+	
 	public struct Dependency {
 		public let mainURL: URL
 		public let cafeURL: URL
