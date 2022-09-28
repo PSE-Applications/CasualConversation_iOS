@@ -7,8 +7,8 @@
 
 import Common
 
-import Foundation.NSURL
 import Combine
+import Foundation
 
 public protocol ConversationManagable: ConversationRecodable, ConversationMaintainable { }
 
@@ -33,14 +33,23 @@ public final class ConversationUseCase: Dependency, ConversationManagable {
 	}
 	
 	public let dependency: Dependency
-	
-	@Published private var dataSource: [Conversation] = []
 	public var dataSourcePublisher: Published<[Conversation]>.Publisher { $dataSource }
 	
 	public init(dependency: Dependency) {
 		self.dependency = dependency
-		fetchDataSource()
+		
+		NotificationCenter.default.publisher(for: .updatedConversation)
+			.sink { [weak self] _ in
+				self?.fetchDataSource()
+			}
+			.store(in: &cancellableSet)
+		
+//		fetchDataSource()
+		NotificationCenter.default.post(name: .updatedConversation, object: nil)
 	}
+	
+	@Published private var dataSource: [Conversation] = []
+	private var cancellableSet: Set<AnyCancellable> = []
 	
 	private func fetchDataSource() {
 		guard let fetcedList = dependency.dataController.fetch() else {
@@ -61,7 +70,7 @@ extension ConversationUseCase {
 				completion(error)
 				return
 			}
-			fetchDataSource()
+			NotificationCenter.default.post(name: .updatedNote, object: nil)
 			completion(nil)
 		}
 	}
@@ -77,7 +86,7 @@ extension ConversationUseCase {
 				completion(error)
 				return
 			}
-			fetchDataSource()
+			NotificationCenter.default.post(name: .updatedNote, object: nil)
 			completion(nil)
 		}
 	}
@@ -88,7 +97,7 @@ extension ConversationUseCase {
 				completion(error)
 				return
 			}
-			fetchDataSource()
+			NotificationCenter.default.post(name: .updatedNote, object: nil)
 			completion(nil)
 		}
 	}
