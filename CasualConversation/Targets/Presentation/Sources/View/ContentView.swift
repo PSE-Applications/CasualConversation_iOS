@@ -54,7 +54,7 @@ struct DebugRecordDataController: RecordDataControllerProtocol {
 	
 }
 
-struct DebugConversationRepository: ConversationDataControllerProtocol {
+struct DebugConversationDataController: ConversationDataControllerProtocol {
 	
 	private var dummyModel: [Conversation] = [
 		.init(
@@ -98,7 +98,7 @@ struct DebugConversationRepository: ConversationDataControllerProtocol {
 	
 }
 
-struct DebugNoteRepository: NoteDataControllerProtocol {
+struct DebugNoteDataController: NoteDataControllerProtocol {
 	
 	private var dummyModel: [Note] = [
 		.init(
@@ -176,9 +176,9 @@ extension PresentationDIContainer {
 	static var preview: PresentationDIContainer {
 		.init(dependency: .init(
 			configurations: PresentationConfiguarations.preview,
-			conversationRepository: DebugConversationRepository(),
-			noteRepository: DebugNoteRepository(),
-			recordRepository: DebugRecordDataController())
+			conversationDataController: DebugConversationDataController(),
+			noteDataController: DebugNoteDataController(),
+			recordDataController: DebugRecordDataController())
 		)
 	}
 	

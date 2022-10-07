@@ -60,11 +60,4 @@ extension CoreDataStack: CoreDataStackProtocol {
 		completion(nil)
 	}
 	
-//	public func entityDescription(forEntityName: String) -> NSEntityDescription? {
-//		NSEntityDescription.entity(
-//			forEntityName: forEntityName,
-//			in: self.mainContext
-//		)
-//	}
-	
 }

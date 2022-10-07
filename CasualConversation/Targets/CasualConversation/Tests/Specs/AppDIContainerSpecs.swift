@@ -23,6 +23,7 @@ class AppDIContainerSpecs: QuickSpec {
 				context("팩토리메서드 호출하면") {
 					var presentationDIContainer: PresentationDIContainer!
 					beforeEach { presentationDIContainer = appDIContainer.makePresentationDIContainer() }
+					afterEach { presentationDIContainer = nil }
 
 					it("PresentationDIContainer 생성됨") {
 						expect(presentationDIContainer).notTo(beNil())
@@ -34,6 +35,7 @@ class AppDIContainerSpecs: QuickSpec {
 				context("뷰 팩토리메서드 호출하면") {
 					var contentView: ContentView!
 					beforeEach { contentView = appDIContainer.ContentView() }
+					afterEach { contentView = nil }
 
 					it("MainTabView 생성됨") {
 						expect(contentView).notTo(beNil())

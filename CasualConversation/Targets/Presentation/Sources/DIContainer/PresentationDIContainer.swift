@@ -15,20 +15,20 @@ public final class PresentationDIContainer: Dependency, ObservableObject {
 	
 	public struct Dependency {
         let configurations: PresentationConfiguarations
-		let conversationRepository: ConversationDataControllerProtocol
-		let noteRepository: NoteDataControllerProtocol
-		let recordRepository: RecordDataControllerProtocol
+		let conversationDataController: ConversationDataControllerProtocol
+		let noteDataController: NoteDataControllerProtocol
+		let recordDataController: RecordDataControllerProtocol
 		
 		public init(
             configurations: PresentationConfiguarations,
-			conversationRepository: ConversationDataControllerProtocol,
-			noteRepository: NoteDataControllerProtocol,
-			recordRepository: RecordDataControllerProtocol
+			conversationDataController: ConversationDataControllerProtocol,
+			noteDataController: NoteDataControllerProtocol,
+			recordDataController: RecordDataControllerProtocol
 		) {
 			self.configurations = configurations
-			self.conversationRepository = conversationRepository
-			self.noteRepository = noteRepository
-			self.recordRepository = recordRepository
+			self.conversationDataController = conversationDataController
+			self.noteDataController = noteDataController
+			self.recordDataController = recordDataController
 		}
 	}
 	
@@ -37,23 +37,23 @@ public final class PresentationDIContainer: Dependency, ObservableObject {
 	// MARK: UseCase
 	lazy var casualConversationUseCase: ConversationUseCase = .init(
 		dependency: .init(
-			dataController: self.dependency.conversationRepository
+			dataController: self.dependency.conversationDataController
 		)
 	)
 	lazy var noteUseCase: NoteUseCase = .init(dependency: .init(
-		dataController: self.dependency.noteRepository,
+		dataController: self.dependency.noteDataController,
 		filter: .all)
 	)
 	
 	// MARK: Service
 	lazy var audioRecordService: AudioRecordService = .init(
 		dependency: .init(
-			dataController: self.dependency.recordRepository
+			dataController: self.dependency.recordDataController
 		)
 	)
 	lazy var audioPlayService: AudioPlayService = .init(
 		dependency: .init(
-			dataController: self.dependency.recordRepository
+			dataController: self.dependency.recordDataController
 		)
 	)
 	
@@ -63,7 +63,7 @@ public final class PresentationDIContainer: Dependency, ObservableObject {
 	
 	private func makeNoteUseCase(filter item: Conversation) -> NoteUseCase {
 		return .init(dependency: .init(
-			dataController: self.dependency.noteRepository,
+			dataController: self.dependency.noteDataController,
 			filter: .selected(item))
 		)
 	}

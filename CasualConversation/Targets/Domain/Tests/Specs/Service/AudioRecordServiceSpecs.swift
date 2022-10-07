@@ -12,11 +12,12 @@
 import Quick
 import Nimble
 
-import Foundation.NSURL
+import Foundation
+import Combine
 
 extension AudioRecordService {
 	static var sut: Self {
-		Self.init(dependency: .init(repository: MockRecordDataController()))
+		Self.init(dependency: .init(dataController: MockRecordDataController()))
 	}
 }
 
@@ -24,8 +25,15 @@ final class AudioRecordServiceSpecs: QuickSpec {
 	override func spec() {
 		describe("인스턴스 객체") {
 			var recorder: CCRecorder!
-			beforeEach { recorder = AudioRecordService.sut }
-			afterEach { recorder = nil }
+			var cancellableSet: Set<AnyCancellable>!
+			beforeEach {
+				recorder = AudioRecordService.sut
+				cancellableSet = []
+			}
+			afterEach {
+				recorder = nil
+				cancellableSet = nil
+			}
 			
 			context("녹음을 위해 준비 작업을 하면") { // Date() 객체를 이용한 새로운 FilePath 생성됨
 				var optionalParameter: CCError!
@@ -40,38 +48,57 @@ final class AudioRecordServiceSpecs: QuickSpec {
 				}
 				
 				context("녹음 시작을 성공하면") {
-					var startOptionalParameter: CCError!
+					var result: Bool!
 					beforeEach {
-						recorder.startRecording() { error in
-							startOptionalParameter = error
-						}
+						recorder.startRecording()
+						recorder.isRecordingPublisher
+							.sink { event in
+								result = event
+							}
+							.store(in: &cancellableSet)
 					}
+					afterEach { result = nil }
 					
-					it("nil 받음") {
-						expect(startOptionalParameter).to(beNil())
+					it("isRecording true 받음") {
+						expect(result).to(be(true))
 					}
 				}
 				
 				context("녹음 중에 일시정지하면") {
-					beforeEach { recorder.pauseRecording() }
-					afterEach { recorder.startRecording() { _ in } }
+					var result: Bool!
+					beforeEach {
+						recorder.startRecording()
+						recorder.pauseRecording()
+						recorder.isRecordingPublisher
+							.sink { event in
+								result = event
+							}
+							.store(in: &cancellableSet)
+					}
+					afterEach { result = nil }
 					
-					it("현재 상태가 paused") {
-						expect(recorder.status).to(equal(.paused))
+					it("isRecording false 받음") {
+						expect(result).to(equal(false))
 					}
 				}
 				
 				context("녹음 중에 중단하면") {
-					var stopParameter: Result<URL, CCError>!
+					var result: URL!
 					beforeEach {
-						recorder.stopRecording() { result in
-							stopParameter = result
+						recorder.startRecording()
+						recorder.stopRecording { parameter in
+							switch parameter {
+							case .success(let url):
+								result = url
+							case .failure(_):
+								break
+							}
 						}
 					}
+					afterEach { result = nil }
 					
-					it(".success(let url) 받음") {
-						//							expect(stopParameter).to(be(succeed())) // failed - expected to be identical to <0x600000788750>, got <0x60000075eee0>
-						//							expect(stopParameter).to(beSuccess()) // 공식문서 - 적용안됨...
+					it("isPlaying false 받음") {
+						expect(result).notTo(beNil())
 					}
 				}
 			}
