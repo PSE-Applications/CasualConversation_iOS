@@ -52,6 +52,7 @@ struct TutorialView: View {
 	
 }
 
+#if DEBUG
 struct TutorialView_Previews: PreviewProvider {
 	
 	static var container: PresentationDIContainer { .preview }
@@ -66,3 +67,4 @@ struct TutorialView_Previews: PreviewProvider {
 	}
 	
 }
+#endif

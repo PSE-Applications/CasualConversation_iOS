@@ -31,9 +31,9 @@ final class AppDIContainer {
                 receptionTel: URL(string: configurations.receptionTel)!
             )
             ),
-            conversationRepository: ConversationDataController(dependency: .init(coreDataStack: self.coreDataStack)),
-            noteRepository: NoteDataController(dependency: .init(coreDataStack: self.coreDataStack)),
-            recordRepository: RecordDataController(dependency: .init(repository: self.fileManagerReposotiry))
+			conversationDataController: ConversationDataController(dependency: .init(coreDataStack: self.coreDataStack)),
+			noteDataController: NoteDataController(dependency: .init(coreDataStack: self.coreDataStack)),
+			recordDataController: RecordDataController(dependency: .init(repository: self.fileManagerReposotiry))
         )
         )
     }
