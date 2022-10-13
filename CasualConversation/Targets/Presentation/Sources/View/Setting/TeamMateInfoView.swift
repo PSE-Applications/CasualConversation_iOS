@@ -26,7 +26,7 @@ struct TeamMateInfoView: View {
 					links: [
 						("github", "https://github.com/keeplo"),
 						("blog", "https://keeplo.tistory.com"),
-						("AppStore", "https://apps.apple.com/kr/developer/id1642134370")
+						("AppStore", "https://apps.apple.com/kr/developer/id1626062808")
 					]
 				)
 			)

@@ -8,6 +8,7 @@
 import Common
 
 import Combine
+import Foundation
 
 public protocol NoteManagable {
 	var dataSourcePublisher: Published<[Note]>.Publisher { get }
@@ -37,14 +38,23 @@ public final class NoteUseCase: Dependency {
 	}
 	
 	public var dependency: Dependecy
-	
-	@Published private var dataSource: [Note] = []
 	public var dataSourcePublisher: Published<[Note]>.Publisher { $dataSource }
 	
 	public init(dependency: Dependecy) {
 		self.dependency = dependency
-		fetchDataSource()
+		
+		NotificationCenter.default.publisher(for: .updatedNote)
+			.sink { [weak self] _ in
+				self?.fetchDataSource()
+			}
+			.store(in: &cancellableSet)
+		
+//		fetchDataSource()
+		NotificationCenter.default.post(name: .updatedNote, object: nil)
 	}
+	
+	@Published private var dataSource: [Note] = []
+	private var cancellableSet: Set<AnyCancellable> = []
 	
 	private func fetchDataSource() {
 		let fetcedList: [Note]
@@ -55,6 +65,7 @@ public final class NoteUseCase: Dependency {
 			fetcedList = dependency.dataController.fetch(filter: item) ?? []
 		}
 		self.dataSource = fetcedList.filter({ !$0.isDone }) + fetcedList.filter({ $0.isDone })
+		print("\(self.dependency.filter.self)")
 	}
 	
 }
@@ -67,7 +78,7 @@ extension NoteUseCase: NoteManagable {
 				completion(error)
 				return
 			}
-			fetchDataSource()
+			NotificationCenter.default.post(name: .updatedNote, object: nil)
 			completion(nil)
 		}
 	}
@@ -78,7 +89,7 @@ extension NoteUseCase: NoteManagable {
 				completion(error)
 				return
 			}
-			fetchDataSource()
+			NotificationCenter.default.post(name: .updatedNote, object: nil)
 			completion(nil)
 		}
 	}
@@ -89,7 +100,7 @@ extension NoteUseCase: NoteManagable {
 				completion(error)
 				return
 			}
-			fetchDataSource()
+			NotificationCenter.default.post(name: .updatedNote, object: nil)
 			completion(nil)
 		}
 	}
