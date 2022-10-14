@@ -16,6 +16,8 @@
 팀원 : 2명 (iOS 개발 1명, ProductManger 1명)  
 기간 : 22.06.17 ~ 22.09.17 `v1.0.0 출시` / 09.19 `v1.1.0 업데이트` ~    
 
+> 프로젝트 진행에 관한 자세한내용이 궁금하시면 [Wiki / 🗂 프로젝트 정보](https://github.com/PSE-Applications/CasualConversation_iOS/wiki/🗂-프로젝트-정보) 에서 확인하실 수 있습니다.
+
 ![](https://img.shields.io/badge/Target_iOS-15.0~-green) ![](https://img.shields.io/badge/Swift-5.6-orange) ![](https://img.shields.io/badge/Xcode-13.4-blue) ![](https://img.shields.io/badge/SwiftUI-3.0-puple) 
 
 ## 🥇 프로젝트팀 소개
@@ -25,65 +27,41 @@
 |iOS Development/Team Leader|ProductManger/Design|
 |김용우 [@keeplo](https://github.com/keeplo) |김찬우 [@dacodaco](https://github.com/dacodaco) |
 
-## 🛠 기술 스택
+## 🛠 기술 스택 
+> 아래 나열된 적용 기술에 관한 자세한 내용이 궁금하시면 [Wiki / 🛠-기술-정보](https://github.com/PSE-Applications/CasualConversation_iOS/wiki/🛠-기술-정보) 에서 확인하실 수 있습니다.
 
-### Tuist
-* `tuist generate` 이용해서 Xcode 생성 - Merge Conflict 해결
-* AppTarget - Dependency Targets 이용해서 모듈화 
-    * Data, Domain, Presentation Layer 분리 + *Common Layer (CCError, Protocols)*
-    * Code [Project.swift](https://github.com/PSE-Applications/CasualConversation/blob/main/CasualConversation/Project.swift)
-    <details><summary>Project Navigation Image</summary><div markdown="1">
-        <img src="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F6d2697d7-39d3-4261-a697-401af26fc6ba%2FUntitled.png?table=block&id=8aa99e8c-0267-4f7a-a0f8-a82514c91098&spaceId=e6b8a7b9-cbae-4355-941e-ce441f218386&width=2000&userId=aaeaa0fd-5da4-499b-9277-7adf273dceea&cache=v2" width=540 height=840>
-    </div></details>
+### Tool
+* Fastlane
+* Tuist
 
-### Clean Architecture (iOS) + MVVM
-* 프로젝트 구조의 계층을 나누어 관심사를 분리
-    * 프레임워크 독립적 
-        > ex)`AVFAudio` 프레임워크는 AudioService 에서만 사용
-    * 테스트 용이
-        > ex) 각 Layer(Target) 독립된 테스트 구현
-    * UI 독립적
-        > ex) Presentation Layer 독립 구현 (`public` 외부 모듈 접근, `internal` 모듈 내부)
-    * DB 독립적
-        > ex) Business Logic과 별개로 동작 (CoreData, FileSystem)
-    * 외부 기능 독립적
-        > ex) 필요 시 Network Layer 분리 구현 가능 ([iOS-CleanArcitecture-MVVM 예제 참고](https://github.com/kudoleh/iOS-Clean-Architecture-MVVM)) 
-* UML
-    [<img src="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fa260c9d0-92ce-4204-ba46-362ccc032452%2FUntitled.png?table=block&id=89cf9c58-2c2f-4a3c-b381-af32fcdfc2c9&spaceId=e6b8a7b9-cbae-4355-941e-ce441f218386&width=2000&userId=aaeaa0fd-5da4-499b-9277-7adf273dceea&cache=v2">](https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fadb23e9e-410a-4708-9966-d500cd519f00%2F%25EC%258A%25A4%25ED%2581%25AC%25EB%25A6%25B0%25EC%2583%25B7_2022-09-20_%25EC%2598%25A4%25ED%259B%2584_8.35.18.png?table=block&id=02f76787-d807-46f1-a4d8-6e215c076918&spaceId=e6b8a7b9-cbae-4355-941e-ce441f218386&width=2000&userId=aaeaa0fd-5da4-499b-9277-7adf273dceea&cache=v2)
-
-> Reference by   
-> [The Clean Architecture by Robert C.Martin](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)   
-> [Clean architecture series — Part 3 _ The Cone](https://pereiren.medium.com/clean-architecture-series-part-3-a0c150551e5f)   
-> [iOS-CleanArcitecture-MVVM](https://github.com/kudoleh/iOS-Clean-Architecture-MVVM)   
+### Architecture & Design Pattern
+* Clean Architecture (iOS)
+   > Reference by   
+   > [The Clean Architecture by Robert C.Martin](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)   
+   > [Clean architecture series — Part 3 _ The Cone](https://pereiren.medium.com/clean-architecture-series-part-3-a0c150551e5f)   
+   > [iOS-CleanArcitecture-MVVM](https://github.com/kudoleh/iOS-Clean-Architecture-MVVM)  
+* MVVM
 
 ### Apple Framework
-#### Combine
-* Combine 이용한 데이터 바인딩 Flow 적용
-    > ex1) (Data) FetchedList -> (Domain) DataSource -> (Presentation) List  
-    > ex2) (Domain) CurrentTime -> (Presentation) CurrentTime
-* `.assing(to:)` 활용한 @Published 데이터 바인딩
-    > `@Published` - `Published<Type>.Publisher` 연동
-
-#### SwiftUI
-AppDelegate, SceneDelegate 없는 SwiftUI Project 형태로 구현   
-Code [CasualConversationApp.swift](https://github.com/PSE-Applications/CasualConversation/blob/main/CasualConversation/Targets/CasualConversation/Sources/CasualConversationApp.swift)
-
-#### AVFAudio
-* AVAudioSession
-* AVAudioRecorder
-* AVAudioPlayer
-
-#### CoreData
-* NSManagedObject
-#### FileSystem
-* FileManager
+* Combine
+* SwiftUI
+* AVFAudio
+   * AVAudioSession
+   * AVAudioRecorder
+   * AVAudioPlayer
+* CoreData
+   * NSManagedObject
+* FileSystem
+   * FileManager
 
 ### Dependency
-#### UnitTest (BDD)
-* Quick
-* Nimble
+* UnitTest (BDD)
+   * Quick
+   * Nimble
 
 ## ⚙️ 기능 소개 with ScreenShots
+> 자세한 기능 시나리오가 궁금하시면 [Wiki /📱 앱 정보](https://github.com/PSE-Applications/CasualConversation_iOS/wiki/📱-앱-정보) 에서 확인하실 수 있습니다.
+
 ### 녹음기능
 - 원하는 시점 북마크를 할 수 있어요, 녹음물에 제목, 대화 주제, 참여자 등 정보를 입력할 수 있습니다.  
 <img src="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F1bba3dab-bb63-4d54-b19a-67417e256981%2FiphoneX_2.jpg?table=block&id=66157add-ad3e-4fad-8a1c-a482e7af85f5&spaceId=e6b8a7b9-cbae-4355-941e-ce441f218386&width=2000&userId=aaeaa0fd-5da4-499b-9277-7adf273dceea&cache=v2" width=200> <img src="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Ff7152056-1810-4aff-a654-e91c6e3bbd32%2FSimulator_Screen_Shot_-_iPhone_12_Pro_-_2022-09-20_at_23.02.32.png?table=block&id=6c8fcc29-bf03-4b78-86d3-f769d167263e&spaceId=e6b8a7b9-cbae-4355-941e-ce441f218386&width=2000&userId=aaeaa0fd-5da4-499b-9277-7adf273dceea&cache=v2" width=200> <img src="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fe977bfae-17f0-4d19-8e64-5c785cf55f10%2FIMG_0493.png?table=block&id=756ba0b3-7c94-497b-b0e1-21459643ad05&spaceId=e6b8a7b9-cbae-4355-941e-ce441f218386&width=2000&userId=aaeaa0fd-5da4-499b-9277-7adf273dceea&cache=v2" width=200>
