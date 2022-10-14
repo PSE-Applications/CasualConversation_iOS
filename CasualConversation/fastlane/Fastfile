@@ -1,0 +1,71 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:ios)
+
+platform :ios do
+
+  lane :discord_test do
+  desc "Test for discord notification"
+     discord_notifier(
+        webhook_url: ENV["DISCORD"],
+        title: "Upload NewBuild to TestFlight", 
+        description: "Test Notification", 
+        success: true
+     )
+  end
+
+  lane :beta do
+  desc "Build app and Upload app to TestFlight"
+     increment_build_number(
+        build_number: app_store_build_number + 1,
+        xcodeproj: "CasualConversation.xcodeproj"
+     )
+     build_app(scheme: "CasualConversation")
+     upload_to_testflight
+     discord_notifier(
+         webhook_url: ENV["DISCORD"],
+         title: "TestFlight",
+         description: "Uploaded NewBuild to TestFlight",
+         success: true
+     )
+  end 
+  
+  desc "Push a new release build to the App Store"
+  lane :release do
+     get_certificates
+     get_provisioning_profile
+     build_app(scheme: "CasualConversation")
+     upload_to_app_store(skip_metadata: true, skip_screenshots: true)
+     version = get_version_number
+     discord_notifier(
+         webhook_url: ENV["DISCORD"],
+         title: "Release",
+         description: "Uploaded NewBuild to AppConnect",
+         success: true
+     )
+  end
+
+  desc "Error"
+  error do |lane, exception, options|
+     discord_notifier(
+        webhook_url: ENV["DISCORD"],
+        title: "Fastlane Error",
+        description: "에러 발생: #{exception}",
+        success: false
+     )
+  end
+
+end
