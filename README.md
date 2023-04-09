@@ -13,8 +13,18 @@
 [인스타그램 홍보/문의 페이지](https://www.instagram.com/casualconversation_ccrecorder/)  [앱스토어](https://apps.apple.com/kr/app/id1642134370/)  
 
 ## 🗂 프로젝트 소개
+
+<details><summary>v1 (1.0.1) - 출시 프로세스</summary><div markdown="1">
+
 팀원 : 2명 (iOS 개발 1명, ProductManger 1명)  
 기간 : 22.06.17 ~ 22.09.17 `v1.0.0 출시` / 09.19 `v1.1.0 업데이트` ~    
+</div></details>
+
+<details><summary>v2 (2.0.0) - 서비스 개선 프로세스</summary><div markdown="1">
+
+팀원 : 1명 (iOS 1명, Android 0명, 디자이너 0명) 모집중  
+기간 : 23.04.10 ~ `v2.0.0` 업데이트    
+</div></details>
 
 > 프로젝트 진행에 관한 자세한내용이 궁금하시면 [Wiki / 🗂 프로젝트 정보](https://github.com/PSE-Applications/CasualConversation_iOS/wiki/🗂-프로젝트-정보) 에서 확인하실 수 있습니다.
 
@@ -22,13 +32,28 @@
 
 ## 🥇 프로젝트팀 소개
 ### Team MarCoda
+<details><summary>v1 (1.0.1) - 출시 프로세스</summary><div markdown="1">
+
 |<img src="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F1cba71b5-edd1-4247-9048-4230712e2d3d%2FProfile_1.jpeg?table=block&id=e17e3b5c-cbdd-4196-8832-38e6e1083432&spaceId=e6b8a7b9-cbae-4355-941e-ce441f218386&width=2000&userId=aaeaa0fd-5da4-499b-9277-7adf273dceea&cache=v2" width=200 height=200>|<img src="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F8e197c5f-03be-4e4a-a777-a0e5468a1c5f%2FCoda__Design.jpg?table=block&id=458a1cfe-8d8b-4fb4-9bf9-80e5ab47ef20&spaceId=e6b8a7b9-cbae-4355-941e-ce441f218386&width=2000&userId=aaeaa0fd-5da4-499b-9277-7adf273dceea&cache=v2" width=200 height=200>|
 |:---:|:---:|
 |iOS Development/Team Leader|ProductManger/Design|
 |김용우 [@keeplo](https://github.com/keeplo) |김찬우 [@dacodaco](https://github.com/dacodaco) |
+</div></details>
+
+<details><summary>v2 (2.0.0) - 서비스 개선 프로세스</summary><div markdown="1">
+
+|<img src="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F1cba71b5-edd1-4247-9048-4230712e2d3d%2FProfile_1.jpeg?table=block&id=e17e3b5c-cbdd-4196-8832-38e6e1083432&spaceId=e6b8a7b9-cbae-4355-941e-ce441f218386&width=2000&userId=aaeaa0fd-5da4-499b-9277-7adf273dceea&cache=v2" width=200 height=200>|<img src="" width=200 height=200>|<img src="" width=200 height=200>|
+|:-:|:-:|:-:|
+|PO, iOS|Android|Design|
+|김용우 [@keeplo](https://github.com/keeplo) | 모집중 | 모집중 |
+
+</div></details>
 
 ## 🛠 기술 스택 
+
 > 아래 나열된 적용 기술에 관한 자세한 내용이 궁금하시면 [Wiki / 🛠-기술-정보](https://github.com/PSE-Applications/CasualConversation_iOS/wiki/🛠-기술-정보) 에서 확인하실 수 있습니다.
+
+<details><summary>v1 (1.0.1) - 출시 프로세스</summary><div markdown="1">
 
 ### Tool
 * Fastlane
@@ -41,6 +66,18 @@
    > [Clean architecture series — Part 3 _ The Cone](https://pereiren.medium.com/clean-architecture-series-part-3-a0c150551e5f)   
    > [iOS-CleanArcitecture-MVVM](https://github.com/kudoleh/iOS-Clean-Architecture-MVVM)  
 * MVVM
+</div></details>
+
+<details><summary>v2 (2.0.0) - 서비스 개선 프로세스</summary><div markdown="1">
+
+### Tool
+* Xcode Cloud
+* Package
+
+### Architecture & Design Pattern
+* MVVM-C
+* Singleton Pattern
+</div></details>
 
 ### Apple Framework
 * Combine
@@ -58,6 +95,7 @@
 * UnitTest (BDD)
    * Quick
    * Nimble
+</div></details>
 
 ## ⚙️ 기능 소개 with ScreenShots
 > 자세한 기능 시나리오가 궁금하시면 [Wiki /📱 앱 정보](https://github.com/PSE-Applications/CasualConversation_iOS/wiki/📱-앱-정보) 에서 확인하실 수 있습니다.
